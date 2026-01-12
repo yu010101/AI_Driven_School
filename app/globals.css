@@ -1,18 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --background-secondary: #f5f5f5;
-  --foreground: #111111;
-  --foreground-muted: #666666;
-  --primary: #111111;
-  --primary-light: #f5f5f5;
-  --border: #e5e5e5;
-  --surface: #ffffff;
+  /* AI Native + Education Friendly カラーパレット */
+  --background: #FAFBFC;
+  --background-secondary: #F1F5F9;
+  --foreground: #0F172A;
+  --foreground-muted: #64748B;
+
+  /* AI Purple - メインカラー */
+  --primary: #6366F1;
+  --primary-light: #EEF2FF;
+  --primary-dark: #4F46E5;
+
+  /* CTA Orange - アクションカラー */
+  --cta: #F97316;
+  --cta-light: #FFF7ED;
+
+  /* Cyan - アクセント */
+  --accent: #06B6D4;
+  --accent-light: #ECFEFF;
+
+  --border: #E2E8F0;
+  --surface: #FFFFFF;
+
+  /* グロー効果 */
+  --glow-primary: rgba(99, 102, 241, 0.15);
+  --glow-cta: rgba(249, 115, 22, 0.15);
 }
 
 body {
@@ -23,42 +40,56 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* 見出し用フォント */
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+}
+
 @layer components {
-  /* カード */
+  /* カード - グラスモーフィズム風 */
   .card {
-    background: var(--surface);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 1.5rem;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px var(--glow-primary);
   }
 
   .card:hover {
     border-color: var(--primary);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 8px 30px var(--glow-primary);
+    transform: translateY(-2px);
   }
 
   .card-strong {
-    background: var(--primary-light);
+    background: linear-gradient(135deg, var(--primary-light) 0%, #F8FAFC 100%);
     border: 1px solid var(--primary);
-    border-radius: 12px;
+    border-radius: 16px;
   }
 
   /* ページ見出し */
   .page-title {
-    @apply text-2xl md:text-3xl font-bold mb-4;
+    @apply text-3xl md:text-4xl font-bold mb-4;
+    font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
     color: var(--foreground);
+    letter-spacing: -0.02em;
   }
 
   .page-title-accent {
-    @apply text-2xl md:text-3xl font-bold mb-4;
-    color: var(--foreground);
+    @apply text-3xl md:text-4xl font-bold mb-4;
+    font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   /* セクション見出し */
   .section-heading-center {
     @apply text-xl md:text-2xl font-bold mb-2;
+    font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
     color: var(--foreground);
   }
 
@@ -68,7 +99,7 @@ body {
     color: var(--foreground);
   }
 
-  /* ステップバッジ */
+  /* ステップバッジ - AI Purple */
   .step-badge {
     @apply inline-block px-3 py-1 text-xs font-bold mb-3;
     background: var(--primary-light);
@@ -76,29 +107,45 @@ body {
     border-radius: 100px;
   }
 
-  /* ボタン */
+  /* ボタン - Primary (AI Purple) */
   .btn-primary {
     @apply px-6 py-3 font-semibold text-sm;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border-radius: 10px;
+    transition: all 0.3s ease;
     cursor: pointer;
+    box-shadow: 0 4px 15px var(--glow-primary);
   }
 
   .btn-primary:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--glow-primary);
+  }
+
+  /* ボタン - CTA (Orange) */
+  .btn-cta {
+    @apply px-6 py-3 font-semibold text-sm;
+    background: linear-gradient(135deg, var(--cta) 0%, #EA580C 100%);
+    color: white;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--glow-cta);
+  }
+
+  .btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--glow-cta);
   }
 
   .btn-secondary {
     @apply px-6 py-3 font-semibold text-sm;
-    background: var(--background);
+    background: var(--surface);
     color: var(--foreground);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    transition: all 0.2s ease;
+    border-radius: 10px;
+    transition: all 0.3s ease;
     cursor: pointer;
   }
 
@@ -106,6 +153,20 @@ body {
     border-color: var(--primary);
     color: var(--primary);
     background: var(--primary-light);
+  }
+
+  /* グラデーション背景 */
+  .gradient-bg {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 50%, var(--cta-light) 100%);
+  }
+
+  /* グロー効果 */
+  .glow-primary {
+    box-shadow: 0 0 40px var(--glow-primary);
+  }
+
+  .glow-cta {
+    box-shadow: 0 0 40px var(--glow-cta);
   }
 }
 
@@ -129,26 +190,29 @@ body {
 
 /* 見出し */
 .prose h1 {
+  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--foreground);
   margin-top: 3rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--primary-light);
 }
 
 .prose h2 {
+  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--foreground);
   margin-top: 3rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--primary-light);
 }
 
 .prose h3 {
+  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--foreground);
@@ -157,6 +221,7 @@ body {
 }
 
 .prose h4 {
+  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--foreground);
@@ -166,12 +231,15 @@ body {
 
 /* リンク */
 .prose a {
-  color: #111111;
+  color: var(--primary);
   text-decoration: underline;
+  text-decoration-color: var(--primary-light);
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
 }
 
 .prose a:hover {
-  text-decoration: underline;
+  text-decoration-color: var(--primary);
 }
 
 /* 強調 */
@@ -182,10 +250,10 @@ body {
 
 /* インラインコード */
 .prose code:not(pre code) {
-  background: var(--background-secondary);
-  color: #e11d48;
+  background: var(--primary-light);
+  color: var(--primary-dark);
   padding: 0.2em 0.4em;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.9em;
   font-family: 'SF Mono', Consolas, monospace;
 }
@@ -195,11 +263,12 @@ body {
   background: #1e293b;
   color: #e2e8f0;
   padding: 1.25rem;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow-x: auto;
   margin: 1.5rem 0;
   font-size: 0.9rem;
   line-height: 1.6;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .prose pre code {
@@ -230,16 +299,16 @@ body {
 }
 
 .prose li::marker {
-  color: var(--foreground-muted);
+  color: var(--primary);
 }
 
 /* 引用 */
 .prose blockquote {
-  background: #f5f5f5;
-  border-left: 4px solid #111111;
+  background: linear-gradient(135deg, var(--primary-light) 0%, #F8FAFC 100%);
+  border-left: 4px solid var(--primary);
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 12px 12px 0;
 }
 
 .prose blockquote p {
@@ -250,7 +319,7 @@ body {
 .prose blockquote strong {
   display: block;
   margin-bottom: 0.5rem;
-  color: #111111;
+  color: var(--primary);
 }
 
 /* テーブル */
@@ -259,6 +328,9 @@ body {
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.95rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .prose th,
@@ -269,9 +341,9 @@ body {
 }
 
 .prose th {
-  background: var(--background-secondary);
+  background: var(--primary-light);
   font-weight: 600;
-  color: var(--foreground);
+  color: var(--primary-dark);
 }
 
 .prose tr:hover {
@@ -281,14 +353,17 @@ body {
 /* 水平線 */
 .prose hr {
   border: none;
-  border-top: 1px solid var(--border);
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary-light), var(--accent-light), var(--cta-light));
   margin: 3rem 0;
+  border-radius: 1px;
 }
 
 /* 画像 */
 .prose img {
-  border-radius: 8px;
+  border-radius: 12px;
   margin: 1.5rem 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* ===============================
@@ -318,12 +393,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--primary-light);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--foreground-muted);
+  background: var(--primary);
 }
 
 /* アクセシビリティ */

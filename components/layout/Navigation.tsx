@@ -17,14 +17,14 @@ export function Navigation() {
   ]
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200" role="navigation" aria-label="メインナビゲーション">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2E8F0]" role="navigation" aria-label="メインナビゲーション">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2" aria-label="AI駆動塾 ホーム">
-            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2 group" aria-label="AI駆動塾 ホーム">
+            <div className="w-9 h-9 bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-xl flex items-center justify-center shadow-lg shadow-[#6366F1]/20 group-hover:shadow-[#6366F1]/40 transition-shadow">
               <span className="font-bold text-white text-xs">AI</span>
             </div>
-            <span className="font-bold text-gray-900">駆動塾</span>
+            <span className="font-bold text-[#0F172A] text-lg">駆動塾</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -38,8 +38,8 @@ export function Navigation() {
                   href={link.href}
                   className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                     isActive
-                      ? 'bg-gray-100 text-black'
-                      : 'text-gray-600 hover:text-black hover:bg-gray-50'
+                      ? 'bg-[#EEF2FF] text-[#6366F1]'
+                      : 'text-[#64748B] hover:text-[#6366F1] hover:bg-[#EEF2FF]'
                   }`}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -55,7 +55,7 @@ export function Navigation() {
           {/* Mobile Hamburger Button */}
           <button
             type="button"
-            className="md:hidden p-2 text-gray-600 hover:text-black transition-colors rounded-lg hover:bg-gray-50"
+            className="md:hidden p-2 text-[#64748B] hover:text-[#6366F1] transition-colors rounded-lg hover:bg-[#EEF2FF]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
@@ -91,7 +91,7 @@ export function Navigation() {
         {isMenuOpen && (
           <div
             id="mobile-menu"
-            className="md:hidden mt-3 pt-3 border-t border-gray-200"
+            className="md:hidden mt-3 pt-3 border-t border-[#E2E8F0]"
           >
             <div className="flex flex-col gap-1">
               <div className="px-4 py-2">
@@ -106,8 +106,8 @@ export function Navigation() {
                     href={link.href}
                     className={`px-4 py-3 text-sm font-medium rounded-lg transition-all ${
                       isActive
-                        ? 'bg-gray-100 text-black'
-                        : 'text-gray-600 hover:text-black hover:bg-gray-50'
+                        ? 'bg-[#EEF2FF] text-[#6366F1]'
+                        : 'text-[#64748B] hover:text-[#6366F1] hover:bg-[#EEF2FF]'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                     aria-current={isActive ? 'page' : undefined}

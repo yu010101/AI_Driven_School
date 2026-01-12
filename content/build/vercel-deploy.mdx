@@ -1,0 +1,198 @@
+---
+title: Vercelデプロイガイド｜Next.jsアプリを無料で公開する方法
+description: VercelはNext.jsの開発元が提供するホスティングサービスです。GitHubと連携して、プッシュするだけで自動デプロイ。無料枠で個人開発には十分です。
+category: build
+tags: [Vercel, デプロイ, Next.js, ホスティング, 無料]
+createdAt: '2024-03-01'
+updatedAt: '2024-12-01'
+relatedArticles:
+  - slug: what-is-vibe-coding
+    anchor: バイブコーディングとは
+  - slug: auth
+    anchor: ログイン機能
+---
+
+# Vercelデプロイガイド
+
+Vercelは、**Next.jsアプリを最も簡単にデプロイできる**サービスです。
+
+GitHubにプッシュするだけで、自動的にビルド＆デプロイ。無料枠で個人開発には十分です。
+
+## Vercelとは？
+
+Vercelは、Next.jsを開発しているVercel社が提供するホスティングサービスです。
+
+| 特徴 | 説明 |
+|------|------|
+| 自動デプロイ | GitHubプッシュで自動公開 |
+| プレビュー | PRごとにプレビューURLを発行 |
+| エッジ配信 | 世界中のCDNから高速配信 |
+| 無料SSL | HTTPSが自動で有効 |
+
+### 他サービスとの比較
+
+| 項目 | Vercel | Netlify | AWS Amplify |
+|------|--------|---------|-------------|
+| Next.js対応 | ◎（公式） | ○ | ○ |
+| 設定の簡単さ | ◎ | ◎ | △ |
+| 無料枠 | 100GB帯域 | 100GB帯域 | 月1000分ビルド |
+| 日本語ドキュメント | ○ | ○ | △ |
+
+## デプロイの手順
+
+### ステップ1: GitHubにリポジトリを作成
+
+まず、プロジェクトをGitHubにプッシュします。
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/あなたのユーザー名/プロジェクト名.git
+git push -u origin main
+```
+
+### ステップ2: Vercelにサインアップ
+
+1. [vercel.com](https://vercel.com)にアクセス
+2. 「Start Deploying」をクリック
+3. GitHubアカウントでサインアップ
+
+### ステップ3: プロジェクトをインポート
+
+1. 「Import Project」をクリック
+2. GitHubリポジトリを選択
+3. 「Deploy」をクリック
+
+**これだけで完了です！**
+
+### ステップ4: カスタムドメインを設定（任意）
+
+1. プロジェクトダッシュボードで「Settings」→「Domains」
+2. ドメインを入力
+3. DNSレコードを設定
+
+## 環境変数の設定
+
+### Vercelダッシュボードで設定
+
+1. プロジェクトの「Settings」→「Environment Variables」
+2. 変数名と値を入力
+3. 「Save」をクリック
+
+```
+NEXT_PUBLIC_SUPABASE_URL=あなたのURL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=あなたのキー
+STRIPE_SECRET_KEY=sk_live_xxx
+```
+
+### 注意点
+
+- `NEXT_PUBLIC_`で始まる変数はクライアントに公開される
+- シークレットキーには`NEXT_PUBLIC_`をつけない
+- 環境変数を変更したら再デプロイが必要
+
+## 料金プラン
+
+| プラン | 料金 | 帯域 | ビルド時間 |
+|--------|------|------|-----------|
+| Hobby | 無料 | 100GB/月 | 6000分/月 |
+| Pro | $20/月 | 1TB/月 | 無制限 |
+| Enterprise | 要相談 | 無制限 | 無制限 |
+
+**個人開発なら無料プランで十分です。**
+
+月間10万PVくらいまでは余裕で対応できます。
+
+## よくあるトラブルと解決策
+
+### ビルドエラー
+
+**症状**: デプロイが失敗する
+
+**解決策**:
+1. ローカルで`npm run build`を実行してエラーを確認
+2. エラーメッセージをAIに貼り付けて解決策を聞く
+3. 修正してプッシュ
+
+### 環境変数が読み込まれない
+
+**症状**: `undefined`になる
+
+**解決策**:
+1. Vercelダッシュボードで環境変数を確認
+2. `NEXT_PUBLIC_`プレフィックスを確認
+3. 再デプロイを実行
+
+### ドメインが反映されない
+
+**症状**: DNSエラーが出る
+
+**解決策**:
+1. DNSの伝播を待つ（最大48時間）
+2. DNSレコードが正しいか確認
+3. NSレコードを確認
+
+## デプロイのベストプラクティス
+
+### 1. プレビューデプロイを活用
+
+PRを作成すると、自動的にプレビューURLが発行されます。
+
+```
+本番確認前にプレビューでテスト
+↓
+問題なければマージ
+↓
+自動的に本番デプロイ
+```
+
+### 2. 環境を分ける
+
+- `Production`: 本番環境
+- `Preview`: PRのプレビュー
+- `Development`: 開発環境
+
+環境変数も環境ごとに設定できます。
+
+### 3. 分析機能を活用
+
+Vercel Analyticsで以下が確認できます：
+
+- ページビュー
+- Core Web Vitals
+- 地域別アクセス
+
+## AIに指示する例
+
+### デプロイ準備
+
+```
+Vercelにデプロイするための準備をして。
+- 環境変数が.env.exampleに記載されているか確認
+- ビルドエラーがないか確認
+- 不要なconsole.logを削除
+```
+
+### ビルドエラー修正
+
+```
+以下のVercelビルドエラーを修正して：
+
+Error: Cannot find module '@/lib/utils'
+```
+
+## まとめ
+
+Vercelデプロイのポイント：
+
+1. **GitHubプッシュで自動デプロイ**
+2. **無料枠で十分な容量**
+3. **環境変数はダッシュボードで設定**
+4. **プレビュー機能でリリース前確認**
+
+## 次のステップ
+
+- [ログイン機能を実装する](/knowledge/build/auth)
+- [決済機能を追加する](/knowledge/build/payment)
+- [Xで集客する](/knowledge/marketing/x-thread)

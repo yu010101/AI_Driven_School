@@ -1,0 +1,255 @@
+---
+title: AIコーディングツール比較｜Cursor vs Claude Code vs GitHub Copilot
+description: AIを使ったコーディングツールを徹底比較。Cursor、Claude Code、GitHub Copilotの特徴、料金、使い分けを解説します。
+category: vibe-coding
+tags: [Cursor, Claude Code, GitHub Copilot, AI, 比較]
+createdAt: '2024-03-12'
+updatedAt: '2024-12-01'
+relatedArticles:
+  - slug: cursor-guide
+    anchor: Cursor入門
+  - slug: claude-code-guide
+    anchor: Claude Code入門
+---
+
+# AIコーディングツール比較
+
+AIコーディングツールは、**バイブコーディングの必須アイテム**です。
+
+主要な3ツールを比較して、あなたに最適なツールを見つけましょう。
+
+## 3大ツール一覧
+
+| ツール | 開発元 | 特徴 |
+|--------|--------|------|
+| Cursor | Cursor社 | VSCode派生のAIエディタ |
+| Claude Code | Anthropic | ターミナルベースのAI |
+| GitHub Copilot | GitHub/Microsoft | コード補完特化 |
+
+## 詳細比較
+
+### インターフェース
+
+| ツール | 形式 | 特徴 |
+|--------|------|------|
+| Cursor | GUI | VSCodeライクで使いやすい |
+| Claude Code | CLI | ターミナルで完結 |
+| GitHub Copilot | エディタ拡張 | 既存環境に追加 |
+
+### AI機能
+
+| 機能 | Cursor | Claude Code | Copilot |
+|------|--------|-------------|---------|
+| コード補完 | ◎ | ○ | ◎ |
+| チャット | ◎ | ◎ | ○ |
+| ファイル編集 | ◎ | ◎ | △ |
+| コマンド実行 | ○ | ◎ | ✕ |
+| コードベース理解 | ◎ | ◎ | ○ |
+
+### 料金
+
+| ツール | 無料枠 | 有料プラン |
+|--------|--------|-----------|
+| Cursor | 月2000回補完 | $20/月（Pro） |
+| Claude Code | なし | 従量課金 |
+| GitHub Copilot | 学生無料 | $10/月 |
+
+## Cursorの特徴
+
+### メリット
+
+```
+✅ VSCodeからの移行が簡単
+✅ GUIで直感的に操作
+✅ コードベース全体を理解
+✅ 編集前に確認できる
+```
+
+### デメリット
+
+```
+❌ 月額$20は少し高め
+❌ リソース消費が大きい
+```
+
+### 向いている人
+
+```
+- VSCodeに慣れている人
+- GUIで操作したい人
+- コードレビュー的に確認したい人
+```
+
+## Claude Codeの特徴
+
+### メリット
+
+```
+✅ ターミナルで完結、軽量
+✅ AIがファイルを直接編集
+✅ シェルコマンドも実行可能
+✅ 従量課金で無駄がない
+```
+
+### デメリット
+
+```
+❌ ターミナル操作が必要
+❌ 編集内容の確認がしにくい
+```
+
+### 向いている人
+
+```
+- ターミナルに慣れている人
+- AIに任せたい人
+- 従量課金が好みの人
+```
+
+## GitHub Copilotの特徴
+
+### メリット
+
+```
+✅ 既存エディタで使える
+✅ コード補完が高速
+✅ $10/月で安い
+✅ 学生は無料
+```
+
+### デメリット
+
+```
+❌ チャット機能は弱め
+❌ ファイル横断的な編集は苦手
+```
+
+### 向いている人
+
+```
+- 既存の開発環境を変えたくない人
+- コード補完メインで使いたい人
+- コストを抑えたい人
+```
+
+## 使い分けガイド
+
+### シーン別おすすめ
+
+| シーン | おすすめ |
+|--------|----------|
+| 新規プロジェクト | Cursor / Claude Code |
+| 既存プロジェクト | GitHub Copilot |
+| 大規模リファクタ | Cursor |
+| スクリプト作成 | Claude Code |
+| 日常のコーディング | GitHub Copilot |
+
+### 組み合わせ例
+
+```
+パターン1: Cursor + Copilot
+→ 大きな機能はCursor、補完はCopilot
+
+パターン2: Claude Code + Copilot
+→ タスクはClaude Code、補完はCopilot
+
+パターン3: Cursor単体
+→ Cursorですべて完結
+```
+
+## 初心者へのおすすめ
+
+### まず試すなら
+
+```
+1位: Cursor（無料枠あり、GUI）
+2位: GitHub Copilot（安い、補完が便利）
+3位: Claude Code（ターミナル慣れが必要）
+```
+
+### ステップアップ
+
+```
+Step 1: Cursorで基本を学ぶ
+Step 2: 慣れたらClaude Codeも試す
+Step 3: 使い分けを最適化
+```
+
+## 実際の使い方比較
+
+### 「ログインフォームを作って」
+
+**Cursor:**
+```
+1. Cmd + L でチャット開く
+2. 「ログインフォームを作って」と入力
+3. 生成されたコードを確認
+4. Acceptで適用
+```
+
+**Claude Code:**
+```
+1. ターミナルで claude を起動
+2. 「ログインフォームを作って」と入力
+3. AIがファイルを直接作成
+```
+
+**GitHub Copilot:**
+```
+1. // Login form と入力
+2. Tabで補完を受け入れ
+3. 部分的にコードが生成される
+```
+
+## コスト比較（月間）
+
+### ライトユーザー（週10時間）
+
+```
+Cursor Free: $0
+GitHub Copilot: $10
+Claude Code: $5〜10（推定）
+```
+
+### ヘビーユーザー（週40時間）
+
+```
+Cursor Pro: $20
+GitHub Copilot: $10
+Claude Code: $30〜50（推定）
+```
+
+## 2024年のトレンド
+
+### 注目の動き
+
+```
+- Claude 3.5 Sonnetの登場で精度向上
+- Cursorがシェア拡大中
+- GitHub Copilot Xの強化
+- 新規参入ツールの増加
+```
+
+### 今後の予想
+
+```
+- マルチモーダル対応（画像→コード）
+- より自律的なAIエージェント化
+- 価格競争の激化
+```
+
+## まとめ
+
+| 重視するポイント | おすすめ |
+|-----------------|----------|
+| 使いやすさ | Cursor |
+| コスト | GitHub Copilot |
+| 自由度 | Claude Code |
+| 補完速度 | GitHub Copilot |
+| AI対話 | Cursor / Claude Code |
+
+## 次のステップ
+
+- [Cursor入門](/knowledge/vibe-coding/cursor-guide)
+- [Claude Code入門](/knowledge/vibe-coding/claude-code-guide)
+- [バイブコーディングとは](/knowledge/vibe-coding/what-is-vibe-coding)

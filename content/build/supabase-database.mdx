@@ -1,0 +1,269 @@
+---
+title: Supabaseデータベース設計｜個人開発で使えるDB入門
+description: Supabaseは無料で使えるFirebase代替サービスです。PostgreSQLベースで、テーブル設計からリレーション、RLS（Row Level Security）まで、個人開発で必要な知識を解説します。
+category: build
+tags: [Supabase, データベース, PostgreSQL, 個人開発, バックエンド]
+createdAt: '2024-03-08'
+updatedAt: '2024-12-01'
+relatedArticles:
+  - slug: auth
+    anchor: ログイン機能
+  - slug: payment
+    anchor: 決済機能
+---
+
+# Supabaseデータベース設計
+
+Supabaseは、**Firebase代替として人気のバックエンドサービス**です。
+
+PostgreSQLベースで、非エンジニアでもAIと一緒にデータベースを設計できます。
+
+## Supabaseとは？
+
+| 特徴 | 説明 |
+|------|------|
+| PostgreSQL | 業界標準のリレーショナルDB |
+| リアルタイム | データ変更をリアルタイム同期 |
+| 認証 | 組み込みのAuth機能 |
+| ストレージ | ファイルアップロード対応 |
+
+### 無料枠でできること
+
+- データベース: 500MB
+- ストレージ: 1GB
+- 月間アクティブユーザー: 50,000
+- Edge Functions: 500,000回/月
+
+**個人開発には十分すぎるスペックです。**
+
+## 基本的なテーブル設計
+
+### 例: ToDoアプリのテーブル
+
+```sql
+-- todosテーブル
+create table todos (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id),
+  title text not null,
+  completed boolean default false,
+  created_at timestamptz default now()
+);
+```
+
+### 例: ブログアプリのテーブル
+
+```sql
+-- postsテーブル
+create table posts (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id),
+  title text not null,
+  content text,
+  published boolean default false,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- commentsテーブル
+create table comments (
+  id uuid primary key default gen_random_uuid(),
+  post_id uuid references posts(id) on delete cascade,
+  user_id uuid references auth.users(id),
+  content text not null,
+  created_at timestamptz default now()
+);
+```
+
+## RLS（Row Level Security）入門
+
+RLSは、**ユーザーが自分のデータだけにアクセスできるように制限する**機能です。
+
+### なぜRLSが必要か？
+
+RLSがないと：
+- Aさんが作ったToDoをBさんが見れてしまう
+- 他人のデータを削除できてしまう
+
+### RLSの設定方法
+
+```sql
+-- RLSを有効化
+alter table todos enable row level security;
+
+-- ポリシーを作成（自分のデータだけ読める）
+create policy "Users can view own todos"
+on todos for select
+using (auth.uid() = user_id);
+
+-- ポリシーを作成（自分のデータだけ作成できる）
+create policy "Users can create own todos"
+on todos for insert
+with check (auth.uid() = user_id);
+
+-- ポリシーを作成（自分のデータだけ更新できる）
+create policy "Users can update own todos"
+on todos for update
+using (auth.uid() = user_id);
+
+-- ポリシーを作成（自分のデータだけ削除できる）
+create policy "Users can delete own todos"
+on todos for delete
+using (auth.uid() = user_id);
+```
+
+## Next.jsからの接続
+
+### Supabaseクライアントの設定
+
+```typescript
+// lib/supabase.ts
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+```
+
+### データの取得
+
+```typescript
+// ToDoリストを取得
+const { data: todos, error } = await supabase
+  .from('todos')
+  .select('*')
+  .order('created_at', { ascending: false })
+```
+
+### データの作成
+
+```typescript
+// ToDoを追加
+const { data, error } = await supabase
+  .from('todos')
+  .insert({
+    title: '買い物に行く',
+    user_id: user.id
+  })
+```
+
+### データの更新
+
+```typescript
+// ToDoを完了にする
+const { error } = await supabase
+  .from('todos')
+  .update({ completed: true })
+  .eq('id', todoId)
+```
+
+### データの削除
+
+```typescript
+// ToDoを削除
+const { error } = await supabase
+  .from('todos')
+  .delete()
+  .eq('id', todoId)
+```
+
+## リアルタイム機能
+
+Supabaseの強力な機能の一つが、リアルタイム同期です。
+
+```typescript
+// リアルタイムでToDoの変更を監視
+const subscription = supabase
+  .channel('todos')
+  .on('postgres_changes',
+    { event: '*', schema: 'public', table: 'todos' },
+    (payload) => {
+      console.log('変更がありました:', payload)
+    }
+  )
+  .subscribe()
+```
+
+## よくある設計パターン
+
+### パターン1: ユーザープロフィール
+
+```sql
+create table profiles (
+  id uuid primary key references auth.users(id),
+  username text unique,
+  avatar_url text,
+  bio text,
+  created_at timestamptz default now()
+);
+```
+
+### パターン2: 多対多リレーション
+
+```sql
+-- タグ機能の例
+create table tags (
+  id uuid primary key default gen_random_uuid(),
+  name text unique not null
+);
+
+create table post_tags (
+  post_id uuid references posts(id) on delete cascade,
+  tag_id uuid references tags(id) on delete cascade,
+  primary key (post_id, tag_id)
+);
+```
+
+### パターン3: 課金ステータス管理
+
+```sql
+create table subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) unique,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  status text default 'inactive',
+  current_period_end timestamptz
+);
+```
+
+## AIに指示する例
+
+### テーブル設計
+
+```
+Supabaseでブログアプリのテーブルを設計して。
+
+機能:
+- 記事の投稿・編集・削除
+- カテゴリ分け
+- コメント機能
+- いいね機能
+
+RLSポリシーも含めて。
+```
+
+### データ取得
+
+```
+Supabaseから以下のデータを取得するコードを書いて：
+- 自分が投稿した記事一覧
+- 各記事のコメント数
+- いいね数も含めて
+```
+
+## まとめ
+
+Supabaseデータベースのポイント：
+
+1. **PostgreSQLベース**で安心
+2. **RLSでセキュリティ確保**
+3. **リアルタイム機能**で同期も簡単
+4. **無料枠で十分**な容量
+
+## 次のステップ
+
+- [ログイン機能を実装する](/knowledge/build/auth)
+- [決済機能を追加する](/knowledge/build/payment)
+- [Vercelにデプロイする](/knowledge/build/vercel-deploy)

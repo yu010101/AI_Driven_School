@@ -1,0 +1,315 @@
+---
+title: Stripe決済機能の実装方法｜Next.js + Supabaseで作るSaaS
+description: Stripeを使った決済機能の実装方法を解説。Next.js + Supabaseで本格的なSaaSの課金システムを作る手順を、初心者にも分かりやすく説明します。
+category: build
+tags: [決済, Stripe, 実装, SaaS, Next.js, Supabase]
+createdAt: '2024-02-01'
+updatedAt: '2024-12-01'
+---
+
+# Stripe決済機能の実装方法
+
+この記事では、**Stripeを使った決済機能の実装方法**を解説します。
+
+Next.js + Supabaseの構成で、サブスクリプション（月額課金）やワンタイム決済（単発購入）を実装できます。
+
+## 想定読者
+
+- 非エンジニア・個人開発者
+- SaaSアプリに課金機能を追加したい人
+- Stripeを初めて使う人
+
+## 全体像
+
+Stripe決済の基本的な流れは以下の通りです：
+
+1. **ユーザーが購入ボタンをクリック**
+2. **Stripeの決済ページにリダイレクト**
+3. **決済完了後、成功ページにリダイレクト**
+4. **Webhookで決済結果を受け取り、DBを更新**
+
+```
+[ユーザー] → [購入ボタン] → [Stripe Checkout] → [成功ページ]
+                                    ↓
+                              [Webhook]
+                                    ↓
+                            [DB更新（Supabase）]
+```
+
+## ステップ1: Stripeアカウントの作成
+
+### 1-1. アカウント登録
+
+1. [Stripe公式サイト](https://stripe.com/jp)にアクセス
+2. 「今すぐ始める」をクリック
+3. メールアドレス、パスワードを入力
+
+### 1-2. テストモードの確認
+
+ダッシュボードの右上に「テストモード」と表示されていることを確認します。本番環境に切り替えるまでは、テストモードで開発を進めます。
+
+### 1-3. APIキーの取得
+
+1. ダッシュボードの「開発者」→「APIキー」を開く
+2. 以下のキーをコピー：
+   - **公開可能キー**: `pk_test_...`
+   - **シークレットキー**: `sk_test_...`
+
+## ステップ2: 商品と価格の作成
+
+### 2-1. Stripeダッシュボードで商品を作成
+
+1. 「商品」→「商品を追加」をクリック
+2. 商品名、説明、画像を入力
+3. 価格を設定（例：月額1,000円）
+
+### 2-2. 価格IDをメモ
+
+作成した価格の「API ID」をコピーします。`price_1A2B3C...`のような形式です。
+
+## ステップ3: Next.jsプロジェクトの設定
+
+### 3-1. 必要なパッケージをインストール
+
+```bash
+npm install stripe @stripe/stripe-js
+```
+
+### 3-2. 環境変数を設定
+
+`.env.local`ファイルに以下を追加：
+
+```
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+
+### 3-3. Stripeクライアントを作成
+
+```typescript
+// lib/stripe.ts
+import Stripe from 'stripe'
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2023-10-16',
+})
+```
+
+## ステップ4: Checkout Sessionの作成
+
+### 4-1. APIルートを作成
+
+```typescript
+// app/api/checkout/route.ts
+import { NextResponse } from 'next/server'
+import { stripe } from '@/lib/stripe'
+
+export async function POST(request: Request) {
+  try {
+    const { priceId, userId } = await request.json()
+
+    const session = await stripe.checkout.sessions.create({
+      mode: 'subscription', // または 'payment'（単発購入）
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/pricing`,
+      metadata: {
+        userId,
+      },
+    })
+
+    return NextResponse.json({ url: session.url })
+  } catch (error) {
+    console.error('Error:', error)
+    return NextResponse.json(
+      { error: 'チェックアウトセッションの作成に失敗しました' },
+      { status: 500 }
+    )
+  }
+}
+```
+
+### 4-2. 購入ボタンコンポーネントを作成
+
+```typescript
+// components/CheckoutButton.tsx
+'use client'
+
+import { useState } from 'react'
+
+export function CheckoutButton({ priceId, userId }: { priceId: string; userId: string }) {
+  const [loading, setLoading] = useState(false)
+
+  const handleCheckout = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, userId }),
+      })
+      const data = await response.json()
+
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleCheckout}
+      disabled={loading}
+      className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 disabled:opacity-50"
+    >
+      {loading ? '処理中...' : '購入する'}
+    </button>
+  )
+}
+```
+
+## ステップ5: Webhookの実装
+
+### 5-1. Webhookエンドポイントを作成
+
+```typescript
+// app/api/webhook/stripe/route.ts
+import { NextResponse } from 'next/server'
+import { stripe } from '@/lib/stripe'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+export async function POST(request: Request) {
+  const body = await request.text()
+  const signature = request.headers.get('stripe-signature')!
+
+  let event
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    )
+  } catch (error) {
+    return NextResponse.json({ error: 'Webhook署名の検証に失敗' }, { status: 400 })
+  }
+
+  switch (event.type) {
+    case 'checkout.session.completed':
+      const session = event.data.object
+      // ユーザーのサブスクリプション状態を更新
+      await supabase
+        .from('users')
+        .update({
+          subscription_status: 'active',
+          stripe_customer_id: session.customer,
+        })
+        .eq('id', session.metadata?.userId)
+      break
+
+    case 'customer.subscription.deleted':
+      // サブスクリプションがキャンセルされた場合
+      const subscription = event.data.object
+      await supabase
+        .from('users')
+        .update({ subscription_status: 'canceled' })
+        .eq('stripe_customer_id', subscription.customer)
+      break
+  }
+
+  return NextResponse.json({ received: true })
+}
+```
+
+### 5-2. Stripe CLIでローカルテスト
+
+```bash
+# Stripe CLIをインストール
+brew install stripe/stripe-cli/stripe
+
+# ログイン
+stripe login
+
+# Webhookをフォワード
+stripe listen --forward-to localhost:3000/api/webhook/stripe
+```
+
+## テスト方法
+
+### テスト用カード番号
+
+| カード番号 | 結果 |
+|-----------|------|
+| 4242 4242 4242 4242 | 成功 |
+| 4000 0000 0000 0002 | 拒否 |
+| 4000 0000 0000 3220 | 3Dセキュア |
+
+有効期限は未来の日付、CVCは任意の3桁を入力します。
+
+## よくあるエラーと対処法
+
+### エラー1: Webhookの署名検証エラー
+
+**原因**: `STRIPE_WEBHOOK_SECRET`が正しく設定されていない
+
+**対処法**: Stripe CLIの出力に表示される`whsec_...`をコピーして環境変数に設定
+
+### エラー2: APIキーのエラー
+
+**原因**: テストキーと本番キーを混同している
+
+**対処法**: ダッシュボードでテストモードになっているか確認
+
+### エラー3: CORSエラー
+
+**原因**: フロントエンドから直接Stripe APIを呼んでいる
+
+**対処法**: 必ずサーバーサイド（API Routes）経由で呼び出す
+
+## 本番環境へのデプロイ
+
+1. Stripeダッシュボードで本番モードに切り替え
+2. 本番用APIキーを取得
+3. Vercelの環境変数を更新
+4. Webhookエンドポイントを登録（Stripe Dashboard → Webhooks）
+
+## 代替サービス
+
+| サービス | 特徴 | 手数料 |
+|----------|------|--------|
+| Stripe | 最も一般的、API充実 | 3.6% |
+| PayPal | 国際決済に強い | 3.6% + 40円 |
+| Square | 実店舗対応 | 3.25% |
+| PAY.JP | 日本企業、サポート充実 | 3.0% |
+
+## まとめ
+
+Stripe決済の実装ポイント：
+
+1. **テストモードで開発** - 本番に影響なく試せる
+2. **Webhookで確実に処理** - 決済結果を確実に受け取る
+3. **エラーハンドリング** - 決済失敗時の処理を忘れずに
+4. **セキュリティ** - APIキーは絶対に公開しない
+
+## 次のステップ
+
+- [ログイン機能を実装する](/knowledge/build/auth)
+- [バイブコーディングの基礎を学ぶ](/knowledge/vibe-coding/what-is-vibe-coding)
+- [0円で集客する方法](/knowledge/marketing/x-thread)

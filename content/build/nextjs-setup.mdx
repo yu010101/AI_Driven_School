@@ -1,0 +1,311 @@
+---
+title: Next.js初期設定ガイド｜AIと一緒に開発を始める
+description: Next.jsはReactベースのフレームワークで、個人開発に最適です。プロジェクト作成から初期設定、フォルダ構成まで、AIと一緒に開発を始める方法を解説します。
+category: build
+tags: [Next.js, React, TypeScript, 初期設定, 個人開発]
+createdAt: '2024-03-03'
+updatedAt: '2024-12-01'
+relatedArticles:
+  - slug: what-is-vibe-coding
+    anchor: バイブコーディングとは
+  - slug: vercel-deploy
+    anchor: Vercelデプロイ
+---
+
+# Next.js初期設定ガイド
+
+Next.jsは、**個人開発に最適なReactフレームワーク**です。
+
+AIと一緒に開発するバイブコーディングとの相性も抜群。この記事で始め方をマスターしましょう。
+
+## なぜNext.jsを選ぶのか？
+
+| 特徴 | メリット |
+|------|----------|
+| React製 | 情報が豊富 |
+| 高速 | 自動最適化 |
+| SEO対応 | SSR/SSG対応 |
+| TypeScript | 型安全で安心 |
+| Vercel連携 | ワンクリックデプロイ |
+
+### 他フレームワークとの比較
+
+| 項目 | Next.js | Nuxt.js | Remix |
+|------|---------|---------|-------|
+| ベース | React | Vue | React |
+| 学習コスト | 中 | 中 | 高 |
+| 情報量 | ◎ | ○ | △ |
+| AIとの相性 | ◎ | ○ | ○ |
+
+## プロジェクトの作成
+
+### 基本コマンド
+
+```bash
+npx create-next-app@latest my-app
+```
+
+### 推奨設定
+
+対話形式で質問されます。以下の設定がおすすめ：
+
+```
+✔ Would you like to use TypeScript? → Yes
+✔ Would you like to use ESLint? → Yes
+✔ Would you like to use Tailwind CSS? → Yes
+✔ Would you like to use `src/` directory? → Yes
+✔ Would you like to use App Router? → Yes
+✔ Would you like to customize the default import alias? → Yes (@/*)
+```
+
+### プロジェクトの起動
+
+```bash
+cd my-app
+npm run dev
+```
+
+ブラウザで`http://localhost:3000`を開くと、アプリが表示されます。
+
+## フォルダ構成
+
+### 基本構成
+
+```
+my-app/
+├── src/
+│   ├── app/           # ページ（App Router）
+│   │   ├── layout.tsx # 共通レイアウト
+│   │   ├── page.tsx   # トップページ
+│   │   └── globals.css
+│   ├── components/    # UIコンポーネント
+│   └── lib/           # ユーティリティ
+├── public/            # 静的ファイル
+├── package.json
+└── tailwind.config.js
+```
+
+### 推奨の拡張構成
+
+```
+src/
+├── app/
+│   ├── (auth)/        # 認証が必要なページ
+│   │   ├── dashboard/
+│   │   └── settings/
+│   ├── (marketing)/   # 公開ページ
+│   │   ├── about/
+│   │   └── pricing/
+│   ├── api/           # APIルート
+│   │   └── webhooks/
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── ui/            # 基本UIパーツ
+│   ├── layout/        # レイアウト部品
+│   └── features/      # 機能別コンポーネント
+├── lib/
+│   ├── supabase.ts    # DB接続
+│   └── utils.ts       # ユーティリティ
+└── types/
+    └── index.ts       # 型定義
+```
+
+## 必須の初期設定
+
+### 1. 環境変数の設定
+
+`.env.local`ファイルを作成：
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+### 2. Tailwind CSSの設定
+
+`tailwind.config.ts`を調整：
+
+```typescript
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      // カスタムカラーなど
+    },
+  },
+  plugins: [],
+}
+export default config
+```
+
+### 3. 共通レイアウトの設定
+
+`src/app/layout.tsx`:
+
+```tsx
+import './globals.css'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'My App',
+  description: 'AIで作ったアプリ',
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="ja">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+## よく使うライブラリ
+
+### 必須級
+
+| ライブラリ | 用途 | インストール |
+|-----------|------|-------------|
+| @supabase/supabase-js | DB/認証 | `npm i @supabase/supabase-js` |
+| lucide-react | アイコン | `npm i lucide-react` |
+
+### あると便利
+
+| ライブラリ | 用途 | インストール |
+|-----------|------|-------------|
+| date-fns | 日付操作 | `npm i date-fns` |
+| react-hook-form | フォーム | `npm i react-hook-form` |
+| zod | バリデーション | `npm i zod` |
+
+### UIライブラリ
+
+| ライブラリ | 特徴 |
+|-----------|------|
+| shadcn/ui | カスタマイズ性◎ |
+| Radix UI | アクセシビリティ◎ |
+| Headless UI | Tailwind公式 |
+
+## App Routerの基本
+
+### ページの作成
+
+`src/app/about/page.tsx`を作成すると、`/about`でアクセスできます。
+
+```tsx
+export default function AboutPage() {
+  return (
+    <div>
+      <h1>About</h1>
+      <p>このアプリについて</p>
+    </div>
+  )
+}
+```
+
+### 動的ルート
+
+`src/app/posts/[id]/page.tsx`:
+
+```tsx
+export default function PostPage({
+  params
+}: {
+  params: { id: string }
+}) {
+  return <h1>Post ID: {params.id}</h1>
+}
+```
+
+### APIルート
+
+`src/app/api/hello/route.ts`:
+
+```typescript
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  return NextResponse.json({ message: 'Hello!' })
+}
+```
+
+## AIに指示する例
+
+### 初期設定
+
+```
+Next.js + TypeScript + Tailwind CSSのプロジェクトを作成して。
+以下の設定もお願い：
+- 日本語フォント（Noto Sans JP）
+- ダークモード対応
+- 共通ナビゲーション
+```
+
+### 新しいページ
+
+```
+/pricingページを作成して。
+- 3つのプラン（Free、Pro、Enterprise）
+- 機能比較表
+- CTAボタン
+```
+
+### コンポーネント作成
+
+```
+以下のコンポーネントを作成して：
+- Button（バリアント: primary, secondary, ghost）
+- Card（タイトル、説明、画像）
+- Input（ラベル、エラーメッセージ対応）
+```
+
+## よくあるエラーと対処法
+
+### 'use client'が必要
+
+**エラー**: Event handlers cannot be passed to Client Component props
+
+**解決**: ファイル先頭に`'use client'`を追加
+
+```tsx
+'use client'
+
+export default function Button({ onClick }) {
+  // ...
+}
+```
+
+### モジュールが見つからない
+
+**エラー**: Cannot find module '@/components/Button'
+
+**解決**: パスが正しいか確認。`src/`ディレクトリを使っている場合は`@/`が`src/`を指す
+
+### Hydrationエラー
+
+**エラー**: Hydration failed because the initial UI does not match
+
+**解決**: サーバーとクライアントで異なるHTMLを出力していないか確認。`Date.now()`などが原因のことが多い
+
+## まとめ
+
+Next.js初期設定のポイント：
+
+1. **TypeScript + Tailwind**を選択
+2. **App Router**を使う
+3. **フォルダ構成**を整理
+4. **必須ライブラリ**を入れる
+
+## 次のステップ
+
+- [バイブコーディングを学ぶ](/knowledge/vibe-coding/what-is-vibe-coding)
+- [ログイン機能を実装する](/knowledge/build/auth)
+- [Vercelにデプロイする](/knowledge/build/vercel-deploy)

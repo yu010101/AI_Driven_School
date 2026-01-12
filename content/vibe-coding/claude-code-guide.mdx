@@ -1,0 +1,230 @@
+---
+title: Claude Code入門｜ターミナルでAI開発を始める方法
+description: Claude CodeはAnthropicが提供するターミナルベースのAI開発ツールです。インストールから基本的な使い方、実践的なコマンドまで解説します。
+category: vibe-coding
+tags: [Claude Code, AI, ターミナル, CLI, Anthropic]
+createdAt: '2024-03-05'
+updatedAt: '2024-12-01'
+relatedArticles:
+  - slug: cursor-guide
+    anchor: Cursor入門
+  - slug: what-is-vibe-coding
+    anchor: バイブコーディングとは
+---
+
+# Claude Code入門｜ターミナルでAI開発
+
+Claude Codeは、**ターミナルから直接AIと対話して開発できる**ツールです。
+
+Anthropicが提供しており、Claude 3.5 Sonnetの力をコマンドラインで活用できます。
+
+## Claude Codeとは？
+
+| 特徴 | 説明 |
+|------|------|
+| ターミナルベース | GUIなしで動作、軽量 |
+| ファイル操作 | AIが直接ファイルを読み書き |
+| コマンド実行 | AIがシェルコマンドを実行 |
+| 会話履歴 | コンテキストを保持して対話 |
+
+### Cursorとの違い
+
+| 項目 | Claude Code | Cursor |
+|------|-------------|--------|
+| インターフェース | ターミナル | GUI |
+| 操作スタイル | コマンド入力 | マウス+キーボード |
+| ファイル編集 | AIが直接編集 | 提案→承認 |
+| 向いている人 | ターミナル慣れした人 | GUI派の人 |
+
+## インストール方法
+
+### 前提条件
+
+- Node.js 18以上
+- npm または yarn
+
+### インストールコマンド
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+### APIキーの設定
+
+1. [Anthropic Console](https://console.anthropic.com/)でAPIキーを取得
+2. 環境変数に設定
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+
+`.zshrc`や`.bashrc`に追加しておくと便利です。
+
+## 基本的な使い方
+
+### 1. Claude Codeを起動
+
+```bash
+claude
+```
+
+プロジェクトディレクトリで実行すると、そのプロジェクトのコンテキストで会話できます。
+
+### 2. 対話モードで指示
+
+```
+> ToDoアプリを作って
+```
+
+AIが必要なファイルを作成し、コードを書いてくれます。
+
+### 3. 終了
+
+```
+> /exit
+```
+
+または `Ctrl + C` で終了。
+
+## 便利なコマンド
+
+### スラッシュコマンド
+
+| コマンド | 説明 |
+|----------|------|
+| `/help` | ヘルプを表示 |
+| `/clear` | 会話履歴をクリア |
+| `/exit` | 終了 |
+| `/cost` | 使用トークン数と料金を表示 |
+
+### よく使うプロンプト
+
+**ファイル作成：**
+```
+> src/components/Button.tsxを作成して
+```
+
+**コード修正：**
+```
+> src/app/page.tsxのエラーを修正して
+```
+
+**説明を求める：**
+```
+> このプロジェクトの構成を説明して
+```
+
+**テスト実行：**
+```
+> npm testを実行して、失敗したテストを修正して
+```
+
+## 実践的な使い方
+
+### 1. 新規プロジェクト作成
+
+```bash
+mkdir my-app
+cd my-app
+claude
+```
+
+```
+> Next.js + TypeScript + Tailwind CSSのプロジェクトを作成して
+```
+
+### 2. 機能追加
+
+```
+> ユーザー認証機能を追加して。Supabase Authを使って。
+```
+
+### 3. デバッグ
+
+```
+> npm run devを実行して、エラーがあれば修正して
+```
+
+### 4. リファクタリング
+
+```
+> src/components/以下のコンポーネントを整理して、共通化できる部分を抽出して
+```
+
+## 料金について
+
+Claude Codeは**従量課金**です。
+
+| モデル | 入力 | 出力 |
+|--------|------|------|
+| Claude 3.5 Sonnet | $3/100万トークン | $15/100万トークン |
+
+**目安：**
+- 1時間の開発セッション: $0.5〜2程度
+- 1つの機能実装: $0.1〜0.5程度
+
+`/cost`コマンドで現在の使用量を確認できます。
+
+## トラブルシューティング
+
+### APIキーエラー
+
+```
+Error: Invalid API key
+```
+
+**対処法：**
+1. APIキーが正しいか確認
+2. 環境変数が設定されているか確認
+3. `echo $ANTHROPIC_API_KEY`で確認
+
+### レート制限エラー
+
+```
+Error: Rate limit exceeded
+```
+
+**対処法：**
+1. 少し待ってから再試行
+2. Anthropic Consoleでレート制限を確認
+
+### ファイル権限エラー
+
+```
+Error: Permission denied
+```
+
+**対処法：**
+1. ファイルの権限を確認
+2. `chmod`で権限を変更
+
+## Claude Code vs Cursor どちらを選ぶ？
+
+### Claude Codeがおすすめな人
+
+- ターミナル操作に慣れている
+- 軽量なツールが好み
+- AIに直接ファイルを編集してほしい
+- 従量課金で使いたい
+
+### Cursorがおすすめな人
+
+- GUIで操作したい
+- VSCodeに慣れている
+- 編集内容を確認してから適用したい
+- 定額制がいい
+
+## まとめ
+
+Claude Codeのポイント：
+
+1. **ターミナルベース**で軽量
+2. **AIが直接ファイル編集**
+3. **従量課金**（使った分だけ）
+4. ターミナル派におすすめ
+
+## 次のステップ
+
+- [Cursor入門](/knowledge/vibe-coding/cursor-guide)
+- [バイブコーディングとは](/knowledge/vibe-coding/what-is-vibe-coding)
+- [Vercelデプロイガイド](/knowledge/build/vercel-deploy)

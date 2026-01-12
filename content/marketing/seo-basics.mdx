@@ -1,0 +1,290 @@
+---
+title: 個人開発SEO入門｜0円で検索流入を増やす方法
+description: 個人開発したサービスへの検索流入を増やすSEO入門。技術的なSEO対策から、コンテンツ作成、キーワード選定まで、0円でできる施策を解説します。
+category: marketing
+tags: [SEO, 検索, 集客, 個人開発, 0円]
+createdAt: '2024-02-10'
+updatedAt: '2024-12-01'
+relatedArticles:
+  - slug: programmatic-seo
+    anchor: プログラマティックSEO
+  - slug: x-thread
+    anchor: Xで集客
+---
+
+# 個人開発SEO入門
+
+SEOは、**0円で継続的な集客ができる**最強のマーケティング手法です。
+
+個人開発者が実践できるSEO対策を、基本から解説します。
+
+## SEOの基本
+
+### SEOとは
+
+SEO = Search Engine Optimization（検索エンジン最適化）
+
+```
+目標: Googleで検索したときに上位表示される
+結果: 継続的にユーザーが流入する
+コスト: 0円（時間と労力のみ）
+```
+
+### SEOのメリット
+
+| メリット | 説明 |
+|----------|------|
+| 0円 | 広告費がかからない |
+| 継続的 | 一度上位になれば流入が続く |
+| 質の高い流入 | 検索している=興味がある |
+| 信頼性 | 広告より信頼されやすい |
+
+## 技術的SEO
+
+### 1. メタタグの設定
+
+```tsx
+// app/layout.tsx
+export const metadata: Metadata = {
+  title: 'サービス名 | キャッチコピー',
+  description: '120文字以内でサービスを説明。キーワードを自然に含める。',
+  keywords: ['キーワード1', 'キーワード2'],
+  openGraph: {
+    title: 'サービス名',
+    description: '説明文',
+    images: ['/og-image.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+}
+```
+
+### 2. 構造化データ（JSON-LD）
+
+```tsx
+// 記事ページの例
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: '記事タイトル',
+  author: {
+    '@type': 'Organization',
+    name: 'サービス名',
+  },
+  datePublished: '2024-01-01',
+  dateModified: '2024-12-01',
+}
+
+// headに追加
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+/>
+```
+
+### 3. サイトマップ
+
+```typescript
+// app/sitemap.ts
+export default function sitemap() {
+  return [
+    {
+      url: 'https://example.com',
+      lastModified: new Date(),
+      priority: 1,
+    },
+    {
+      url: 'https://example.com/about',
+      lastModified: new Date(),
+      priority: 0.8,
+    },
+    // 全ページを列挙
+  ]
+}
+```
+
+### 4. robots.txt
+
+```
+# public/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://example.com/sitemap.xml
+```
+
+### 5. ページ速度
+
+```
+重要な指標:
+- LCP（Largest Contentful Paint）: 2.5秒以下
+- FID（First Input Delay）: 100ms以下
+- CLS（Cumulative Layout Shift）: 0.1以下
+
+改善方法:
+- 画像を最適化（next/imageを使う）
+- 不要なJavaScriptを削除
+- フォントの読み込みを最適化
+```
+
+## コンテンツSEO
+
+### キーワード選定
+
+```
+ステップ1: ターゲットを決める
+→ 「個人開発者」「非エンジニア」など
+
+ステップ2: 検索されるキーワードを調査
+→ ラッコキーワード、Ubersuggestで調査
+
+ステップ3: 競合を確認
+→ 上位10サイトを分析
+
+ステップ4: 狙うキーワードを決める
+→ 競合が弱く、ニーズがあるものを選ぶ
+```
+
+### 記事構成
+
+```
+タイトル: 検索キーワードを含める（32文字以内）
+導入: 読者の課題を提示
+本文: 見出しを階層化（H2→H3→H4）
+まとめ: ポイントを箇条書き
+CTA: 次のアクションを示す
+```
+
+### 記事の長さ
+
+```
+目安: 2000〜5000文字
+
+短すぎ: 検索エンジンに評価されにくい
+長すぎ: 読まれない、離脱する
+
+ポイント: 長さより「網羅性」と「独自性」
+```
+
+## 内部リンク戦略
+
+### ピラーページとクラスター
+
+```
+ピラーページ: 大きなテーマの総合ページ
+例: 「バイブコーディング入門」
+
+クラスターページ: 個別トピックの詳細ページ
+例: 「Cursor入門」「Claude Code入門」「失敗パターン」
+
+ピラー ←→ クラスター を相互リンク
+```
+
+### 関連記事リンク
+
+```
+各記事の末尾に関連記事を3〜5つ表示
+→ 回遊率アップ
+→ 滞在時間延長
+→ SEO評価向上
+```
+
+## よくある失敗
+
+### 失敗1: キーワードの詰め込み
+
+**問題**: 不自然にキーワードを繰り返す
+
+**対策**: 自然な文章で、関連語も使う
+
+### 失敗2: コンテンツが薄い
+
+**問題**: 100文字程度の記事を量産
+
+**対策**: 1記事2000文字以上、価値ある情報を提供
+
+### 失敗3: 更新しない
+
+**問題**: 公開後、放置
+
+**対策**:
+- 定期的に情報を更新
+- `updatedAt`を更新
+- 新しい情報を追加
+
+## 無料SEOツール
+
+| ツール | 用途 |
+|--------|------|
+| Google Search Console | インデックス状況、検索クエリ確認 |
+| Google Analytics | アクセス解析 |
+| ラッコキーワード | 関連キーワード調査 |
+| Ubersuggest | キーワード調査（一部無料） |
+| PageSpeed Insights | ページ速度チェック |
+| Lighthouse | 総合的なサイト診断 |
+
+## SEO施策の優先順位
+
+### すぐやること（1日）
+
+```
+1. title、descriptionを全ページに設定
+2. OG画像を設定
+3. サイトマップを生成
+4. Search Consoleに登録
+```
+
+### 1週間以内
+
+```
+5. 構造化データを追加
+6. ページ速度を改善
+7. コンテンツを2000文字以上に
+```
+
+### 継続
+
+```
+8. 記事を定期的に追加
+9. 内部リンクを充実
+10. 古い記事を更新
+```
+
+## 成果の測り方
+
+### 追跡する指標
+
+```
+検索順位: 狙ったキーワードで何位か
+クリック率: 表示されたうち何%がクリックしたか
+オーガニック流入: 検索からの訪問者数
+滞在時間: ユーザーがどれだけ読んだか
+```
+
+### 時間軸
+
+```
+SEOは時間がかかる:
+- 1ヶ月: まだ変化なし
+- 3ヶ月: 少し順位が上がり始める
+- 6ヶ月: 安定した流入が出始める
+- 1年: 大きな成果が見える
+
+焦らず継続することが大切。
+```
+
+## まとめ
+
+個人開発SEOのポイント：
+
+1. **技術的SEO**を整える
+2. **キーワード**を選定して記事を書く
+3. **内部リンク**を充実させる
+4. **継続して**更新する
+
+## 次のステップ
+
+- [プログラマティックSEOを学ぶ](/knowledge/marketing/programmatic-seo)
+- [Xで集客する](/knowledge/marketing/x-thread)
+- [ランディングページを作る](/knowledge/marketing/landing-page)

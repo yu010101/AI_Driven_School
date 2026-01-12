@@ -1,0 +1,352 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --background-secondary: #f5f5f5;
+  --foreground: #111111;
+  --foreground-muted: #666666;
+  --primary: #111111;
+  --primary-light: #f5f5f5;
+  --border: #e5e5e5;
+  --surface: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  /* カード */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  }
+
+  .card-strong {
+    background: var(--primary-light);
+    border: 1px solid var(--primary);
+    border-radius: 12px;
+  }
+
+  /* ページ見出し */
+  .page-title {
+    @apply text-2xl md:text-3xl font-bold mb-4;
+    color: var(--foreground);
+  }
+
+  .page-title-accent {
+    @apply text-2xl md:text-3xl font-bold mb-4;
+    color: var(--foreground);
+  }
+
+  /* セクション見出し */
+  .section-heading-center {
+    @apply text-xl md:text-2xl font-bold mb-2;
+    color: var(--foreground);
+  }
+
+  /* サブ見出し */
+  .sub-heading {
+    @apply text-lg font-bold mb-3;
+    color: var(--foreground);
+  }
+
+  /* ステップバッジ */
+  .step-badge {
+    @apply inline-block px-3 py-1 text-xs font-bold mb-3;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 100px;
+  }
+
+  /* ボタン */
+  .btn-primary {
+    @apply px-6 py-3 font-semibold text-sm;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 font-semibold text-sm;
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+  }
+}
+
+/* ===============================
+   記事本文 - Zenn/Qiita風
+   =============================== */
+.prose {
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+.prose > * + * {
+  margin-top: 1.5rem;
+}
+
+.prose p {
+  color: var(--foreground);
+  margin-bottom: 1.5rem;
+}
+
+/* 見出し */
+.prose h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* リンク */
+.prose a {
+  color: #111111;
+  text-decoration: underline;
+}
+
+.prose a:hover {
+  text-decoration: underline;
+}
+
+/* 強調 */
+.prose strong {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* インラインコード */
+.prose code:not(pre code) {
+  background: var(--background-secondary);
+  color: #e11d48;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+
+/* コードブロック */
+.prose pre {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1.25rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+
+/* リスト */
+.prose ul,
+.prose ol {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+  color: var(--foreground);
+}
+
+.prose li::marker {
+  color: var(--foreground-muted);
+}
+
+/* 引用 */
+.prose blockquote {
+  background: #f5f5f5;
+  border-left: 4px solid #111111;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+.prose blockquote p {
+  margin: 0;
+  color: var(--foreground);
+}
+
+.prose blockquote strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #111111;
+}
+
+/* テーブル */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose th {
+  background: var(--background-secondary);
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.prose tr:hover {
+  background: var(--background-secondary);
+}
+
+/* 水平線 */
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+
+/* 画像 */
+.prose img {
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+/* ===============================
+   その他
+   =============================== */
+
+/* セレクション */
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+/* フォーカス */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* スクロールバー */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground-muted);
+}
+
+/* アクセシビリティ */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* アニメーション削減 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

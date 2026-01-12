@@ -1,0 +1,72 @@
+import Link from 'next/link'
+import type { Metadata } from 'next'
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
+
+export const metadata: Metadata = {
+  title: '記事一覧',
+  description: 'バイブコーディング、実装パターン、0円マーケティングの記事一覧。非エンジニアでもAIでアプリを作れるようになる実践的なノウハウを公開中。',
+  openGraph: {
+    type: 'website',
+    title: '記事一覧 | AI駆動塾',
+    description: 'バイブコーディング、実装パターン、0円マーケティングの記事一覧',
+    url: `${baseUrl}/knowledge`,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '記事一覧 | AI駆動塾',
+    description: 'バイブコーディング、実装パターン、0円マーケティングの記事一覧',
+  },
+  alternates: {
+    canonical: `${baseUrl}/knowledge`,
+  },
+}
+
+export default function Knowledge() {
+  return (
+    <div className="container mx-auto px-4 py-16">
+      <div className="text-center mb-14">
+        <h1 className="page-title">記事一覧</h1>
+        <p className="text-lg text-foreground/60">カテゴリを選んでください</p>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        {/* バイブコーディング */}
+        <Link href="/knowledge/vibe-coding" className="card p-6 group cursor-pointer">
+          <div className="step-badge">STEP 1</div>
+          <h2 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors">
+            バイブコーディング
+          </h2>
+          <p className="text-foreground/60 text-sm mb-4">
+            AIに指示を出すだけでアプリが作れる開発手法
+          </p>
+          <span className="text-primary text-sm font-medium">→ 記事を見る</span>
+        </Link>
+
+        {/* 実装 */}
+        <Link href="/knowledge/build" className="card p-6 group cursor-pointer">
+          <div className="step-badge">STEP 2</div>
+          <h2 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors">
+            実装パターン
+          </h2>
+          <p className="text-foreground/60 text-sm mb-4">
+            ログイン・決済など、よくある機能の作り方
+          </p>
+          <span className="text-primary text-sm font-medium">→ 記事を見る</span>
+        </Link>
+
+        {/* マーケティング */}
+        <Link href="/knowledge/marketing" className="card p-6 group cursor-pointer">
+          <div className="step-badge">STEP 3</div>
+          <h2 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors">
+            0円マーケティング
+          </h2>
+          <p className="text-foreground/60 text-sm mb-4">
+            広告費ゼロで集客する方法
+          </p>
+          <span className="text-primary text-sm font-medium">→ 記事を見る</span>
+        </Link>
+      </div>
+    </div>
+  )
+}

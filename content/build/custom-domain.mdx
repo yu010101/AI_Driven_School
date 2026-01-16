@@ -1,0 +1,85 @@
+---
+title: カスタムドメインの設定方法
+description: Vercel、Cloudflareでカスタムドメインを設定する方法。DNS設定からSSL証明書まで解説。
+category: build
+tags: [ドメイン, DNS, SSL, Vercel, Cloudflare]
+createdAt: '2024-04-15'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: vercel-deploy
+    anchor: Vercelでデプロイする方法
+---
+
+# カスタムドメインの設定方法
+
+独自ドメインでサイトを公開しましょう。
+
+## ドメインの取得
+
+### おすすめレジストラ
+
+| サービス | 特徴 |
+|----------|------|
+| Cloudflare | 最安、無料WHOIS |
+| Google Domains | シンプル |
+| お名前.com | 日本語サポート |
+
+## Vercelでの設定
+
+### 1. ドメインを追加
+
+Settings → Domains → Add
+
+### 2. DNS設定
+
+```
+タイプ: CNAME
+名前: www（またはサブドメイン）
+値: cname.vercel-dns.com
+```
+
+ルートドメインの場合:
+```
+タイプ: A
+名前: @
+値: 76.76.21.21
+```
+
+### 3. SSL証明書
+
+自動で発行（Let's Encrypt）
+
+## Cloudflareでの設定
+
+### 1. ネームサーバー変更
+
+ドメインレジストラでCloudflareのNSに変更
+
+### 2. DNS設定
+
+```
+タイプ: CNAME
+名前: @
+ターゲット: your-project.pages.dev
+```
+
+### 3. SSL設定
+
+SSL/TLS → Full (strict)
+
+## トラブルシューティング
+
+### 「DNS設定が反映されない」
+
+- TTLを短く（300秒）
+- 最大48時間待つ
+
+### 「SSL証明書エラー」
+
+- DNS設定を確認
+- 24時間待つ
+
+## 次のステップ
+
+- [Vercelでデプロイする方法](/knowledge/build/vercel-deploy)
+- [環境変数の設定方法](/knowledge/build/environment-variables)

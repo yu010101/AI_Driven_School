@@ -1,0 +1,88 @@
+---
+title: LINE Botの作り方
+description: AIを使ってLINE Botを作る方法。Messaging APIを使った基本実装から、リッチメニュー、Flexメッセージまで。
+category: vibe-coding
+tags: [LINE, Bot, Messaging API, 日本, コミュニケーション]
+createdAt: '2024-03-29'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: discord-bot
+    anchor: Discord Botの作り方
+---
+
+# LINE Botの作り方
+
+日本で最も使われるLINEでBotを作りましょう。
+
+## できること
+
+- 自動応答
+- リッチメニュー
+- Flexメッセージ
+- 予約通知
+
+## 準備
+
+1. LINE Developers登録
+2. Messaging APIチャネル作成
+3. チャネルアクセストークン取得
+
+## 基本実装
+
+```
+プロンプト:
+LINE Botの基本構造を作って:
+- Webhookエンドポイント
+- テキストメッセージへの応答
+- オウム返し機能
+```
+
+## コード例（Next.js）
+
+```typescript
+// app/api/webhook/route.ts
+export async function POST(req: Request) {
+  const body = await req.json()
+  const events = body.events
+
+  for (const event of events) {
+    if (event.type === 'message' && event.message.type === 'text') {
+      await replyMessage(event.replyToken, event.message.text)
+    }
+  }
+
+  return Response.json({ success: true })
+}
+```
+
+## リッチメニュー
+
+```
+プロンプト:
+LINE Botにリッチメニューを追加:
+- 3分割のメニュー
+- よくある質問、お問い合わせ、予約
+- タップでアクション実行
+```
+
+## Flexメッセージ
+
+```
+プロンプト:
+商品情報をFlexメッセージで送信:
+- 画像
+- 商品名、価格
+- 購入ボタン
+```
+
+## ホスティング
+
+| 環境 | おすすめ |
+|------|---------|
+| 本番 | Vercel, Railway |
+| テスト | ngrok |
+
+## 次のステップ
+
+- [Notion連携アプリの作り方](/knowledge/vibe-coding/notion-integration)
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)

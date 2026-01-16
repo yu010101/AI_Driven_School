@@ -1,0 +1,118 @@
+---
+title: Googleログインの実装方法
+description: Googleアカウントでのログイン機能を実装する方法。OAuth 2.0の設定からコード実装まで解説。
+category: build
+tags: [Google, OAuth, ログイン, 認証, Supabase]
+createdAt: '2024-04-05'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-auth
+    anchor: Supabaseでログイン機能を実装
+---
+
+# Googleログインの実装方法
+
+「Googleでログイン」ボタンを実装しましょう。
+
+## 準備
+
+1. Google Cloud Consoleでプロジェクト作成
+2. OAuth同意画面を設定
+3. 認証情報（OAuth 2.0クライアントID）を作成
+
+## Google Cloud Console設定
+
+### 1. OAuth同意画面
+
+1. 「外部」を選択
+2. アプリ名、メール等を入力
+3. スコープ: email, profile
+
+### 2. 認証情報作成
+
+1. 「+認証情報を作成」→「OAuth クライアントID」
+2. ウェブアプリケーションを選択
+3. 承認済みリダイレクトURI:
+   - `https://your-project.supabase.co/auth/v1/callback`
+
+## Supabaseでの設定
+
+1. Authentication → Providers → Google
+2. Client IDとClient Secretを入力
+3. 保存
+
+## 実装
+
+### ログインボタン
+
+```tsx
+'use client'
+import { createClient } from '@/lib/supabase'
+
+export function GoogleLoginButton() {
+  const supabase = createClient()
+
+  const handleLogin = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    })
+  }
+
+  return (
+    <button onClick={handleLogin} className="btn">
+      <GoogleIcon />
+      Googleでログイン
+    </button>
+  )
+}
+```
+
+### コールバック処理
+
+```typescript
+// app/auth/callback/route.ts
+import { createClient } from '@/lib/supabase-server'
+import { NextResponse } from 'next/server'
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const code = searchParams.get('code')
+
+  if (code) {
+    const supabase = createClient()
+    await supabase.auth.exchangeCodeForSession(code)
+  }
+
+  return NextResponse.redirect(new URL('/dashboard', request.url))
+}
+```
+
+## ユーザー情報取得
+
+```typescript
+const { data: { user } } = await supabase.auth.getUser()
+
+// ユーザー情報
+console.log(user?.email)
+console.log(user?.user_metadata.full_name)
+console.log(user?.user_metadata.avatar_url)
+```
+
+## よくある問題
+
+### リダイレクトエラー
+
+- URIが完全一致か確認
+- httpsになっているか確認
+
+### スコープ不足
+
+- email, profileスコープを追加
+
+## 次のステップ
+
+- [マジックリンク認証の実装](/knowledge/build/magic-link)
+- [Clerk認証の使い方](/knowledge/build/clerk-auth)

@@ -1,0 +1,86 @@
+---
+title: 環境変数の設定方法
+description: Next.js、Vercel、Supabaseでの環境変数の設定方法。セキュリティを保ちながらシークレットを管理。
+category: build
+tags: [環境変数, セキュリティ, Vercel, Next.js, シークレット]
+createdAt: '2024-04-16'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: vercel-deploy
+    anchor: Vercelでデプロイする方法
+---
+
+# 環境変数の設定方法
+
+APIキーなどの機密情報を安全に管理しましょう。
+
+## 環境変数とは
+
+- コードに書けない機密情報
+- 環境ごとに異なる値
+- 例: APIキー、DB接続文字列
+
+## Next.jsでの設定
+
+### .env.local（ローカル開発）
+
+```env
+# サーバーサイドのみ
+DATABASE_URL=postgres://...
+STRIPE_SECRET_KEY=sk_test_...
+
+# クライアントでも使用（NEXT_PUBLIC_）
+NEXT_PUBLIC_SUPABASE_URL=https://...
+NEXT_PUBLIC_API_URL=http://localhost:3000
+```
+
+### 使用方法
+
+```typescript
+// サーバーサイド
+const dbUrl = process.env.DATABASE_URL
+
+// クライアント
+const apiUrl = process.env.NEXT_PUBLIC_API_URL
+```
+
+## Vercelでの設定
+
+1. Settings → Environment Variables
+2. Key/Valueを入力
+3. 環境を選択（Production/Preview/Development）
+
+## 注意点
+
+### ❌ やってはいけない
+
+```typescript
+// コードに直接書かない
+const apiKey = 'sk_live_xxx'
+
+// .env.localをGitにコミットしない
+```
+
+### ✅ 正しい方法
+
+```typescript
+// 環境変数から取得
+const apiKey = process.env.STRIPE_SECRET_KEY
+
+// .gitignoreに追加
+.env.local
+.env.*.local
+```
+
+## .gitignore設定
+
+```
+.env
+.env.local
+.env.*.local
+```
+
+## 次のステップ
+
+- [Vercelでデプロイする方法](/knowledge/build/vercel-deploy)
+- [CI/CDの基本](/knowledge/build/ci-cd-basics)

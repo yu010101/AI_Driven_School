@@ -1,0 +1,83 @@
+---
+title: Slackアプリの作り方
+description: Slack APIを使ったアプリの作り方。Bolt.jsでの実装、スラッシュコマンド、モーダルまで解説。
+category: vibe-coding
+tags: [Slack, Bot, 自動化, ビジネス, コミュニケーション]
+createdAt: '2024-03-31'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: discord-bot
+    anchor: Discord Botの作り方
+---
+
+# Slackアプリの作り方
+
+業務効率化に役立つSlackアプリを作りましょう。
+
+## できること
+
+- スラッシュコマンド
+- メッセージ送信
+- モーダルフォーム
+- ワークフロー自動化
+
+## 準備
+
+1. Slack APIでアプリ作成
+2. Bot Token取得
+3. ワークスペースにインストール
+
+## 基本実装（Bolt.js）
+
+```
+プロンプト:
+Bolt.jsでSlackアプリを作って:
+- /hello コマンドで挨拶
+- メンションで応答
+- モーダルフォーム
+```
+
+## コード例
+
+```javascript
+const { App } = require('@slack/bolt')
+
+const app = new App({
+  token: process.env.SLACK_BOT_TOKEN,
+  signingSecret: process.env.SLACK_SIGNING_SECRET
+})
+
+app.command('/hello', async ({ command, ack, say }) => {
+  await ack()
+  await say(`こんにちは、${command.user_name}さん！`)
+})
+
+app.start(3000)
+```
+
+## 活用例
+
+### 日報Bot
+
+```
+プロンプト:
+日報を収集するSlackアプリ:
+- /report でモーダル表示
+- 今日やったこと、明日やること入力
+- 投稿を特定チャンネルに転送
+```
+
+### 承認フロー
+
+```
+プロンプト:
+経費申請の承認フロー:
+- フォームで申請
+- 上長にDM
+- ボタンで承認/却下
+```
+
+## 次のステップ
+
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)
+- [AIチャットボットの作り方](/knowledge/vibe-coding/ai-chatbot)

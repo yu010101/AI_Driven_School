@@ -1,0 +1,128 @@
+---
+title: Stripeでサブスク課金を実装
+description: Stripeを使ったサブスクリプション課金の実装方法。プラン管理、課金サイクル、解約処理まで解説。
+category: build
+tags: [Stripe, サブスク, 課金, SaaS, 月額]
+createdAt: '2024-04-09'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-setup
+    anchor: Stripeで決済機能を実装
+---
+
+# Stripeでサブスク課金を実装
+
+SaaSに必須のサブスクリプション課金を実装します。
+
+## プラン設計
+
+### Stripe Dashboardで商品作成
+
+1. Products → 新規
+2. 名前: Pro Plan
+3. 価格: 月額/年額を設定
+
+### 推奨プラン構成
+
+| プラン | 月額 | 年額 |
+|--------|------|------|
+| Basic | ¥980 | ¥9,800 |
+| Pro | ¥2,980 | ¥29,800 |
+| Enterprise | カスタム | - |
+
+## 実装
+
+### チェックアウト
+
+```typescript
+const session = await stripe.checkout.sessions.create({
+  mode: 'subscription',
+  customer_email: user.email,
+  line_items: [{
+    price: priceId,
+    quantity: 1
+  }],
+  success_url: `${url}/success?session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${url}/pricing`,
+  subscription_data: {
+    trial_period_days: 14 // 無料トライアル
+  }
+})
+```
+
+### サブスク状態の管理
+
+```typescript
+// ユーザーテーブルに追加
+interface User {
+  stripe_customer_id?: string
+  subscription_status: 'active' | 'canceled' | 'past_due' | null
+  subscription_plan?: string
+  current_period_end?: Date
+}
+```
+
+### Webhook処理
+
+```typescript
+switch (event.type) {
+  case 'customer.subscription.created':
+    // 新規サブスク
+    await updateUserSubscription(customerId, 'active', plan)
+    break
+
+  case 'customer.subscription.updated':
+    // プラン変更・更新
+    break
+
+  case 'customer.subscription.deleted':
+    // 解約
+    await updateUserSubscription(customerId, 'canceled', null)
+    break
+
+  case 'invoice.payment_failed':
+    // 支払い失敗
+    await sendPaymentFailedEmail(customerId)
+    break
+}
+```
+
+## プラン変更
+
+```typescript
+// アップグレード/ダウングレード
+await stripe.subscriptions.update(subscriptionId, {
+  items: [{
+    id: subscriptionItemId,
+    price: newPriceId
+  }],
+  proration_behavior: 'always_invoice' // 日割り計算
+})
+```
+
+## 解約処理
+
+```typescript
+// 期間終了時に解約
+await stripe.subscriptions.update(subscriptionId, {
+  cancel_at_period_end: true
+})
+
+// 即時解約
+await stripe.subscriptions.cancel(subscriptionId)
+```
+
+## 顧客ポータル
+
+```typescript
+// カード変更、請求書確認、解約をStripeに任せる
+const session = await stripe.billingPortal.sessions.create({
+  customer: customerId,
+  return_url: `${url}/settings`
+})
+```
+
+## 次のステップ
+
+- [料金ページの作り方](/knowledge/build/pricing-page)
+- [無料トライアルの実装](/knowledge/build/free-trial)

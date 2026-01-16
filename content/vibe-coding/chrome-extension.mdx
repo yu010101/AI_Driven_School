@@ -1,0 +1,94 @@
+---
+title: Chrome拡張機能の作り方
+description: AIを使ってChrome拡張機能を作る方法。マニフェスト、ポップアップ、コンテンツスクリプトの実装を解説。
+category: vibe-coding
+tags: [Chrome拡張機能, ブラウザ, JavaScript, ツール開発]
+createdAt: '2024-03-27'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: nextjs-starter
+    anchor: Next.jsアプリの作り方
+---
+
+# Chrome拡張機能の作り方
+
+AIを使ってChrome拡張機能を作りましょう。
+
+## 拡張機能でできること
+
+- ページの内容を変更
+- ショートカットキー追加
+- ポップアップUI
+- バックグラウンド処理
+
+## 基本構造
+
+```
+プロンプト:
+Chrome拡張機能の基本構造を作って:
+- manifest.json (V3)
+- popup.html/js
+- アイコン（16, 48, 128px）
+
+機能: クリックでポップアップ表示
+ポップアップ内容: 現在のページURLを表示
+```
+
+## manifest.json
+
+```json
+{
+  "manifest_version": 3,
+  "name": "My Extension",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "permissions": ["activeTab"]
+}
+```
+
+## 実装例: ページ翻訳
+
+```
+プロンプト:
+選択したテキストを翻訳するChrome拡張を作って:
+- 右クリックメニューに「翻訳」を追加
+- 選択テキストを取得
+- 翻訳API（Google翻訳）を呼び出し
+- 結果をアラートで表示
+```
+
+## 実装例: スクリーンショット
+
+```
+プロンプト:
+ワンクリックでスクリーンショットを撮る拡張:
+- ポップアップにボタン
+- 現在のタブをキャプチャ
+- 画像としてダウンロード
+```
+
+## ローカルでテスト
+
+1. `chrome://extensions/` を開く
+2. 「デベロッパーモード」をON
+3. 「パッケージ化されていない拡張機能を読み込む」
+4. フォルダを選択
+
+## Chrome Web Storeへ公開
+
+1. 開発者登録（1回$5）
+2. ZIPにパッケージ
+3. アップロード
+4. 審査（数日）
+
+## 次のステップ
+
+- [Discord Botの作り方](/knowledge/vibe-coding/discord-bot)
+- [LINE Botの作り方](/knowledge/vibe-coding/line-bot)

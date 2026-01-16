@@ -1,0 +1,92 @@
+---
+title: Discord Botの作り方
+description: AIを使ってDiscord Botを作る方法。discord.jsを使った基本的なBot実装からホスティングまで解説。
+category: vibe-coding
+tags: [Discord, Bot, JavaScript, コミュニティ, 自動化]
+createdAt: '2024-03-28'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: line-bot
+    anchor: LINE Botの作り方
+---
+
+# Discord Botの作り方
+
+コミュニティ運営に役立つDiscord Botを作りましょう。
+
+## できること
+
+- メッセージ自動応答
+- コマンド実行
+- 定期投稿
+- モデレーション
+
+## 準備
+
+1. Discord Developer Portalでアプリ作成
+2. Botトークン取得
+3. サーバーにBot招待
+
+## 基本実装
+
+```
+プロンプト:
+discord.jsでシンプルなBotを作って:
+- 「!hello」で挨拶を返す
+- 「!ping」でpongを返す
+- 起動時にログ出力
+```
+
+## コード例
+
+```javascript
+const { Client, GatewayIntentBits } = require('discord.js')
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+})
+
+client.on('messageCreate', message => {
+  if (message.content === '!hello') {
+    message.reply('こんにちは！')
+  }
+})
+
+client.login(process.env.DISCORD_TOKEN)
+```
+
+## 実装例: 自己紹介Bot
+
+```
+プロンプト:
+新メンバーが入ったら自己紹介を促すBot:
+- 参加時にウェルカムメッセージ
+- 自己紹介チャンネルへ誘導
+- ロールを自動付与
+```
+
+## スラッシュコマンド
+
+```
+プロンプト:
+スラッシュコマンドを実装:
+- /help: ヘルプ表示
+- /info @user: ユーザー情報
+- /poll: 投票作成
+```
+
+## ホスティング
+
+| サービス | 無料枠 |
+|----------|--------|
+| Railway | $5/月のクレジット |
+| Render | 750時間/月 |
+| Fly.io | 無料枠あり |
+
+## 次のステップ
+
+- [LINE Botの作り方](/knowledge/vibe-coding/line-bot)
+- [Slackアプリの作り方](/knowledge/vibe-coding/slack-app)

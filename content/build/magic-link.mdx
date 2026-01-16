@@ -1,0 +1,111 @@
+---
+title: マジックリンク認証の実装
+description: パスワード不要のマジックリンク認証の実装方法。メールリンクでのログインを簡単に実装できます。
+category: build
+tags: [マジックリンク, 認証, パスワードレス, Supabase, メール]
+createdAt: '2024-04-06'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-auth
+    anchor: Supabaseでログイン機能を実装
+---
+
+# マジックリンク認証の実装
+
+パスワードなしでログインできるマジックリンク認証を実装します。
+
+## マジックリンクとは
+
+1. ユーザーがメールアドレスを入力
+2. ログインリンクがメールで届く
+3. リンクをクリックでログイン完了
+
+**メリット:**
+- パスワード管理不要
+- セキュリティが高い
+- ユーザー体験が良い
+
+## Supabaseで実装
+
+### メール送信
+
+```typescript
+const { error } = await supabase.auth.signInWithOtp({
+  email: 'user@example.com',
+  options: {
+    emailRedirectTo: `${window.location.origin}/auth/callback`
+  }
+})
+
+if (!error) {
+  // 「メールを確認してください」と表示
+}
+```
+
+### ログインフォーム
+
+```tsx
+'use client'
+import { useState } from 'react'
+
+export function MagicLinkForm() {
+  const [email, setEmail] = useState('')
+  const [sent, setSent] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const { error } = await supabase.auth.signInWithOtp({ email })
+    if (!error) setSent(true)
+  }
+
+  if (sent) {
+    return <p>メールを確認してください</p>
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="メールアドレス"
+      />
+      <button type="submit">ログインリンクを送信</button>
+    </form>
+  )
+}
+```
+
+### コールバック処理
+
+```typescript
+// app/auth/callback/route.ts
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const token_hash = searchParams.get('token_hash')
+  const type = searchParams.get('type')
+
+  if (token_hash && type) {
+    const supabase = createClient()
+    await supabase.auth.verifyOtp({ token_hash, type })
+  }
+
+  return NextResponse.redirect(new URL('/dashboard', request.url))
+}
+```
+
+## メールテンプレート
+
+Supabase Dashboard → Authentication → Email Templates
+
+```html
+<h2>ログインリンク</h2>
+<p>以下のリンクをクリックしてログインしてください：</p>
+<a href="{{ .ConfirmationURL }}">ログインする</a>
+<p>このリンクは24時間有効です。</p>
+```
+
+## 次のステップ
+
+- [Clerk認証の使い方](/knowledge/build/clerk-auth)
+- [認証のベストプラクティス](/knowledge/build/auth-best-practices)

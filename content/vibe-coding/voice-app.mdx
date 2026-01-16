@@ -1,0 +1,90 @@
+---
+title: 音声アプリの作り方
+description: Web Speech APIやWhisperを使った音声認識アプリの作り方。文字起こし、音声コマンドなどを解説。
+category: vibe-coding
+tags: [音声認識, Whisper, Speech API, AI, アクセシビリティ]
+createdAt: '2024-04-03'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: ai-chatbot
+    anchor: AIチャットボットの作り方
+---
+
+# 音声アプリの作り方
+
+音声認識・合成を使ったアプリを作りましょう。
+
+## できること
+
+- 音声→テキスト変換
+- テキスト→音声変換
+- 音声コマンド
+- 文字起こし
+
+## 技術選択
+
+| 技術 | 用途 |
+|------|------|
+| Web Speech API | ブラウザ内蔵、無料 |
+| Whisper | 高精度、多言語 |
+| Google Speech | 商用向け |
+
+## Web Speech API（無料）
+
+```
+プロンプト:
+ブラウザの音声認識で文字起こしアプリを作って:
+- 録音ボタン
+- リアルタイム文字起こし
+- テキストをコピー可能
+- 日本語対応
+```
+
+## Whisper（高精度）
+
+```
+プロンプト:
+OpenAI Whisperで音声文字起こし:
+- 音声ファイルアップロード
+- APIで変換
+- 結果表示
+- タイムスタンプ付き
+```
+
+## コード例（Web Speech API）
+
+```javascript
+const recognition = new webkitSpeechRecognition()
+recognition.lang = 'ja-JP'
+recognition.continuous = true
+
+recognition.onresult = (event) => {
+  const text = event.results[event.results.length - 1][0].transcript
+  console.log(text)
+}
+
+recognition.start()
+```
+
+## 音声合成
+
+```
+プロンプト:
+テキストを読み上げる機能を追加:
+- テキスト入力
+- 再生ボタン
+- 速度調整
+- 音声選択
+```
+
+## 活用例
+
+- 議事録自動作成
+- 音声メモアプリ
+- 語学学習アプリ
+- アクセシビリティ向上
+
+## 次のステップ
+
+- [AIチャットボットの作り方](/knowledge/vibe-coding/ai-chatbot)
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)

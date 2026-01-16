@@ -39,7 +39,7 @@ const tools = [
       </svg>
     ),
     color: 'from-[#06B6D4] to-[#22D3EE]',
-    status: 'coming-soon',
+    status: 'available',
   },
   {
     slug: 'marketing-planner',
@@ -51,7 +51,7 @@ const tools = [
       </svg>
     ),
     color: 'from-[#F97316] to-[#FB923C]',
-    status: 'coming-soon',
+    status: 'available',
   },
 ]
 

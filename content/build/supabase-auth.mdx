@@ -1,0 +1,145 @@
+---
+title: Supabaseでログイン機能を実装
+description: Supabase Authを使ったログイン機能の実装方法。メール認証、OAuth、セッション管理まで完全解説。
+category: build
+tags: [Supabase, 認証, ログイン, OAuth, セキュリティ]
+createdAt: '2024-04-04'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-database
+    anchor: Supabaseでデータベースを使う
+---
+
+# Supabaseでログイン機能を実装
+
+Supabase Authで簡単に認証機能を実装できます。
+
+## Supabase Authの特徴
+
+- メール/パスワード認証
+- OAuth（Google, GitHub等）
+- マジックリンク
+- Row Level Security連携
+
+## セットアップ
+
+### 1. Supabaseプロジェクト作成
+
+1. [supabase.com](https://supabase.com)でプロジェクト作成
+2. Project URLとAnon Keyをコピー
+
+### 2. Next.jsにインストール
+
+```bash
+npm install @supabase/supabase-js @supabase/ssr
+```
+
+### 3. 環境変数設定
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key
+```
+
+## 基本実装
+
+### Supabaseクライアント
+
+```typescript
+// lib/supabase.ts
+import { createBrowserClient } from '@supabase/ssr'
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+```
+
+### サインアップ
+
+```typescript
+const { data, error } = await supabase.auth.signUp({
+  email: 'user@example.com',
+  password: 'password123'
+})
+```
+
+### ログイン
+
+```typescript
+const { data, error } = await supabase.auth.signInWithPassword({
+  email: 'user@example.com',
+  password: 'password123'
+})
+```
+
+### ログアウト
+
+```typescript
+await supabase.auth.signOut()
+```
+
+## OAuth（Google）
+
+### 1. Google Cloud Console設定
+
+1. OAuth同意画面を設定
+2. 認証情報を作成
+3. リダイレクトURIを設定
+
+### 2. Supabaseに登録
+
+1. Authentication → Providers
+2. Googleを有効化
+3. Client ID/Secretを入力
+
+### 3. 実装
+
+```typescript
+await supabase.auth.signInWithOAuth({
+  provider: 'google',
+  options: {
+    redirectTo: `${window.location.origin}/auth/callback`
+  }
+})
+```
+
+## セッション管理
+
+```typescript
+// ユーザー取得
+const { data: { user } } = await supabase.auth.getUser()
+
+// セッション監視
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN') {
+    // ログイン時の処理
+  }
+})
+```
+
+## 認証ガード
+
+```typescript
+// middleware.ts
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+
+export async function middleware(req) {
+  const res = NextResponse.next()
+  const supabase = createMiddlewareClient({ req, res })
+  const { data: { session } } = await supabase.auth.getSession()
+
+  if (!session && req.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.redirect(new URL('/login', req.url))
+  }
+
+  return res
+}
+```
+
+## 次のステップ
+
+- [Googleログインの実装方法](/knowledge/build/google-auth)
+- [Supabaseでデータベースを使う](/knowledge/build/supabase-database)

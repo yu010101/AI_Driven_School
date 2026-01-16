@@ -1,0 +1,104 @@
+---
+title: LemonSqueezyで決済実装
+description: LemonSqueezyを使った決済機能の実装。Stripeより簡単に始められる決済サービスの使い方を解説。
+category: build
+tags: [LemonSqueezy, 決済, 個人開発, SaaS, 課金]
+createdAt: '2024-04-10'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-setup
+    anchor: Stripeで決済機能を実装
+---
+
+# LemonSqueezyで決済実装
+
+個人開発者に人気のLemonSqueezyで決済を実装します。
+
+## LemonSqueezyとは
+
+- Merchant of Record（販売代行）
+- 消費税計算を自動化
+- 個人でもグローバル販売可能
+- Stripeより設定が簡単
+
+## Stripeとの比較
+
+| 項目 | LemonSqueezy | Stripe |
+|------|--------------|--------|
+| 設定難易度 | 簡単 | やや複雑 |
+| 消費税処理 | 自動 | 手動 |
+| 手数料 | 5% + $0.50 | 3.6% |
+| 日本語対応 | 部分的 | 完全 |
+
+## セットアップ
+
+### 1. アカウント作成
+
+1. [lemonsqueezy.com](https://lemonsqueezy.com)でアカウント作成
+2. ストア設定
+3. APIキー取得
+
+### 2. 商品作成
+
+Dashboard → Products → New Product
+
+### 3. インストール
+
+```bash
+npm install @lemonsqueezy/lemonsqueezy.js
+```
+
+## 実装
+
+### チェックアウト
+
+```typescript
+// 支払いリンク取得
+const checkoutUrl = `https://your-store.lemonsqueezy.com/checkout/buy/${variantId}`
+
+// または API経由
+const checkout = await lemonSqueezy.createCheckout({
+  storeId,
+  variantId,
+  checkoutData: {
+    email: user.email,
+    custom: { user_id: user.id }
+  }
+})
+```
+
+### Webhook処理
+
+```typescript
+// app/api/ls-webhook/route.ts
+export async function POST(req: Request) {
+  const body = await req.json()
+  const event = body.meta.event_name
+
+  switch (event) {
+    case 'subscription_created':
+      // サブスク開始
+      break
+    case 'subscription_cancelled':
+      // 解約
+      break
+    case 'subscription_payment_success':
+      // 更新成功
+      break
+  }
+
+  return Response.json({ received: true })
+}
+```
+
+## カスタマーポータル
+
+```typescript
+// 顧客ポータルURL取得
+const portalUrl = await lemonSqueezy.getCustomerPortalUrl(customerId)
+```
+
+## 次のステップ
+
+- [決済サービス比較](/knowledge/build/payment-comparison)
+- [料金ページの作り方](/knowledge/build/pricing-page)

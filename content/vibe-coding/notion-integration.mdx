@@ -1,0 +1,87 @@
+---
+title: Notion連携アプリの作り方
+description: Notion APIを使ったアプリの作り方。データベース連携、ページ作成、自動化まで解説。
+category: vibe-coding
+tags: [Notion, API, 自動化, データベース, 生産性]
+createdAt: '2024-03-30'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: slack-app
+    anchor: Slackアプリの作り方
+---
+
+# Notion連携アプリの作り方
+
+Notion APIで自分だけのツールを作りましょう。
+
+## できること
+
+- データベース読み書き
+- ページ自動作成
+- 外部サービス連携
+- ダッシュボード作成
+
+## 準備
+
+1. Notion Integrationを作成
+2. APIキー取得
+3. ワークスペースに追加
+
+## 基本実装
+
+```
+プロンプト:
+Notion APIでデータベースを操作するコードを作って:
+- データベースの内容を取得
+- 新規ページを追加
+- プロパティを更新
+```
+
+## コード例
+
+```typescript
+import { Client } from '@notionhq/client'
+
+const notion = new Client({ auth: process.env.NOTION_TOKEN })
+
+// データベースを取得
+const response = await notion.databases.query({
+  database_id: 'your-database-id'
+})
+
+// ページを作成
+await notion.pages.create({
+  parent: { database_id: 'your-database-id' },
+  properties: {
+    Name: { title: [{ text: { content: '新規タスク' } }] },
+    Status: { select: { name: '未着手' } }
+  }
+})
+```
+
+## 活用例
+
+### 日報自動作成
+
+```
+プロンプト:
+毎日18時に日報テンプレートを自動作成するスクリプト:
+- 日付をタイトルに
+- テンプレートをコピー
+- Cronで定期実行
+```
+
+### フォーム連携
+
+```
+プロンプト:
+Webフォームの送信内容をNotionに保存:
+- お問い合わせフォーム
+- 送信でNotion DBに追加
+- Slack通知
+```
+
+## 次のステップ
+
+- [Slackアプリの作り方](/knowledge/vibe-coding/slack-app)
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)

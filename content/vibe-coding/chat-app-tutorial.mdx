@@ -1,0 +1,117 @@
+---
+title: チャットアプリの作り方
+description: リアルタイムチャットアプリの作り方を解説。SupabaseのRealtime機能を使って、本格的なチャット機能を実装します。
+category: vibe-coding
+tags: [チャットアプリ, チュートリアル, Supabase, リアルタイム, WebSocket]
+createdAt: '2024-03-19'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: todo-app-tutorial
+    anchor: ToDoアプリの作り方
+---
+
+# チャットアプリの作り方
+
+Supabaseを使ってリアルタイムチャットアプリを作ります。
+
+## 完成イメージ
+
+- メッセージの送受信
+- リアルタイム更新
+- ユーザー名表示
+- 送信時刻表示
+
+## 技術スタック
+
+- Next.js + TypeScript
+- Supabase（データベース + リアルタイム）
+- Tailwind CSS
+
+## ステップ1: Supabaseセットアップ
+
+1. [supabase.com](https://supabase.com)でプロジェクト作成
+2. APIキーをコピー
+
+```
+.env.localに設定:
+NEXT_PUBLIC_SUPABASE_URL=your-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-key
+```
+
+## ステップ2: テーブル作成
+
+Cursorで:
+
+```
+Supabaseにmessagesテーブルを作成するSQLを生成して。
+
+カラム:
+- id (uuid, primary key)
+- content (text)
+- user_name (text)
+- created_at (timestamp)
+```
+
+## ステップ3: チャットUI
+
+```
+チャットアプリのUIを作って:
+- メッセージ一覧（吹き出し形式）
+- 入力欄（下部固定）
+- 送信ボタン
+- ユーザー名入力（初回のみ）
+```
+
+## ステップ4: リアルタイム接続
+
+```
+Supabase Realtimeでメッセージをリアルタイム受信して。
+新しいメッセージが来たら自動で表示。
+```
+
+## ステップ5: メッセージ送信
+
+```
+メッセージ送信機能を実装:
+- 入力してEnterまたはボタンで送信
+- Supabaseに保存
+- 送信後は入力欄クリア
+```
+
+## 動作確認
+
+1. `npm run dev`
+2. 2つのブラウザタブで開く
+3. 片方で送信→もう片方にリアルタイム表示
+
+## コード例
+
+```typescript
+// メッセージ購読
+useEffect(() => {
+  const channel = supabase
+    .channel('messages')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages'
+    }, (payload) => {
+      setMessages(prev => [...prev, payload.new])
+    })
+    .subscribe()
+
+  return () => { channel.unsubscribe() }
+}, [])
+```
+
+## 発展課題
+
+- 既読機能
+- 画像送信
+- グループチャット
+- 通知機能
+
+## 次のステップ
+
+- [認証機能の追加](/knowledge/build/supabase-auth)
+- [ポートフォリオサイトの作り方](/knowledge/vibe-coding/portfolio-tutorial)

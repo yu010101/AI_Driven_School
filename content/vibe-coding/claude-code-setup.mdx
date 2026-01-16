@@ -1,0 +1,209 @@
+---
+title: Claude Codeのインストール方法｜初期設定から使い方まで
+description: Claude Codeのインストール手順を画像付きで解説。Node.jsのセットアップから認証、初回起動まで、初心者でも迷わない完全ガイド。
+category: vibe-coding
+tags: [Claude Code, インストール, 設定, Anthropic, CLI]
+createdAt: '2024-03-09'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: claude-code-guide
+    anchor: Claude Code入門
+---
+
+# Claude Codeのインストール方法
+
+Claude Codeのインストールから初期設定までを、ステップバイステップで解説します。
+
+## 前提条件
+
+### 必要なもの
+
+1. **Node.js 18以上**
+2. **Claude Pro または Max プラン**（$20/月〜）
+3. **ターミナル操作の基礎知識**
+
+### 対応OS
+
+- macOS
+- Windows
+- Linux
+
+## ステップ1: Node.jsのインストール
+
+### Macの場合
+
+```bash
+# Homebrewでインストール（推奨）
+brew install node
+
+# または公式サイトからダウンロード
+# https://nodejs.org/
+```
+
+### Windowsの場合
+
+1. [nodejs.org](https://nodejs.org/)にアクセス
+2. LTS版をダウンロード
+3. インストーラーを実行
+
+### バージョン確認
+
+```bash
+node --version
+# v18.0.0以上ならOK
+
+npm --version
+# npmも確認
+```
+
+## ステップ2: Claude Codeのインストール
+
+### npmでグローバルインストール
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+### インストール確認
+
+```bash
+claude-code --version
+# バージョンが表示されればOK
+```
+
+### トラブルシューティング
+
+**権限エラーの場合（Mac/Linux）:**
+
+```bash
+sudo npm install -g @anthropic-ai/claude-code
+```
+
+**コマンドが見つからない場合:**
+
+```bash
+# PATHを確認
+echo $PATH
+
+# npmのグローバルパスを追加
+export PATH="$PATH:$(npm bin -g)"
+```
+
+## ステップ3: 認証設定
+
+### ログイン
+
+```bash
+claude-code auth
+```
+
+1. ブラウザが自動で開く
+2. Anthropicアカウントでログイン
+3. 認証完了
+
+### 認証確認
+
+```bash
+claude-code whoami
+# アカウント情報が表示されればOK
+```
+
+## ステップ4: 初回起動
+
+### プロジェクトフォルダで起動
+
+```bash
+cd your-project
+claude-code
+```
+
+### 初回起動時の流れ
+
+1. プロジェクトのインデックス作成（初回のみ）
+2. 対話式インターフェースが起動
+3. 指示を入力してEnter
+
+## 基本的な使い方
+
+### 指示の出し方
+
+```
+> ToDoアプリを作って
+```
+
+### ファイル操作
+
+```
+> src/App.tsxを編集して、ボタンを追加して
+```
+
+### コマンド実行
+
+```
+> npm run build を実行して
+```
+
+### 終了
+
+```
+> exit
+# または Ctrl + C
+```
+
+## 設定ファイル
+
+### .claude/settings.json
+
+プロジェクトルートに作成：
+
+```json
+{
+  "model": "claude-sonnet-4-20250514",
+  "autoApprove": ["read"],
+  "ignore": ["node_modules", ".git", "dist"]
+}
+```
+
+### .claudeignore
+
+機密ファイルを除外：
+
+```
+.env
+.env.local
+secrets/
+*.pem
+```
+
+## よくあるエラーと解決法
+
+### 「認証エラー」
+
+```bash
+# 再認証
+claude-code auth --force
+```
+
+### 「Node.jsバージョンが古い」
+
+```bash
+# Node.jsをアップデート
+nvm install 20
+nvm use 20
+```
+
+### 「コマンドが見つからない」
+
+```bash
+# 再インストール
+npm uninstall -g @anthropic-ai/claude-code
+npm install -g @anthropic-ai/claude-code
+```
+
+## 次のステップ
+
+インストールが完了したら、実際に使ってみましょう。
+
+- [Claude Code入門ガイド](/knowledge/vibe-coding/claude-code-guide)
+- [Claude Code完全ガイド](/guide/claude-code-complete)
+- [Cursor vs Claude Code比較](/knowledge/vibe-coding/cursor-vs-claude-code)

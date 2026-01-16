@@ -1,0 +1,168 @@
+---
+title: AIでデバッグする方法｜エラー解決の最短ルート
+description: AIを使ったデバッグ方法を解説。エラーメッセージの読み方、AIへの伝え方、効率的なバグ修正のコツを紹介します。
+category: vibe-coding
+tags: [デバッグ, エラー解決, AI, バグ修正, トラブルシューティング]
+createdAt: '2024-03-22'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: common-mistakes
+    anchor: よくある失敗と対処法
+---
+
+# AIでデバッグする方法
+
+エラーが出ても慌てない。AIに任せれば解決できます。
+
+## デバッグの基本フロー
+
+```
+1. エラーメッセージを確認
+2. AIにそのまま貼り付け
+3. 提案された修正を適用
+4. 動作確認
+5. 解決するまで繰り返し
+```
+
+## エラーの種類と対処法
+
+### 1. コンパイルエラー
+
+```
+エラー例:
+Type 'string' is not assignable to type 'number'
+
+AIへの伝え方:
+「以下のTypeScriptエラーを修正して:
+Type 'string' is not assignable to type 'number'
+at src/components/Counter.tsx:15」
+```
+
+### 2. ランタイムエラー
+
+```
+エラー例:
+TypeError: Cannot read property 'map' of undefined
+
+AIへの伝え方:
+「以下のエラーが発生します:
+TypeError: Cannot read property 'map' of undefined
+
+該当コード:
+[コードを貼り付け]
+
+データ:
+[期待するデータ構造]」
+```
+
+### 3. 動作不良（エラーなし）
+
+```
+AIへの伝え方:
+「問題: ボタンをクリックしても何も起きません
+
+期待する動作: クリックでモーダルが開く
+実際の動作: 何も起きない
+コンソールエラー: なし
+
+該当コード:
+[コードを貼り付け]」
+```
+
+## 効果的な伝え方テンプレート
+
+```
+# 問題
+[何が起きているか]
+
+# エラーメッセージ
+[そのまま貼り付け]
+
+# 再現手順
+1. [ステップ1]
+2. [ステップ2]
+3. [ステップ3]
+
+# 期待する動作
+[正しい動作]
+
+# 該当コード
+[関連するコード]
+```
+
+## Cursorでのデバッグ
+
+### 方法1: チャットで質問
+
+```
+Cmd + L でチャットを開き、
+エラーメッセージを貼り付け
+```
+
+### 方法2: コードを選択して質問
+
+```
+1. エラー箇所を選択
+2. Cmd + K
+3. 「このエラーを修正して」
+```
+
+### 方法3: @でファイル参照
+
+```
+@src/components/Button.tsx このファイルで
+TypeError: Cannot read property 'onClick' of undefined
+が発生しています。修正して。
+```
+
+## よくあるエラーと解決法
+
+### "Module not found"
+
+```
+原因: パッケージ未インストール or パス間違い
+
+解決:
+1. npm install [パッケージ名]
+2. import文のパスを確認
+```
+
+### "Hydration mismatch"
+
+```
+原因: サーバーとクライアントでHTMLが異なる
+
+解決:
+- useEffectでクライアントのみの処理に
+- dynamicインポート + ssr: false
+```
+
+### "CORS error"
+
+```
+原因: 異なるオリジンへのリクエスト
+
+解決:
+- APIルートを経由
+- プロキシ設定
+- サーバー側でCORS許可
+```
+
+## デバッグのコツ
+
+1. **エラーを恐れない**: AIが解決してくれる
+2. **そのまま貼る**: 加工せずコピペ
+3. **コンテキストを伝える**: 何をしようとしていたか
+4. **一度に一つ**: 複数エラーは一つずつ
+
+## AIでも解決しない時
+
+- エラーメッセージを検索
+- 公式ドキュメントを確認
+- Stack Overflowを参照
+- GitHubのIssueを確認
+
+## 次のステップ
+
+- [よくあるエラーと解決法](/knowledge/vibe-coding/error-messages-guide)
+- [プロンプトの基本](/knowledge/vibe-coding/prompt-basics)

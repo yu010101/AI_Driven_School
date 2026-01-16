@@ -1,0 +1,125 @@
+---
+title: Clerkで認証機能を実装
+description: Clerkを使った認証機能の実装方法。Next.jsとの統合、コンポーネント、カスタマイズまで解説。
+category: build
+tags: [Clerk, 認証, Next.js, OAuth, コンポーネント]
+createdAt: '2024-04-07'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-auth
+    anchor: Supabaseでログイン機能を実装
+---
+
+# Clerkで認証機能を実装
+
+Clerkは認証UIコンポーネントが充実した認証サービスです。
+
+## Clerkの特徴
+
+- UIコンポーネント付属
+- Next.js完全対応
+- 多様なログイン方法
+- ユーザー管理画面
+
+## セットアップ
+
+### 1. Clerkアカウント作成
+
+1. [clerk.com](https://clerk.com)でアカウント作成
+2. アプリケーション作成
+3. APIキー取得
+
+### 2. インストール
+
+```bash
+npm install @clerk/nextjs
+```
+
+### 3. 環境変数
+
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_xxx
+CLERK_SECRET_KEY=sk_xxx
+```
+
+## 基本実装
+
+### Provider設定
+
+```tsx
+// app/layout.tsx
+import { ClerkProvider } from '@clerk/nextjs'
+
+export default function RootLayout({ children }) {
+  return (
+    <ClerkProvider>
+      <html>
+        <body>{children}</body>
+      </html>
+    </ClerkProvider>
+  )
+}
+```
+
+### ミドルウェア
+
+```typescript
+// middleware.ts
+import { clerkMiddleware } from '@clerk/nextjs/server'
+
+export default clerkMiddleware()
+
+export const config = {
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)']
+}
+```
+
+### ログインボタン
+
+```tsx
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+
+export function Header() {
+  return (
+    <header>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </header>
+  )
+}
+```
+
+### ユーザー情報取得
+
+```typescript
+import { currentUser } from '@clerk/nextjs/server'
+
+export default async function Page() {
+  const user = await currentUser()
+  return <div>こんにちは、{user?.firstName}さん</div>
+}
+```
+
+## 認証ページのカスタマイズ
+
+```tsx
+// app/sign-in/[[...sign-in]]/page.tsx
+import { SignIn } from '@clerk/nextjs'
+
+export default function SignInPage() {
+  return (
+    <div className="flex justify-center py-20">
+      <SignIn />
+    </div>
+  )
+}
+```
+
+## 次のステップ
+
+- [ユーザープロフィール機能の実装](/knowledge/build/user-profile)
+- [認証のベストプラクティス](/knowledge/build/auth-best-practices)

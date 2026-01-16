@@ -1,0 +1,122 @@
+---
+title: Stripeで決済機能を実装
+description: Stripeを使った決済機能の実装方法。Checkout、サブスクリプション、Webhookまで完全解説。
+category: build
+tags: [Stripe, 決済, サブスク, EC, 課金]
+createdAt: '2024-04-08'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-subscription
+    anchor: Stripeでサブスク課金を実装
+---
+
+# Stripeで決済機能を実装
+
+Stripeで安全な決済機能を実装しましょう。
+
+## Stripeとは
+
+- 世界標準の決済プラットフォーム
+- 開発者フレンドリーなAPI
+- PCI DSS準拠
+- 日本円対応
+
+## セットアップ
+
+### 1. Stripeアカウント作成
+
+1. [stripe.com](https://stripe.com)でアカウント作成
+2. 本番申請は後でOK（テストモードで開発）
+
+### 2. インストール
+
+```bash
+npm install stripe @stripe/stripe-js
+```
+
+### 3. 環境変数
+
+```env
+STRIPE_SECRET_KEY=sk_test_xxx
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxx
+```
+
+## Stripe Checkout（推奨）
+
+### 商品を作成
+
+Stripe Dashboard → Products → 新規作成
+
+### APIルート
+
+```typescript
+// app/api/checkout/route.ts
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+
+export async function POST(req: Request) {
+  const { priceId } = await req.json()
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription', // または 'payment'
+    payment_method_types: ['card'],
+    line_items: [{ price: priceId, quantity: 1 }],
+    success_url: `${process.env.NEXT_PUBLIC_URL}/success`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
+  })
+
+  return Response.json({ url: session.url })
+}
+```
+
+### クライアント側
+
+```tsx
+const handleCheckout = async () => {
+  const res = await fetch('/api/checkout', {
+    method: 'POST',
+    body: JSON.stringify({ priceId: 'price_xxx' })
+  })
+  const { url } = await res.json()
+  window.location.href = url
+}
+```
+
+## Webhook処理
+
+```typescript
+// app/api/webhook/route.ts
+export async function POST(req: Request) {
+  const body = await req.text()
+  const sig = req.headers.get('stripe-signature')!
+
+  const event = stripe.webhooks.constructEvent(
+    body, sig, process.env.STRIPE_WEBHOOK_SECRET!
+  )
+
+  switch (event.type) {
+    case 'checkout.session.completed':
+      // 決済完了処理
+      break
+    case 'customer.subscription.deleted':
+      // 解約処理
+      break
+  }
+
+  return Response.json({ received: true })
+}
+```
+
+## テスト用カード番号
+
+| カード | 番号 |
+|--------|------|
+| 成功 | 4242 4242 4242 4242 |
+| 失敗 | 4000 0000 0000 0002 |
+| 3Dセキュア | 4000 0025 0000 3155 |
+
+## 次のステップ
+
+- [Stripeでサブスク課金を実装](/knowledge/build/stripe-subscription)
+- [LemonSqueezyで決済実装](/knowledge/build/lemonsqueezy)

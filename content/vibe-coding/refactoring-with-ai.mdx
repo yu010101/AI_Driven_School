@@ -1,0 +1,123 @@
+---
+title: AIでコードリファクタリング
+description: AIを使ったコードリファクタリングの方法。可読性の向上、パフォーマンス改善、TypeScript化などを解説。
+category: vibe-coding
+tags: [リファクタリング, AI, コード品質, TypeScript, 最適化]
+createdAt: '2024-03-24'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: debugging-with-ai
+    anchor: AIでデバッグする方法
+---
+
+# AIでコードリファクタリング
+
+AIを使えば、コードの品質改善が簡単にできます。
+
+## リファクタリングとは
+
+- コードの動作を変えずに
+- 構造を改善すること
+- 可読性、保守性、パフォーマンスの向上
+
+## AIでできるリファクタリング
+
+### 1. TypeScript化
+
+```
+プロンプト:
+このJavaScriptコードをTypeScriptに変換して。
+適切な型定義を追加し、anyは使わないで。
+
+[コードを貼り付け]
+```
+
+### 2. 関数分割
+
+```
+プロンプト:
+この関数を小さな関数に分割して。
+単一責任の原則に従って。
+
+[長い関数を貼り付け]
+```
+
+### 3. 重複排除
+
+```
+プロンプト:
+このファイル内の重複コードを共通化して。
+再利用可能な関数に抽出。
+
+[コードを貼り付け]
+```
+
+### 4. パフォーマンス改善
+
+```
+プロンプト:
+このReactコンポーネントのパフォーマンスを改善して:
+- 不要な再レンダリングを防ぐ
+- useMemo, useCallbackの適切な使用
+- 重い処理の最適化
+
+[コードを貼り付け]
+```
+
+### 5. 命名改善
+
+```
+プロンプト:
+このコードの変数名・関数名をより分かりやすく改善して。
+何をしているか一目でわかる名前に。
+
+[コードを貼り付け]
+```
+
+## Cursorでのリファクタリング
+
+### 方法1: 選択してCmd+K
+
+1. リファクタリングしたいコードを選択
+2. `Cmd + K`
+3. 指示を入力（例：「TypeScriptに変換して」）
+
+### 方法2: チャットで依頼
+
+1. `Cmd + L` でチャット
+2. `@filename.tsx` でファイルを参照
+3. リファクタリング指示
+
+## ビフォーアフター例
+
+### Before
+```javascript
+function getData(id) {
+  const d = fetch('/api/items/' + id)
+  const r = d.then(x => x.json())
+  return r
+}
+```
+
+### After
+```typescript
+async function fetchItemById(itemId: string): Promise<Item> {
+  const response = await fetch(`/api/items/${itemId}`)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch item: ${response.status}`)
+  }
+  return response.json()
+}
+```
+
+## リファクタリングのコツ
+
+1. **小さく始める**: 一度に多くを変えない
+2. **テストを先に**: 動作を保証してから
+3. **Git活用**: いつでも戻れるように
+4. **AIに任せる**: 機械的な作業はAIへ
+
+## 次のステップ
+
+- [Next.jsアプリの作り方](/knowledge/vibe-coding/nextjs-starter)
+- [エラーメッセージと解決法](/knowledge/vibe-coding/error-messages-guide)

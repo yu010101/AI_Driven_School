@@ -1,0 +1,71 @@
+---
+title: Cloudflare Pagesの使い方
+description: Cloudflare Pagesで静的サイトをホスティングする方法。無料で高速なデプロイを実現。
+category: build
+tags: [Cloudflare, デプロイ, ホスティング, 無料, CDN]
+createdAt: '2024-04-13'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: vercel-deploy
+    anchor: Vercelでデプロイする方法
+---
+
+# Cloudflare Pagesの使い方
+
+無料で高速なCloudflare Pagesでサイトをデプロイしましょう。
+
+## Cloudflare Pagesとは
+
+- 無料の静的サイトホスティング
+- 高速なグローバルCDN
+- 自動ビルド・デプロイ
+- 無制限の帯域幅
+
+## Vercelとの比較
+
+| 項目 | Cloudflare | Vercel |
+|------|------------|--------|
+| 無料枠 | 無制限 | 月100GB |
+| 速度 | 非常に速い | 速い |
+| 機能 | シンプル | 豊富 |
+| SSR | Functions | 標準対応 |
+
+## デプロイ方法
+
+### 1. GitHubと連携
+
+1. Cloudflareダッシュボード → Pages
+2. 「プロジェクトを作成」
+3. GitHubリポジトリを選択
+
+### 2. ビルド設定
+
+```
+フレームワーク: Next.js
+ビルドコマンド: npm run build
+出力ディレクトリ: .next
+```
+
+### 3. 環境変数
+
+Settings → Environment variables で設定
+
+## カスタムドメイン
+
+1. Pages → プロジェクト → カスタムドメイン
+2. ドメインを入力
+3. DNS設定（自動）
+
+## Workers連携（SSR）
+
+```javascript
+// functions/api/hello.js
+export async function onRequest(context) {
+  return new Response('Hello World')
+}
+```
+
+## 次のステップ
+
+- [Vercelでデプロイする方法](/knowledge/build/vercel-deploy)
+- [カスタムドメインの設定方法](/knowledge/build/custom-domain)

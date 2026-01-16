@@ -1,0 +1,63 @@
+---
+title: Railwayの使い方
+description: Railwayでバックエンドをデプロイする方法。Node.js、Python、データベースのホスティングを解説。
+category: build
+tags: [Railway, デプロイ, バックエンド, Node.js, データベース]
+createdAt: '2024-04-14'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: vercel-deploy
+    anchor: Vercelでデプロイする方法
+---
+
+# Railwayの使い方
+
+バックエンドのデプロイに便利なRailwayを解説します。
+
+## Railwayとは
+
+- バックエンド向けPaaS
+- PostgreSQL等のDB内蔵
+- 環境変数管理が簡単
+- $5/月のクレジット（無料枠）
+
+## 向いている用途
+
+- Node.jsサーバー
+- Python API
+- Discord Bot
+- データベース
+
+## デプロイ方法
+
+### 1. アカウント作成
+
+[railway.app](https://railway.app)でGitHub連携
+
+### 2. プロジェクト作成
+
+1. New Project
+2. Deploy from GitHub repo
+3. リポジトリを選択
+
+### 3. 環境変数設定
+
+Variables タブで設定
+
+## データベース追加
+
+1. プロジェクト → Add → Database
+2. PostgreSQL/MySQL/Redis等を選択
+3. 接続情報が自動で環境変数に
+
+## 料金
+
+| プラン | 料金 |
+|--------|------|
+| Hobby | $5/月のクレジット |
+| Pro | 従量制 |
+
+## 次のステップ
+
+- [Vercelでデプロイする方法](/knowledge/build/vercel-deploy)
+- [環境変数の設定方法](/knowledge/build/environment-variables)

@@ -1,0 +1,92 @@
+---
+title: 料金ページの作り方
+description: CVに直結する料金ページの作り方。デザイン、構成、心理学に基づいた効果的な料金表示を解説。
+category: build
+tags: [料金, 価格設定, LP, CV, デザイン]
+createdAt: '2024-04-12'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-subscription
+    anchor: Stripeでサブスク課金を実装
+---
+
+# 料金ページの作り方
+
+CVを最大化する料金ページを作りましょう。
+
+## 料金ページの基本構成
+
+1. ヘッドライン
+2. プラン比較表
+3. 機能一覧
+4. FAQ
+5. CTA
+
+## プラン設計のコツ
+
+### 3プラン構成
+
+| プラン | 役割 |
+|--------|------|
+| Basic | 比較対象 |
+| Pro | 主力（おすすめ） |
+| Enterprise | 高単価狙い |
+
+### 価格のアンカリング
+
+```
+Basic: ¥980/月
+Pro: ¥2,980/月 ← おすすめバッジ
+Enterprise: ¥9,800/月
+```
+
+**Pro**を選ばせたいなら、**Enterprise**を高めに設定。
+
+## 実装
+
+```
+プロンプト:
+3プランの料金ページを作って:
+- Basic（¥980/月）、Pro（¥2,980/月）、Enterprise（¥9,800/月）
+- Proに「おすすめ」バッジ
+- 各プランの機能チェックリスト
+- 年額で20%オフの切り替え
+- CTAボタン
+
+デザイン:
+- Proを少し大きく
+- 中央に配置
+- ホバーでシャドウ
+```
+
+## コード例
+
+```tsx
+const plans = [
+  {
+    name: 'Basic',
+    price: 980,
+    features: ['機能A', '機能B'],
+    recommended: false
+  },
+  {
+    name: 'Pro',
+    price: 2980,
+    features: ['機能A', '機能B', '機能C', '機能D'],
+    recommended: true
+  },
+  // ...
+]
+```
+
+## CVを上げるテクニック
+
+- **年額割引**: 20%オフ等
+- **無料トライアル**: 「14日間無料」
+- **返金保証**: 「30日間返金保証」
+- **人数限定**: 「残り10名」
+
+## 次のステップ
+
+- [Stripeでサブスク課金を実装](/knowledge/build/stripe-subscription)
+- [無料トライアルの実装](/knowledge/build/free-trial)

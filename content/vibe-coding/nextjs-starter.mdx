@@ -1,0 +1,130 @@
+---
+title: Next.jsアプリの作り方（AI活用）
+description: AIを活用したNext.jsアプリの作り方。プロジェクト作成から、ルーティング、データ取得、デプロイまでを解説。
+category: vibe-coding
+tags: [Next.js, React, AI, チュートリアル, Web開発]
+createdAt: '2024-03-25'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: first-app-30min
+    anchor: 30分で最初のアプリを作る
+---
+
+# Next.jsアプリの作り方（AI活用）
+
+AIを使ってNext.jsアプリを効率的に作る方法を解説します。
+
+## Next.jsとは
+
+- React製のフレームワーク
+- サーバーサイドレンダリング（SSR）
+- ファイルベースルーティング
+- APIルート機能
+
+## プロジェクト作成
+
+### 方法1: CLIで作成
+
+```bash
+npx create-next-app@latest my-app --typescript --tailwind --app
+cd my-app
+```
+
+### 方法2: AIに依頼
+
+```
+Next.js 14 + TypeScript + Tailwind CSSで
+新規プロジェクトを作成して。
+
+App Routerを使用。
+基本的なレイアウト（ヘッダー、フッター）も作って。
+```
+
+## 基本構造
+
+```
+my-app/
+├── app/
+│   ├── layout.tsx    # 共通レイアウト
+│   ├── page.tsx      # トップページ
+│   └── about/
+│       └── page.tsx  # /about ページ
+├── components/
+│   └── Header.tsx
+└── public/
+    └── images/
+```
+
+## ページの追加
+
+```
+プロンプト:
+/dashboard ページを作って。
+- サイドバー付きのレイアウト
+- 統計カード4つ
+- グラフエリア
+```
+
+## データ取得
+
+### サーバーコンポーネント
+
+```
+プロンプト:
+サーバーコンポーネントで外部APIからデータを取得して表示するページを作って。
+エラーハンドリングとローディング状態も含めて。
+```
+
+### クライアントコンポーネント
+
+```
+プロンプト:
+'use client'でリアルタイム検索機能を実装して。
+- 入力中に検索
+- デバウンス300ms
+- ローディング表示
+```
+
+## APIルート
+
+```
+プロンプト:
+/api/users のAPIルートを作って。
+- GET: ユーザー一覧
+- POST: ユーザー作成
+- バリデーション付き
+```
+
+## 認証追加
+
+```
+プロンプト:
+NextAuth.jsでGoogle認証を追加して。
+- ログインボタン
+- セッション管理
+- 認証ガード（保護ページ）
+```
+
+## デプロイ
+
+```bash
+# Vercelでデプロイ
+vercel
+
+# または GitHubと連携
+# push時に自動デプロイ
+```
+
+## よくある構成
+
+| 用途 | 構成 |
+|------|------|
+| ブログ | Next.js + MDX + Vercel |
+| SaaS | Next.js + Supabase + Stripe |
+| EC | Next.js + Shopify API |
+| 管理画面 | Next.js + Prisma + PostgreSQL |
+
+## 次のステップ
+
+- [React Nativeアプリの作り方](/knowledge/vibe-coding/react-native-starter)
+- [Vercelでデプロイする方法](/knowledge/build/vercel-deploy)

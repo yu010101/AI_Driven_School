@@ -521,4 +521,659 @@ TypeError: Cannot read property 'map' of undefined
       </>
     ),
   },
+
+  'cursor-complete': {
+    title: 'Cursor完全ガイド｜AIコードエディタの全機能を徹底解説',
+    shortTitle: 'Cursor完全ガイド',
+    description: 'CursorはAIを搭載した次世代コードエディタです。インストールから高度な使い方、料金プラン、VSCodeとの違いまで完全解説。',
+    keywords: ['Cursor', 'AI', 'コードエディタ', 'VSCode', 'プログラミング', 'バイブコーディング'],
+    badges: ['完全ガイド', '2024年最新', 'AI搭載'],
+    createdAt: '2024-01-20',
+    updatedAt: '2024-12-20',
+    readTime: 25,
+    toc: [
+      { id: 'what-is-cursor', title: 'Cursorとは' },
+      { id: 'installation', title: 'インストール方法' },
+      { id: 'basic-features', title: '基本機能' },
+      { id: 'advanced-features', title: '高度な機能' },
+      { id: 'pricing', title: '料金プラン' },
+      { id: 'vs-vscode', title: 'VSCodeとの違い' },
+      { id: 'tips', title: '使いこなしのコツ' },
+    ],
+    steps: [
+      { title: 'Cursorをダウンロード', description: 'cursor.comからインストーラーをダウンロードします' },
+      { title: 'インストール', description: 'インストーラーを実行してCursorをインストールします' },
+      { title: 'アカウント作成', description: '無料アカウントを作成してログインします' },
+      { title: 'VSCode設定のインポート', description: '既存のVSCode設定を引き継ぎます（任意）' },
+      { title: 'AIモデルの選択', description: 'Claude 3.5 Sonnetを選択します（推奨）' },
+      { title: '最初のプロジェクトを開く', description: 'フォルダを開いてAIチャットを試します' },
+    ],
+    faqs: [
+      {
+        question: 'Cursorは無料で使えますか？',
+        answer: 'はい、無料プラン（Hobby）があります。月2000回のAI補完、50回のスローリクエストが含まれます。個人開発なら十分な量です。',
+      },
+      {
+        question: 'VSCodeの拡張機能は使えますか？',
+        answer: 'はい、CursorはVSCodeをベースにしているため、ほとんどの拡張機能がそのまま使えます。設定もインポート可能です。',
+      },
+      {
+        question: 'どのAIモデルがおすすめですか？',
+        answer: 'Claude 3.5 Sonnetがおすすめです。コーディング能力が高く、日本語も得意です。GPT-4も使えますが、コーディングではClaudeの方が優秀です。',
+      },
+      {
+        question: 'オフラインでも使えますか？',
+        answer: 'エディタとしての基本機能はオフラインでも使えますが、AI機能にはインターネット接続が必要です。',
+      },
+      {
+        question: 'チームで使う場合の料金は？',
+        answer: 'Businessプラン（$40/ユーザー/月）があります。管理機能、集中課金、優先サポートが含まれます。',
+      },
+    ],
+    relatedArticles: [
+      { href: '/guide/claude-code-complete', title: 'Claude Code完全ガイド', description: 'ターミナルで動くAI開発ツール' },
+      { href: '/guide/vibe-coding', title: 'バイブコーディング完全ガイド', description: 'AIでアプリを作る方法' },
+      { href: '/knowledge/vibe-coding/ai-tools-comparison', title: 'AIツール比較', description: '主要ツールの違いを解説' },
+    ],
+    content: (
+      <>
+        <section id="what-is-cursor">
+          <h2>Cursorとは</h2>
+          <p>
+            <strong>Cursor</strong>は、AIを搭載した次世代のコードエディタです。
+            VSCodeをベースにしており、使い慣れた操作感でAIの力を最大限に活用できます。
+          </p>
+          <h3>Cursorの特徴</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>機能</th>
+                <th>説明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AIチャット</td>
+                <td>エディタ内でAIと会話しながらコーディング</td>
+              </tr>
+              <tr>
+                <td>インライン編集</td>
+                <td>選択したコードをAIが直接修正</td>
+              </tr>
+              <tr>
+                <td>Tab補完</td>
+                <td>AIが次に書くべきコードを予測</td>
+              </tr>
+              <tr>
+                <td>コードベース理解</td>
+                <td>プロジェクト全体を理解した上で回答</td>
+              </tr>
+              <tr>
+                <td>マルチファイル編集</td>
+                <td>複数ファイルを一度に生成・編集</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>なぜCursorなのか</h3>
+          <p>
+            GitHub CopilotやChatGPTなど、AIコーディングツールは多数ありますが、
+            Cursorは<strong>エディタとAIの統合度</strong>が圧倒的に高いです。
+          </p>
+          <ul>
+            <li>コードを書きながらシームレスにAIを呼び出せる</li>
+            <li>プロジェクト全体のコンテキストをAIが理解</li>
+            <li>生成されたコードをワンクリックで適用</li>
+            <li>複数ファイルをまたぐ編集も自動</li>
+          </ul>
+        </section>
+
+        <section id="installation">
+          <h2>インストール方法</h2>
+          <h3>ステップ1: ダウンロード</h3>
+          <ol>
+            <li><a href="https://cursor.com" target="_blank" rel="noopener noreferrer">cursor.com</a>にアクセス</li>
+            <li>「Download」ボタンをクリック</li>
+            <li>お使いのOS（Mac / Windows / Linux）を選択</li>
+          </ol>
+          <h3>ステップ2: インストール</h3>
+          <p><strong>Mac:</strong></p>
+          <ol>
+            <li>ダウンロードした.dmgファイルを開く</li>
+            <li>CursorアイコンをApplicationsフォルダにドラッグ</li>
+            <li>Launchpadから起動</li>
+          </ol>
+          <p><strong>Windows:</strong></p>
+          <ol>
+            <li>ダウンロードした.exeファイルを実行</li>
+            <li>インストーラーの指示に従う</li>
+            <li>デスクトップのアイコンから起動</li>
+          </ol>
+          <h3>ステップ3: 初期設定</h3>
+          <ol>
+            <li>Cursorを起動</li>
+            <li>「Create Account」でアカウント作成（Google/GitHubでも可）</li>
+            <li>VSCodeの設定をインポートするか選択</li>
+            <li>AIモデルを選択（Claude 3.5 Sonnet推奨）</li>
+          </ol>
+        </section>
+
+        <section id="basic-features">
+          <h2>基本機能</h2>
+          <h3>1. AIチャット（Cmd/Ctrl + L）</h3>
+          <p>
+            エディタ内でAIと会話できます。コードの説明、生成、デバッグなど何でも相談できます。
+          </p>
+          <pre><code>{`使い方:
+1. Cmd + L（Mac）/ Ctrl + L（Windows）を押す
+2. サイドパネルにチャットが開く
+3. 質問や指示を入力
+4. AIが回答・コードを生成
+5. 「Apply」で生成コードを適用`}</code></pre>
+          <p><strong>便利な使い方：</strong></p>
+          <ul>
+            <li>「この関数の意味を教えて」 - コード解説</li>
+            <li>「ログイン機能を追加して」 - 機能追加</li>
+            <li>「このエラーを修正して」 - デバッグ</li>
+            <li>「TypeScriptに変換して」 - リファクタリング</li>
+          </ul>
+
+          <h3>2. インラインチャット（Cmd/Ctrl + K）</h3>
+          <p>
+            コードを選択して、その場で編集指示を出せます。
+          </p>
+          <pre><code>{`使い方:
+1. 編集したいコードを選択
+2. Cmd + K（Mac）/ Ctrl + K（Windows）を押す
+3. 指示を入力（例：「エラーハンドリングを追加」）
+4. AIが編集案を提示
+5. Accept/Rejectで採否を決定`}</code></pre>
+
+          <h3>3. Tab補完</h3>
+          <p>
+            AIがコードの続きを予測して提案します。
+          </p>
+          <pre><code>{`使い方:
+1. コードを書き始める
+2. グレーの文字で補完候補が表示
+3. Tabキーで採用
+4. Escキーでキャンセル`}</code></pre>
+
+          <h3>4. @ メンション</h3>
+          <p>
+            チャット内でファイルやドキュメントを参照できます。
+          </p>
+          <ul>
+            <li><code>@filename</code> - 特定ファイルを参照</li>
+            <li><code>@codebase</code> - プロジェクト全体を検索</li>
+            <li><code>@docs</code> - ドキュメントを参照</li>
+            <li><code>@web</code> - Web検索結果を参照</li>
+          </ul>
+        </section>
+
+        <section id="advanced-features">
+          <h2>高度な機能</h2>
+          <h3>Composer（マルチファイル編集）</h3>
+          <p>
+            Cmd + Shift + I で起動。複数ファイルを一度に生成・編集できます。
+          </p>
+          <pre><code>{`例：「React + TypeScriptでToDoアプリを作って」
+
+AIが自動で以下を生成：
+- src/App.tsx
+- src/components/TodoList.tsx
+- src/components/TodoItem.tsx
+- src/types/index.ts
+- src/hooks/useTodos.ts`}</code></pre>
+
+          <h3>Agent（自律的なコーディング）</h3>
+          <p>
+            AIが自分で考えながらコードを書きます。ファイル作成、コマンド実行も自動で行います。
+          </p>
+          <ul>
+            <li>チャットで「Agent」モードを選択</li>
+            <li>指示を出すとAIが自律的に作業</li>
+            <li>途中でレビュー・修正可能</li>
+          </ul>
+
+          <h3>コードベースインデックス</h3>
+          <p>
+            プロジェクト全体をインデックス化し、AIがコンテキストを理解した上で回答します。
+          </p>
+          <ul>
+            <li>設定 → Features → Codebase indexing をON</li>
+            <li><code>@codebase</code> で全体を検索</li>
+            <li>「この機能はどこに実装されている？」のような質問が可能</li>
+          </ul>
+
+          <h3>ルールファイル（.cursorrules）</h3>
+          <p>
+            プロジェクトルートに<code>.cursorrules</code>ファイルを置くと、AIの振る舞いをカスタマイズできます。
+          </p>
+          <pre><code>{`# .cursorrules
+- TypeScriptを使用する
+- 関数にはJSDocコメントを付ける
+- エラーハンドリングを必ず含める
+- テストコードも生成する`}</code></pre>
+        </section>
+
+        <section id="pricing">
+          <h2>料金プラン</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>プラン</th>
+                <th>料金</th>
+                <th>内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hobby（無料）</td>
+                <td>$0</td>
+                <td>月2000回のAI補完、50回のスローリクエスト</td>
+              </tr>
+              <tr>
+                <td>Pro</td>
+                <td>$20/月</td>
+                <td>無制限のAI補完、500回の高速リクエスト</td>
+              </tr>
+              <tr>
+                <td>Business</td>
+                <td>$40/月</td>
+                <td>Proの全機能 + チーム管理、SSO</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>プラン選択のポイント</h3>
+          <ul>
+            <li><strong>Hobby</strong>: 週末だけ開発する人、お試し用</li>
+            <li><strong>Pro</strong>: 毎日開発する人、本格的に使いたい人</li>
+            <li><strong>Business</strong>: チームで使う場合</li>
+          </ul>
+          <p>
+            <strong>おすすめ</strong>: まずHobbyで試して、足りなくなったらProへ
+          </p>
+        </section>
+
+        <section id="vs-vscode">
+          <h2>VSCodeとの違い</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>項目</th>
+                <th>VSCode + Copilot</th>
+                <th>Cursor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AI統合度</td>
+                <td>拡張機能として追加</td>
+                <td>エディタに完全統合</td>
+              </tr>
+              <tr>
+                <td>チャット</td>
+                <td>別ウィンドウ</td>
+                <td>エディタ内でシームレス</td>
+              </tr>
+              <tr>
+                <td>コンテキスト理解</td>
+                <td>限定的</td>
+                <td>プロジェクト全体を理解</td>
+              </tr>
+              <tr>
+                <td>マルチファイル編集</td>
+                <td>手動</td>
+                <td>AIが自動で複数ファイルを編集</td>
+              </tr>
+              <tr>
+                <td>料金</td>
+                <td>Copilot $10/月</td>
+                <td>無料〜$20/月</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            <strong>結論</strong>: AIを活用した開発なら、Cursorの方が圧倒的に使いやすいです。
+          </p>
+        </section>
+
+        <section id="tips">
+          <h2>使いこなしのコツ</h2>
+          <h3>1. @メンションを活用する</h3>
+          <pre><code>{`@components/Button.tsx このコンポーネントを参考に、Cardコンポーネントを作って`}</code></pre>
+          <p>関連ファイルを参照に追加すると、より正確なコードが生成されます。</p>
+
+          <h3>2. エラーはそのまま貼り付け</h3>
+          <pre><code>{`以下のエラーを修正して：
+TypeError: Cannot read property 'map' of undefined at ProductList.tsx:42`}</code></pre>
+
+          <h3>3. .cursorrulesを設定する</h3>
+          <p>プロジェクトの規約をAIに伝えると、一貫性のあるコードが生成されます。</p>
+
+          <h3>4. Composerで大きな変更</h3>
+          <p>機能追加や大規模リファクタリングはComposerモードで。</p>
+
+          <h3>5. 段階的に指示を出す</h3>
+          <pre><code>{`❌ 「完璧なECサイトを作って」
+✅ 「まず商品一覧ページを作って」→「カートに追加機能を追加して」→「決済を実装して」`}</code></pre>
+        </section>
+      </>
+    ),
+  },
+
+  'claude-code-complete': {
+    title: 'Claude Code完全ガイド｜ターミナルで動くAI開発ツール',
+    shortTitle: 'Claude Code完全ガイド',
+    description: 'Claude CodeはAnthropicが提供するターミナルベースのAI開発ツールです。インストールから活用法、料金、Cursorとの使い分けまで完全解説。',
+    keywords: ['Claude Code', 'AI', 'ターミナル', 'CLI', 'Anthropic', 'プログラミング'],
+    badges: ['完全ガイド', '2024年最新', 'Anthropic公式'],
+    createdAt: '2024-01-25',
+    updatedAt: '2024-12-20',
+    readTime: 22,
+    toc: [
+      { id: 'what-is-claude-code', title: 'Claude Codeとは' },
+      { id: 'installation', title: 'インストール方法' },
+      { id: 'basic-usage', title: '基本的な使い方' },
+      { id: 'advanced-usage', title: '高度な使い方' },
+      { id: 'pricing', title: '料金' },
+      { id: 'vs-cursor', title: 'Cursorとの比較' },
+      { id: 'best-practices', title: 'ベストプラクティス' },
+    ],
+    steps: [
+      { title: 'Node.jsをインストール', description: 'Node.js 18以上が必要です' },
+      { title: 'npmでインストール', description: 'npm install -g @anthropic-ai/claude-code' },
+      { title: 'Anthropicアカウント作成', description: 'claude.aiでアカウントを作成' },
+      { title: 'API設定', description: 'claude-code auth でログイン' },
+      { title: 'プロジェクトで実行', description: 'プロジェクトフォルダでclaude-codeを起動' },
+    ],
+    faqs: [
+      {
+        question: 'Claude Codeは無料で使えますか？',
+        answer: 'Claude Pro（月$20）またはClaude Max（月$100）のサブスクリプションが必要です。無料プランでは使用できません。',
+      },
+      {
+        question: 'Cursorとどちらがおすすめですか？',
+        answer: '初心者にはCursorがおすすめです。GUIで直感的に操作できます。ターミナル操作に慣れている人、より自動化したい人にはClaude Codeが向いています。',
+      },
+      {
+        question: 'どのプログラミング言語に対応していますか？',
+        answer: 'ほぼすべての言語に対応しています。JavaScript、TypeScript、Python、Go、Rust、Java、C++など、主要な言語は問題なく使えます。',
+      },
+      {
+        question: 'オフラインでも使えますか？',
+        answer: 'いいえ、Claude CodeはクラウドのClaude AIを使用するため、インターネット接続が必要です。',
+      },
+      {
+        question: '企業での利用は可能ですか？',
+        answer: 'はい、可能です。ただし、コードがClaudeに送信されるため、機密性の高いコードを扱う場合は社内ポリシーを確認してください。',
+      },
+    ],
+    relatedArticles: [
+      { href: '/guide/cursor-complete', title: 'Cursor完全ガイド', description: 'AIコードエディタの使い方' },
+      { href: '/guide/vibe-coding', title: 'バイブコーディング完全ガイド', description: 'AIでアプリを作る方法' },
+      { href: '/knowledge/vibe-coding/ai-tools-comparison', title: 'AIツール比較', description: '主要ツールの違いを解説' },
+    ],
+    content: (
+      <>
+        <section id="what-is-claude-code">
+          <h2>Claude Codeとは</h2>
+          <p>
+            <strong>Claude Code</strong>は、Anthropicが提供するターミナルベースのAI開発ツールです。
+            コマンドラインから直接Claudeに指示を出し、コードの生成、編集、実行を自動化できます。
+          </p>
+          <h3>Claude Codeの特徴</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>機能</th>
+                <th>説明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ファイル操作</td>
+                <td>ファイルの作成、読み取り、編集を自動で実行</td>
+              </tr>
+              <tr>
+                <td>コマンド実行</td>
+                <td>ターミナルコマンドを自動で実行</td>
+              </tr>
+              <tr>
+                <td>プロジェクト理解</td>
+                <td>プロジェクト全体の構造を把握した上で作業</td>
+              </tr>
+              <tr>
+                <td>自律的な作業</td>
+                <td>複数ステップの作業を自動で実行</td>
+              </tr>
+              <tr>
+                <td>Git操作</td>
+                <td>コミット、ブランチ作成なども自動化可能</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>Cursorとの違い</h3>
+          <p>
+            Cursorがエディタ内でAIを使うのに対し、Claude Codeは<strong>ターミナルで動作</strong>します。
+            より<strong>自動化された開発</strong>が可能で、複数の操作を一度に実行できます。
+          </p>
+        </section>
+
+        <section id="installation">
+          <h2>インストール方法</h2>
+          <h3>前提条件</h3>
+          <ul>
+            <li>Node.js 18以上</li>
+            <li>Claude Pro（$20/月）またはClaude Max（$100/月）プラン</li>
+          </ul>
+          <h3>ステップ1: Node.jsのインストール</h3>
+          <p>まだインストールしていない場合は、<a href="https://nodejs.org" target="_blank" rel="noopener noreferrer">nodejs.org</a>からダウンロードしてください。</p>
+          <pre><code>{`# バージョン確認
+node --version  # v18.0.0以上が必要`}</code></pre>
+
+          <h3>ステップ2: Claude Codeのインストール</h3>
+          <pre><code>{`# グローバルインストール
+npm install -g @anthropic-ai/claude-code
+
+# インストール確認
+claude-code --version`}</code></pre>
+
+          <h3>ステップ3: 認証</h3>
+          <pre><code>{`# ログイン
+claude-code auth
+
+# ブラウザが開くので、Anthropicアカウントでログイン`}</code></pre>
+        </section>
+
+        <section id="basic-usage">
+          <h2>基本的な使い方</h2>
+          <h3>起動</h3>
+          <pre><code>{`# プロジェクトフォルダで起動
+cd my-project
+claude-code`}</code></pre>
+          <p>対話式のインターフェースが起動し、自然言語で指示を出せます。</p>
+
+          <h3>基本的な指示の出し方</h3>
+          <pre><code>{`# 機能追加
+「ユーザー認証機能を追加して」
+
+# バグ修正
+「このエラーを修正して: TypeError: Cannot read property 'map' of undefined」
+
+# リファクタリング
+「このコンポーネントをTypeScriptに変換して」
+
+# テスト作成
+「src/utils/helpers.tsのユニットテストを作って」`}</code></pre>
+
+          <h3>ファイル操作</h3>
+          <p>Claude Codeはファイルの作成、編集、削除を自動で行います。</p>
+          <pre><code>{`「新しいReactコンポーネントButton.tsxを作成して」
+→ src/components/Button.tsx が自動作成される
+
+「package.jsonにaxiosを追加して」
+→ package.jsonが編集され、npm installが実行される`}</code></pre>
+
+          <h3>コマンド実行</h3>
+          <p>ターミナルコマンドも自動で実行できます。</p>
+          <pre><code>{`「ビルドして問題があれば修正して」
+→ npm run build を実行
+→ エラーがあれば自動修正
+→ 再ビルド`}</code></pre>
+        </section>
+
+        <section id="advanced-usage">
+          <h2>高度な使い方</h2>
+          <h3>複数ファイルの一括編集</h3>
+          <pre><code>{`「全コンポーネントにエラーバウンダリを追加して」
+→ 複数のファイルを自動で編集`}</code></pre>
+
+          <h3>プロジェクト分析</h3>
+          <pre><code>{`「このプロジェクトの構造を説明して」
+「認証機能はどこに実装されている？」
+「パフォーマンスの問題点を指摘して」`}</code></pre>
+
+          <h3>Git操作</h3>
+          <pre><code>{`「変更をコミットして」
+「feature/loginブランチを作成して」
+「mainブランチにマージして」`}</code></pre>
+
+          <h3>テスト駆動開発</h3>
+          <pre><code>{`「まずテストを書いて、それからテストが通る実装を作って」`}</code></pre>
+
+          <h3>設定ファイル（.claude）</h3>
+          <p>プロジェクトルートに<code>.claude</code>フォルダを作成し、設定を追加できます。</p>
+          <pre><code>{`# .claude/settings.json
+{
+  "model": "claude-3-5-sonnet-20241022",
+  "autoApprove": ["read", "write"],
+  "ignore": ["node_modules", ".git", "dist"]
+}`}</code></pre>
+        </section>
+
+        <section id="pricing">
+          <h2>料金</h2>
+          <p>Claude Codeを使用するには、Anthropicのサブスクリプションが必要です。</p>
+          <table>
+            <thead>
+              <tr>
+                <th>プラン</th>
+                <th>料金</th>
+                <th>内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Claude Pro</td>
+                <td>$20/月</td>
+                <td>Claude Codeが使用可能、使用量制限あり</td>
+              </tr>
+              <tr>
+                <td>Claude Max</td>
+                <td>$100/月</td>
+                <td>より多くの使用量、優先アクセス</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            <strong>注意</strong>: 無料プランではClaude Codeは使用できません。
+          </p>
+        </section>
+
+        <section id="vs-cursor">
+          <h2>Cursorとの比較</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>項目</th>
+                <th>Claude Code</th>
+                <th>Cursor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>インターフェース</td>
+                <td>ターミナル（CLI）</td>
+                <td>GUI（エディタ）</td>
+              </tr>
+              <tr>
+                <td>自動化レベル</td>
+                <td>高い（ファイル操作、コマンド実行）</td>
+                <td>中程度</td>
+              </tr>
+              <tr>
+                <td>学習コスト</td>
+                <td>やや高い</td>
+                <td>低い</td>
+              </tr>
+              <tr>
+                <td>向いている人</td>
+                <td>ターミナル慣れしている人</td>
+                <td>初心者、GUI好きな人</td>
+              </tr>
+              <tr>
+                <td>料金</td>
+                <td>$20〜$100/月</td>
+                <td>無料〜$20/月</td>
+              </tr>
+            </tbody>
+          </table>
+          <h3>使い分けのポイント</h3>
+          <ul>
+            <li><strong>初心者</strong>: まずCursorで始める</li>
+            <li><strong>中級者</strong>: 両方使い分ける</li>
+            <li><strong>上級者</strong>: Claude Codeをメインに</li>
+          </ul>
+          <p>
+            <strong>おすすめ</strong>: 細かい編集はCursor、大きな変更やプロジェクト構築はClaude Codeという使い分けが効率的です。
+          </p>
+        </section>
+
+        <section id="best-practices">
+          <h2>ベストプラクティス</h2>
+          <h3>1. 明確な指示を出す</h3>
+          <pre><code>{`❌ 「ログインを作って」
+✅ 「Supabase Authを使ってメール/パスワードのログイン機能を実装して。
+   エラーハンドリングとローディング状態も含めて。」`}</code></pre>
+
+          <h3>2. 段階的に進める</h3>
+          <p>大きな機能は一度に頼まず、段階的に実装します。</p>
+          <pre><code>{`1. 「まずログインフォームのUIを作って」
+2. 「次にSupabase Authと接続して」
+3. 「エラーハンドリングを追加して」
+4. 「ローディング状態を追加して」`}</code></pre>
+
+          <h3>3. レビューを怠らない</h3>
+          <p>AIが生成したコードは必ず確認してください。特に:</p>
+          <ul>
+            <li>セキュリティ関連のコード</li>
+            <li>データベース操作</li>
+            <li>支払い処理</li>
+          </ul>
+
+          <h3>4. バージョン管理と併用</h3>
+          <pre><code>{`# 作業前にコミット
+git commit -m "Before AI changes"
+
+# Claude Codeで作業
+
+# 変更を確認
+git diff
+
+# 問題なければコミット
+git commit -m "Add login feature via Claude Code"`}</code></pre>
+
+          <h3>5. .claudeignoreを設定</h3>
+          <p>機密情報を含むファイルはAIに読ませないようにします。</p>
+          <pre><code>{`# .claudeignore
+.env
+.env.local
+secrets/
+*.pem
+*.key`}</code></pre>
+        </section>
+      </>
+    ),
+  },
 }

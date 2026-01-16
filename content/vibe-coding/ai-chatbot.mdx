@@ -1,0 +1,99 @@
+---
+title: AIチャットボットの作り方
+description: OpenAI APIやClaude APIを使ったAIチャットボットの作り方。カスタマーサポート、FAQ対応など実用的な実装を解説。
+category: vibe-coding
+tags: [AI, チャットボット, OpenAI, Claude, カスタマーサポート]
+createdAt: '2024-04-02'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: chat-app-tutorial
+    anchor: チャットアプリの作り方
+---
+
+# AIチャットボットの作り方
+
+AIを使ったチャットボットで自動応答を実現しましょう。
+
+## できること
+
+- 24時間自動応答
+- FAQ対応
+- カスタマーサポート
+- 予約・問い合わせ
+
+## 技術選択
+
+| API | 特徴 |
+|-----|------|
+| OpenAI | GPT-4、高性能 |
+| Claude | 長文対応、安全性 |
+| Gemini | Google製、無料枠大 |
+
+## 基本実装
+
+```
+プロンプト:
+Next.jsでAIチャットボットを作って:
+- OpenAI APIを使用
+- チャットUI（吹き出し形式）
+- 会話履歴を保持
+- ストリーミング応答
+```
+
+## コード例
+
+```typescript
+// app/api/chat/route.ts
+import OpenAI from 'openai'
+
+const openai = new OpenAI()
+
+export async function POST(req: Request) {
+  const { messages } = await req.json()
+
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [
+      { role: 'system', content: 'あなたはカスタマーサポートです。' },
+      ...messages
+    ],
+    stream: true
+  })
+
+  // ストリーミングレスポンス
+  return new Response(response.toReadableStream())
+}
+```
+
+## カスタマイズ
+
+### システムプロンプト
+
+```
+あなたは[サービス名]のサポートアシスタントです。
+以下のルールに従って回答してください：
+- 丁寧な敬語を使う
+- 回答は簡潔に
+- わからないことは「担当者に確認します」
+```
+
+### RAG（知識ベース追加）
+
+```
+プロンプト:
+FAQドキュメントを読み込んで回答するチャットボット:
+- Markdownファイルを読み込み
+- 関連する内容を検索
+- コンテキストとして提供
+```
+
+## コスト管理
+
+- トークン数を監視
+- 月間上限を設定
+- キャッシュで重複回避
+
+## 次のステップ
+
+- [音声アプリの作り方](/knowledge/vibe-coding/voice-app)
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)

@@ -1,0 +1,81 @@
+---
+title: 決済サービス比較（Stripe vs LemonSqueezy）
+description: Stripe、LemonSqueezy、その他の決済サービスを徹底比較。個人開発者が選ぶべきサービスを解説。
+category: build
+tags: [決済, Stripe, LemonSqueezy, 比較, 選び方]
+createdAt: '2024-04-11'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-setup
+    anchor: Stripeで決済機能を実装
+---
+
+# 決済サービス比較
+
+個人開発で使える決済サービスを比較します。
+
+## 主要サービス一覧
+
+| サービス | 手数料 | 特徴 |
+|----------|--------|------|
+| Stripe | 3.6% | 業界標準、高機能 |
+| LemonSqueezy | 5% + $0.50 | 消費税自動化 |
+| Gumroad | 10% | デジタル商品向け |
+| PayPal | 3.6% + ¥40 | 知名度高い |
+
+## Stripe
+
+### メリット
+- 高機能、柔軟
+- ドキュメント充実
+- 日本語サポート
+
+### デメリット
+- 設定がやや複雑
+- 消費税処理は自分で
+
+### おすすめケース
+- 本格的なSaaS
+- カスタマイズ重視
+- 日本市場メイン
+
+## LemonSqueezy
+
+### メリット
+- 消費税を自動計算・納付
+- 設定が簡単
+- グローバル販売が楽
+
+### デメリット
+- 手数料が高め
+- カスタマイズ制限
+
+### おすすめケース
+- 個人開発
+- 海外販売したい
+- 税務処理を任せたい
+
+## 選び方フローチャート
+
+```
+日本市場のみ?
+├─ Yes → Stripe
+└─ No
+    └─ 税務処理を任せたい?
+        ├─ Yes → LemonSqueezy
+        └─ No → Stripe
+```
+
+## 結論
+
+| 状況 | おすすめ |
+|------|---------|
+| 初めての決済実装 | LemonSqueezy |
+| 本格SaaS | Stripe |
+| デジタルコンテンツ販売 | Gumroad |
+| 日本市場のみ | Stripe |
+
+## 次のステップ
+
+- [Stripeで決済機能を実装](/knowledge/build/stripe-setup)
+- [LemonSqueezyで決済実装](/knowledge/build/lemonsqueezy)

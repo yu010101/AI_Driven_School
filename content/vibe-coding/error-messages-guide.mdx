@@ -1,0 +1,149 @@
+---
+title: よくあるエラーメッセージと解決法
+description: プログラミングでよく遭遇するエラーメッセージとその解決法を一覧化。コピペで使えるソリューション集。
+category: vibe-coding
+tags: [エラー, デバッグ, 解決法, 初心者, トラブルシューティング]
+createdAt: '2024-03-23'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: debugging-with-ai
+    anchor: AIでデバッグする方法
+---
+
+# よくあるエラーメッセージと解決法
+
+## JavaScript/TypeScript
+
+### TypeError: Cannot read property 'X' of undefined
+
+```
+原因: undefinedに対してプロパティアクセス
+
+解決:
+// オプショナルチェイニング
+const value = obj?.property?.nested
+
+// またはデフォルト値
+const value = obj?.property || 'default'
+```
+
+### TypeError: X is not a function
+
+```
+原因: 関数でないものを関数として呼び出し
+
+確認ポイント:
+1. import文が正しいか
+2. 関数名のスペルミス
+3. 関数が正しくexportされているか
+```
+
+### SyntaxError: Unexpected token
+
+```
+原因: 構文エラー
+
+確認ポイント:
+1. 括弧の閉じ忘れ
+2. カンマの有無
+3. JSONの形式
+```
+
+## React
+
+### Too many re-renders
+
+```
+原因: 無限ループ
+
+解決:
+// ❌ 直接呼び出し
+onClick={handleClick()}
+
+// ✅ 関数を渡す
+onClick={handleClick}
+onClick={() => handleClick(arg)}
+```
+
+### Hydration failed
+
+```
+原因: サーバーとクライアントのHTMLが不一致
+
+解決:
+// useEffectでクライアントのみの処理に
+const [mounted, setMounted] = useState(false)
+useEffect(() => setMounted(true), [])
+if (!mounted) return null
+```
+
+### Invalid hook call
+
+```
+原因: フックのルール違反
+
+確認ポイント:
+1. 関数コンポーネント内で呼んでいるか
+2. 条件分岐の中で呼んでいないか
+3. Reactのバージョン
+```
+
+## Next.js
+
+### Module not found
+
+```
+解決:
+1. パッケージをインストール
+   npm install [package-name]
+
+2. パスを確認
+   @/components/... vs ./components/...
+
+3. tsconfig.jsonのpaths設定を確認
+```
+
+### CORS error
+
+```
+解決: API Routeを経由
+// pages/api/proxy.ts
+export default async function handler(req, res) {
+  const data = await fetch('外部API')
+  res.json(await data.json())
+}
+```
+
+## Supabase
+
+### JWT expired
+
+```
+原因: セッション切れ
+
+解決: セッションリフレッシュ
+await supabase.auth.refreshSession()
+```
+
+### RLS policy error
+
+```
+原因: Row Level Securityの設定
+
+解決: ポリシーを追加
+CREATE POLICY "Enable read for all" ON table
+FOR SELECT USING (true);
+```
+
+## 一般的な解決手順
+
+1. **エラーメッセージを読む**
+2. **該当行を特定**
+3. **AIに貼り付けて聞く**
+4. **検索**（エラーメッセージ + 技術名）
+5. **公式ドキュメント確認**
+
+## 次のステップ
+
+- [AIでデバッグする方法](/knowledge/vibe-coding/debugging-with-ai)
+- [AIでコードリファクタリング](/knowledge/vibe-coding/refactoring-with-ai)

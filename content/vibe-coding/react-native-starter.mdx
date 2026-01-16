@@ -1,0 +1,105 @@
+---
+title: React Nativeアプリの作り方
+description: AIを活用したReact Nativeモバイルアプリの作り方。Expo、ナビゲーション、ストア申請までを解説。
+category: vibe-coding
+tags: [React Native, モバイルアプリ, iOS, Android, Expo]
+createdAt: '2024-03-26'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: nextjs-starter
+    anchor: Next.jsアプリの作り方
+---
+
+# React Nativeアプリの作り方
+
+AIを使ってモバイルアプリを作る方法を解説します。
+
+## React Nativeとは
+
+- JavaScriptでiOS/Androidアプリ
+- Reactの知識が活かせる
+- 1つのコードで両OS対応
+
+## Expoで始める（推奨）
+
+```bash
+npx create-expo-app my-app
+cd my-app
+npx expo start
+```
+
+## 基本構造
+
+```
+プロンプト:
+React Native + Expoでシンプルなアプリの基本構造を作って。
+- タブナビゲーション（Home, Profile, Settings）
+- 各タブに仮のコンテンツ
+- ヘッダー付き
+```
+
+## ナビゲーション
+
+```
+プロンプト:
+Expo Routerでナビゲーションを実装:
+- 認証フロー（Login → Main）
+- タブナビゲーション
+- スタックナビゲーション（詳細画面）
+```
+
+## UI実装
+
+```
+プロンプト:
+SNSアプリのフィード画面を作って:
+- 投稿カード（画像、テキスト、いいね数）
+- プルリフレッシュ
+- 無限スクロール
+- いいねボタン
+```
+
+## データ永続化
+
+```
+プロンプト:
+AsyncStorageでユーザー設定を保存:
+- ダークモード設定
+- 通知設定
+- ログイン状態
+```
+
+## プッシュ通知
+
+```
+プロンプト:
+Expo Notificationsでプッシュ通知を実装:
+- 通知許可のリクエスト
+- トークン取得
+- 通知受信時の処理
+```
+
+## ビルド・申請
+
+### iOS
+
+```bash
+eas build --platform ios
+```
+
+### Android
+
+```bash
+eas build --platform android
+```
+
+## 注意点
+
+- iOS開発にはMacが必要
+- Apple Developer Program（年$99）
+- Google Play Console（1回$25）
+
+## 次のステップ
+
+- [Chrome拡張機能の作り方](/knowledge/vibe-coding/chrome-extension)
+- [Discord Botの作り方](/knowledge/vibe-coding/discord-bot)

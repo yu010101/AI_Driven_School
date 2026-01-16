@@ -1,35 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* AI Native + Education Friendly カラーパレット */
-  --background: #FAFBFC;
-  --background-secondary: #F1F5F9;
-  --foreground: #0F172A;
-  --foreground-muted: #64748B;
+  /* Core Colors */
+  --background: #FAFAFA;
+  --background-secondary: #F5F5F5;
+  --foreground: #0A0A0A;
+  --foreground-muted: #525252;
 
-  /* AI Purple - メインカラー */
-  --primary: #6366F1;
-  --primary-light: #EEF2FF;
-  --primary-dark: #4F46E5;
+  /* Primary - Rich Black */
+  --primary: #0A0A0A;
+  --primary-light: #F5F5F5;
 
-  /* CTA Orange - アクションカラー */
-  --cta: #F97316;
-  --cta-light: #FFF7ED;
+  /* Accent Colors - Multi-layer */
+  --accent: #6366F1;
+  --accent-light: #EEF2FF;
+  --accent-secondary: #06B6D4;
+  --accent-tertiary: #F97316;
 
-  /* Cyan - アクセント */
-  --accent: #06B6D4;
-  --accent-light: #ECFEFF;
+  /* Semantic Colors */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
 
-  --border: #E2E8F0;
+  --border: #E5E5E5;
   --surface: #FFFFFF;
 
-  /* グロー効果 */
-  --glow-primary: rgba(99, 102, 241, 0.15);
-  --glow-cta: rgba(249, 115, 22, 0.15);
+  /* Enhanced Glow Effects */
+  --glow-primary: rgba(10, 10, 10, 0.12);
+  --glow-accent: rgba(99, 102, 241, 0.2);
+  --glow-secondary: rgba(6, 182, 212, 0.15);
+  --glow-tertiary: rgba(249, 115, 22, 0.12);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 body {
@@ -40,103 +51,306 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* 見出し用フォント */
+/* Distinctive Heading Font */
 h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  letter-spacing: -0.02em;
 }
 
+/* ===============================
+   Keyframe Animations
+   =============================== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+  50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+}
+
+@keyframes ripple {
+  to {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
+
+@keyframes blob-move {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(30px, -20px) rotate(120deg) scale(1.1); }
+  66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes underline-expand {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* ===============================
+   Animation Utilities
+   =============================== */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 1000px 100%;
+}
+
+.animate-slideInUp {
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-blob {
+  animation: blob-move 7s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Staggered Animation Delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
 @layer components {
-  /* カード - グラスモーフィズム風 */
+  /* ===============================
+     Cards - Enhanced
+     =============================== */
   .card {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 1.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px var(--glow-primary);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 8px var(--glow-primary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-secondary), var(--accent-tertiary));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 30px var(--glow-primary);
-    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 20px 40px var(--glow-accent);
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  .card:hover::before {
+    transform: scaleX(1);
   }
 
   .card-strong {
-    background: linear-gradient(135deg, var(--primary-light) 0%, #F8FAFC 100%);
+    background: var(--primary-light);
     border: 1px solid var(--primary);
-    border-radius: 16px;
+    border-radius: 20px;
   }
 
-  /* ページ見出し */
+  /* ===============================
+     Typography - Page Elements
+     =============================== */
   .page-title {
     @apply text-3xl md:text-4xl font-bold mb-4;
-    font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
     color: var(--foreground);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 
   .page-title-accent {
     @apply text-3xl md:text-4xl font-bold mb-4;
-    font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+    background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* セクション見出し */
   .section-heading-center {
     @apply text-xl md:text-2xl font-bold mb-2;
-    font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
     color: var(--foreground);
   }
 
-  /* サブ見出し */
   .sub-heading {
     @apply text-lg font-bold mb-3;
     color: var(--foreground);
   }
 
-  /* ステップバッジ - AI Purple */
+  /* ===============================
+     Badges - Enhanced
+     =============================== */
   .step-badge {
-    @apply inline-block px-3 py-1 text-xs font-bold mb-3;
-    background: var(--primary-light);
-    color: var(--primary);
+    @apply inline-block px-4 py-1.5 text-xs font-bold mb-3;
+    background: linear-gradient(135deg, var(--primary), #1a1a1a);
+    color: white;
     border-radius: 100px;
+    box-shadow: 0 2px 8px var(--glow-primary);
   }
 
-  /* ボタン - Primary (AI Purple) */
+  .badge-glow {
+    @apply inline-flex items-center gap-2 px-4 py-2;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+    backdrop-filter: blur(12px);
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
+  }
+
+  .badge-glow:hover {
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
+    transform: translateY(-1px);
+  }
+
+  /* Category Badges */
+  .badge-vibe-coding {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  .badge-build {
+    background: rgba(6, 182, 212, 0.1);
+    color: var(--accent-secondary);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+  }
+
+  .badge-marketing {
+    background: rgba(249, 115, 22, 0.1);
+    color: var(--accent-tertiary);
+    border: 1px solid rgba(249, 115, 22, 0.2);
+  }
+
+  /* ===============================
+     Buttons - Enhanced with Ripple
+     =============================== */
   .btn-primary {
     @apply px-6 py-3 font-semibold text-sm;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    background: var(--primary);
     color: white;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     cursor: pointer;
-    box-shadow: 0 4px 15px var(--glow-primary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .btn-primary:active::before {
+    animation: ripple 0.6s ease-out;
   }
 
   .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px var(--glow-primary);
+    background: #1a1a1a;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 24px var(--glow-primary);
   }
 
-  /* ボタン - CTA (Orange) */
   .btn-cta {
     @apply px-6 py-3 font-semibold text-sm;
-    background: linear-gradient(135deg, var(--cta) 0%, #EA580C 100%);
+    background: linear-gradient(135deg, var(--accent), #818CF8);
     color: white;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     cursor: pointer;
-    box-shadow: 0 4px 15px var(--glow-cta);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px var(--glow-accent);
+  }
+
+  .btn-cta::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .btn-cta:active::before {
+    animation: ripple 0.6s ease-out;
   }
 
   .btn-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px var(--glow-cta);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 32px var(--glow-accent);
   }
 
   .btn-secondary {
@@ -144,29 +358,158 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     background: var(--surface);
     color: var(--foreground);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     cursor: pointer;
   }
 
   .btn-secondary:hover {
     border-color: var(--primary);
-    color: var(--primary);
     background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px var(--glow-primary);
   }
 
-  /* グラデーション背景 */
-  .gradient-bg {
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 50%, var(--cta-light) 100%);
+  /* ===============================
+     Navigation Link with Underline
+     =============================== */
+  .nav-link {
+    position: relative;
+    transition: color 0.3s ease;
   }
 
-  /* グロー効果 */
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+    border-radius: 2px;
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    width: 100%;
+  }
+
+  /* ===============================
+     Icon Container
+     =============================== */
+  .icon-container {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center;
+    background: linear-gradient(135deg, var(--primary), #1a1a1a);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px var(--glow-primary);
+  }
+
+  .icon-container:hover,
+  .group:hover .icon-container {
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 8px 20px var(--glow-accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  }
+
+  /* ===============================
+     Backgrounds & Textures
+     =============================== */
+  .bg-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Blob Background */
+  .blob-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blob-glow::before,
+  .blob-glow::after {
+    content: '';
+    position: absolute;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    filter: blur(60px);
+    animation: blob-move 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .blob-glow::before {
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.15));
+    top: -100px;
+    left: -50px;
+  }
+
+  .blob-glow::after {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(99, 102, 241, 0.1));
+    bottom: -80px;
+    right: -80px;
+    animation-delay: 3s;
+  }
+
+  /* Gradient Backgrounds */
+  .gradient-radial {
+    background: radial-gradient(
+      ellipse 80% 80% at 50% 0%,
+      rgba(99, 102, 241, 0.12) 0%,
+      transparent 100%
+    );
+  }
+
+  .gradient-mesh {
+    background:
+      radial-gradient(at 40% 20%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(249, 115, 22, 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+  }
+
+  /* Glow Effects */
   .glow-primary {
-    box-shadow: 0 0 40px var(--glow-primary);
+    box-shadow:
+      0 0 40px 0 rgba(99, 102, 241, 0.15),
+      0 0 80px 0 rgba(99, 102, 241, 0.08);
   }
 
-  .glow-cta {
-    box-shadow: 0 0 40px var(--glow-cta);
+  .glow-accent {
+    box-shadow:
+      0 0 60px 0 rgba(6, 182, 212, 0.2),
+      0 0 100px 0 rgba(6, 182, 212, 0.1);
+  }
+
+  /* ===============================
+     Progress Bar - Enhanced
+     =============================== */
+  .progress-bar {
+    height: 3px;
+    background: linear-gradient(90deg,
+      var(--accent),
+      var(--accent-secondary),
+      var(--accent-tertiary)
+    );
+    background-size: 200% 100%;
+    animation: gradient-shift 2s ease infinite;
+    box-shadow: 0 0 10px var(--glow-accent);
+    border-radius: 0 2px 2px 0;
   }
 }
 
@@ -190,29 +533,31 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 /* 見出し */
 .prose h1 {
-  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--foreground);
   margin-top: 3rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--primary-light);
+  border-bottom: 2px solid var(--border);
+  letter-spacing: -0.02em;
 }
 
 .prose h2 {
-  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--foreground);
   margin-top: 3rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--primary-light);
+  border-bottom: 2px solid var(--border);
+  letter-spacing: -0.02em;
 }
 
 .prose h3 {
-  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--foreground);
@@ -221,7 +566,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 .prose h4 {
-  font-family: 'Space Grotesk', 'Noto Sans JP', sans-serif;
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--foreground);
@@ -231,15 +576,15 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 /* リンク */
 .prose a {
-  color: var(--primary);
+  color: var(--accent);
   text-decoration: underline;
-  text-decoration-color: var(--primary-light);
+  text-decoration-color: var(--accent-light);
   text-underline-offset: 3px;
   transition: all 0.2s ease;
 }
 
 .prose a:hover {
-  text-decoration-color: var(--primary);
+  text-decoration-color: var(--accent);
 }
 
 /* 強調 */
@@ -251,7 +596,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 /* インラインコード */
 .prose code:not(pre code) {
   background: var(--primary-light);
-  color: var(--primary-dark);
+  color: var(--foreground);
   padding: 0.2em 0.4em;
   border-radius: 6px;
   font-size: 0.9em;
@@ -260,15 +605,15 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 /* コードブロック */
 .prose pre {
-  background: #1e293b;
-  color: #e2e8f0;
+  background: #0a0a0a;
+  color: #e5e5e5;
   padding: 1.25rem;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow-x: auto;
   margin: 1.5rem 0;
   font-size: 0.9rem;
   line-height: 1.6;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px var(--glow-primary);
 }
 
 .prose pre code {
@@ -299,16 +644,16 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 .prose li::marker {
-  color: var(--primary);
+  color: var(--accent);
 }
 
 /* 引用 */
 .prose blockquote {
-  background: linear-gradient(135deg, var(--primary-light) 0%, #F8FAFC 100%);
-  border-left: 4px solid var(--primary);
+  background: linear-gradient(135deg, var(--primary-light), rgba(99, 102, 241, 0.05));
+  border-left: 4px solid var(--accent);
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 16px 16px 0;
 }
 
 .prose blockquote p {
@@ -319,7 +664,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .prose blockquote strong {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 /* テーブル */
@@ -328,9 +673,9 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   border-collapse: collapse;
   margin: 1.5rem 0;
   font-size: 0.95rem;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px var(--glow-primary);
 }
 
 .prose th,
@@ -341,9 +686,9 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 .prose th {
-  background: var(--primary-light);
+  background: linear-gradient(135deg, var(--primary), #1a1a1a);
+  color: white;
   font-weight: 600;
-  color: var(--primary-dark);
 }
 
 .prose tr:hover {
@@ -354,16 +699,15 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .prose hr {
   border: none;
   height: 2px;
-  background: linear-gradient(90deg, var(--primary-light), var(--accent-light), var(--cta-light));
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
   margin: 3rem 0;
-  border-radius: 1px;
 }
 
 /* 画像 */
 .prose img {
-  border-radius: 12px;
+  border-radius: 16px;
   margin: 1.5rem 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px var(--glow-primary);
 }
 
 /* ===============================
@@ -372,20 +716,20 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 /* セレクション */
 ::selection {
-  background: var(--primary);
+  background: var(--accent);
   color: white;
 }
 
 /* フォーカス */
 :focus-visible {
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* スクロールバー */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -393,12 +737,12 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-light);
-  border-radius: 4px;
+  background: linear-gradient(180deg, var(--border), var(--foreground-muted));
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: linear-gradient(180deg, var(--foreground-muted), var(--primary));
 }
 
 /* アクセシビリティ */

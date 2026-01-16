@@ -5,6 +5,8 @@ import { remark } from 'remark'
 import remarkHtml from 'remark-html'
 import remarkGfm from 'remark-gfm'
 import type { Metadata } from 'next'
+import { ShareButtons } from '@/components/ShareButtons'
+import { ReadingProgress } from '@/components/ReadingProgress'
 
 const categories: Category[] = ['vibe-coding', 'build', 'marketing']
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
@@ -31,6 +33,75 @@ function formatDate(dateString?: string): string {
     month: 'long',
     day: 'numeric',
   })
+}
+
+// 目次を抽出する関数
+interface TOCItem {
+  id: string
+  text: string
+  level: number
+}
+
+function extractTOC(content: string): TOCItem[] {
+  const toc: TOCItem[] = []
+  const headingPattern = /^(#{2,3})\s+(.+)$/gm
+  let match
+
+  while ((match = headingPattern.exec(content)) !== null) {
+    const level = match[1].length
+    const text = match[2].trim()
+    const id = text
+      .toLowerCase()
+      .replace(/[^\w\s\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '')
+      .replace(/\s+/g, '-')
+    toc.push({ id, text, level })
+  }
+
+  return toc
+}
+
+// HowToステップを抽出する関数
+interface HowToStep {
+  name: string
+  text: string
+  position: number
+}
+
+function extractHowToSteps(content: string): HowToStep[] {
+  const steps: HowToStep[] = []
+
+  // パターン1: ### STEP 1: または ### ステップ1: 形式
+  const stepPattern = /###\s*(?:STEP|ステップ)\s*(\d+)[：:.]?\s*(.+?)[\n\r]+([^#]+?)(?=###|##|$)/gi
+  let match
+
+  while ((match = stepPattern.exec(content)) !== null) {
+    const position = parseInt(match[1])
+    const name = match[2].trim()
+    let text = match[3].trim().split(/\n\n/)[0].trim()
+    text = text.replace(/^\*\*[^*]+\*\*\s*/, '').trim()
+    if (name && text) {
+      steps.push({ name, text, position })
+    }
+  }
+
+  // パターン2: 1. 2. 3. のリスト形式（最低3つ以上）
+  if (steps.length === 0) {
+    const listPattern = /^(\d+)[.．]\s*\*?\*?(.+?)\*?\*?\s*$/gm
+    const matches: Array<{ num: number; text: string }> = []
+
+    while ((match = listPattern.exec(content)) !== null) {
+      matches.push({ num: parseInt(match[1]), text: match[2].trim() })
+    }
+
+    // 連番になっているものをステップとして抽出
+    if (matches.length >= 3) {
+      matches.slice(0, 10).forEach((m, i) => {
+        steps.push({ name: m.text, text: m.text, position: i + 1 })
+      })
+    }
+  }
+
+  return steps.sort((a, b) => a.position - b.position).slice(0, 10)
 }
 
 // FAQを抽出する関数
@@ -108,6 +179,8 @@ export async function generateMetadata({
 
   const articleUrl = `${baseUrl}/knowledge/${category}/${params.slug}`
 
+  const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(article.title)}&category=${category}`
+
   return {
     title: article.title,
     description: article.description,
@@ -121,11 +194,20 @@ export async function generateMetadata({
       modifiedTime: article.updatedAt || article.createdAt,
       authors: ['AI駆動塾'],
       tags: article.tags,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: article.title,
       description: article.description,
+      images: [ogImageUrl],
     },
     alternates: {
       canonical: articleUrl,
@@ -167,30 +249,61 @@ export default async function ArticlePage({
     .filter((a) => a.slug !== article.slug)
     .slice(0, 3)
 
+  // 他カテゴリからおすすめ記事を取得（内部リンク強化）
+  const otherCategories = categories.filter((c) => c !== category)
+  const crossCategoryArticles = otherCategories.flatMap((c) =>
+    getAllArticles(c).slice(0, 1).map((a) => ({ ...a, category: c }))
+  )
+
   // MarkdownをHTMLに変換
   const processedContent = await remark()
     .use(remarkGfm)
     .use(remarkHtml)
     .process(article.content)
-  const contentHtml = processedContent.toString()
+  let contentHtml = processedContent.toString()
 
-  // Article Schema (JSON-LD)
+  // 見出しにIDを追加（目次リンク用）
+  contentHtml = contentHtml.replace(/<h([23])>(.+?)<\/h\1>/g, (match, level, text) => {
+    const id = text
+      .replace(/<[^>]+>/g, '') // HTMLタグを除去
+      .toLowerCase()
+      .replace(/[^\w\s\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g, '')
+      .replace(/\s+/g, '-')
+    return `<h${level} id="${id}">${text}</h${level}>`
+  })
+
+  // OG画像URL
+  const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(article.title)}&category=${category}`
+
+  // Article Schema (JSON-LD) - 強化版
   const articleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
+    '@id': `${articleUrl}#article`,
     headline: article.title,
     description: article.description,
+    image: {
+      '@type': 'ImageObject',
+      url: ogImageUrl,
+      width: 1200,
+      height: 630,
+    },
+    thumbnailUrl: ogImageUrl,
     author: {
-      '@type': 'Organization',
+      '@type': 'Person',
+      '@id': `${baseUrl}/#author`,
       name: 'AI駆動塾',
-      url: baseUrl,
+      url: 'https://x.com/L_go_mrk',
     },
     publisher: {
       '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
       name: 'AI駆動塾',
       logo: {
         '@type': 'ImageObject',
         url: `${baseUrl}/icon-512.png`,
+        width: 512,
+        height: 512,
       },
     },
     datePublished: article.createdAt || new Date().toISOString(),
@@ -199,10 +312,27 @@ export default async function ArticlePage({
       '@type': 'WebPage',
       '@id': articleUrl,
     },
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': `${baseUrl}/#website`,
+      name: 'AI Driven School',
+      url: baseUrl,
+    },
     keywords: article.tags?.join(', '),
     articleSection: categoryNames[category],
     inLanguage: 'ja',
     wordCount: article.content.length,
+    timeRequired: `PT${readingTime}M`,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['article h1', 'article .prose'],
+    },
+    isAccessibleForFree: true,
+    copyrightHolder: {
+      '@type': 'Organization',
+      '@id': `${baseUrl}/#organization`,
+    },
+    copyrightYear: new Date(article.createdAt || new Date()).getFullYear(),
   }
 
   // Breadcrumb Schema (JSON-LD)
@@ -252,6 +382,25 @@ export default async function ArticlePage({
     })),
   } : null
 
+  // HowTo Schema (JSON-LD) - チュートリアル記事向け
+  const howToSteps = extractHowToSteps(article.content)
+  const howToJsonLd = howToSteps.length >= 3 ? {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: article.title,
+    description: article.description,
+    totalTime: `PT${readingTime}M`,
+    step: howToSteps.map((step) => ({
+      '@type': 'HowToStep',
+      position: step.position,
+      name: step.name,
+      text: step.text,
+    })),
+  } : null
+
+  // 目次を抽出
+  const toc = extractTOC(article.content)
+
   return (
     <>
       {/* 構造化データ */}
@@ -269,6 +418,14 @@ export default async function ArticlePage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       )}
+      {howToJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        />
+      )}
+
+      <ReadingProgress />
 
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
@@ -360,18 +517,52 @@ export default async function ArticlePage({
               </div>
             </header>
 
+            {/* 目次 */}
+            {toc.length >= 3 && (
+              <nav className="bg-gray-50 rounded-xl border border-gray-200 p-5 mb-8" aria-label="目次">
+                <h2 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                  <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                  目次
+                </h2>
+                <ol className="space-y-2 text-sm">
+                  {toc.map((item, index) => (
+                    <li
+                      key={index}
+                      className={item.level === 3 ? 'ml-4' : ''}
+                    >
+                      <a
+                        href={`#${item.id}`}
+                        className="text-gray-600 hover:text-black transition-colors hover:underline"
+                      >
+                        {item.text}
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
+
             {/* 本文 */}
             <div className="bg-white rounded-xl border border-gray-200 p-6 md:p-10 shadow-sm">
               <div
                 className="prose prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ __html: contentHtml }}
               />
+
+              {/* シェアボタン */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <ShareButtons url={articleUrl} title={article.title} />
+              </div>
             </div>
 
-            {/* 関連記事 */}
+            {/* 関連記事（同カテゴリ） */}
             {sameCategoryArticles.length > 0 && (
               <section className="mt-10">
-                <h2 className="font-bold text-lg text-gray-900 mb-4">次に読む</h2>
+                <h2 className="font-bold text-lg text-gray-900 mb-4">
+                  {categoryNames[category]}の他の記事
+                </h2>
                 <div className="grid gap-3">
                   {sameCategoryArticles.map((art) => (
                     <Link
@@ -381,6 +572,27 @@ export default async function ArticlePage({
                     >
                       <span className="text-black">→</span>
                       <span className="text-gray-900">{art.title}</span>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 他カテゴリのおすすめ記事 */}
+            {crossCategoryArticles.length > 0 && (
+              <section className="mt-8">
+                <h2 className="font-bold text-lg text-gray-900 mb-4">他のカテゴリも見る</h2>
+                <div className="grid md:grid-cols-2 gap-3">
+                  {crossCategoryArticles.map((art) => (
+                    <Link
+                      key={`${art.category}-${art.slug}`}
+                      href={`/knowledge/${art.category}/${art.slug}`}
+                      className="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:border-black transition-colors"
+                    >
+                      <span className="text-xs text-gray-500 block mb-1">
+                        {categoryNames[art.category as Category]}
+                      </span>
+                      <span className="text-gray-900 font-medium">{art.title}</span>
                     </Link>
                   ))}
                 </div>

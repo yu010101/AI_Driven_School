@@ -22,9 +22,93 @@ export const metadata: Metadata = {
   },
 }
 
+// AboutPage Schema (JSON-LD) - 強化版
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  '@id': `${baseUrl}/about#webpage`,
+  name: 'About | AI駆動塾',
+  description: 'AI駆動塾は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
+  url: `${baseUrl}/about`,
+  inLanguage: 'ja',
+  isPartOf: {
+    '@type': 'WebSite',
+    '@id': `${baseUrl}/#website`,
+    name: 'AI Driven School',
+    url: baseUrl,
+  },
+  about: {
+    '@id': `${baseUrl}/#organization`,
+  },
+  mainEntity: {
+    '@type': 'Organization',
+    '@id': `${baseUrl}/#organization`,
+    name: 'AI駆動塾',
+    alternateName: 'AI Driven School',
+    url: baseUrl,
+    description: '非エンジニアでもAIを使ってアプリを作り、売る方法を発信',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${baseUrl}/icon-512.png`,
+      width: 512,
+      height: 512,
+    },
+    founder: {
+      '@type': 'Person',
+      '@id': `${baseUrl}/#author`,
+      name: 'AI駆動塾',
+      url: 'https://x.com/L_go_mrk',
+      jobTitle: 'AI開発エバンジェリスト',
+      sameAs: [
+        'https://x.com/L_go_mrk',
+        'https://note.com/l_mrk',
+      ],
+    },
+    sameAs: [
+      'https://x.com/L_go_mrk',
+      'https://note.com/l_mrk',
+    ],
+    knowsAbout: [
+      'バイブコーディング',
+      'AI駆動開発',
+      '個人開発',
+      '0円マーケティング',
+    ],
+  },
+}
+
+// Breadcrumb Schema (JSON-LD)
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'ホーム',
+      item: baseUrl,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'About',
+      item: `${baseUrl}/about`,
+    },
+  ],
+}
+
 export default function About() {
   return (
-    <div className="container mx-auto px-4 py-16 max-w-2xl">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <div className="container mx-auto px-4 py-16 max-w-2xl">
       <div className="text-center mb-14">
         <h1 className="page-title">About</h1>
       </div>
@@ -74,5 +158,6 @@ export default function About() {
         </div>
       </div>
     </div>
+    </>
   )
 }

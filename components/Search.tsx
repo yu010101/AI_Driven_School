@@ -102,7 +102,7 @@ export default function Search() {
       {/* 検索ボタン */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#64748B] bg-[#F1F5F9] hover:bg-[#EEF2FF] hover:text-[#6366F1] rounded-lg transition-colors"
+        className="flex items-center gap-2 px-3 py-1.5 text-sm text-[#525252] bg-[#F5F5F5] hover:bg-[#E5E5E5] hover:text-[#0A0A0A] rounded-lg transition-colors"
         aria-label="検索"
       >
         <svg
@@ -119,7 +119,7 @@ export default function Search() {
           />
         </svg>
         <span className="hidden sm:inline">検索</span>
-        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs font-mono bg-white rounded border border-[#E2E8F0]">
+        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-xs font-mono bg-white rounded border border-[#E5E5E5]">
           <span className="text-xs">⌘</span>K
         </kbd>
       </button>
@@ -129,12 +129,12 @@ export default function Search() {
         <div className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] bg-[#0F172A]/50 backdrop-blur-sm">
           <div
             ref={containerRef}
-            className="w-full max-w-xl mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden border border-[#E2E8F0]"
+            className="w-full max-w-xl mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden border border-[#E5E5E5]"
           >
             {/* 検索入力 */}
-            <div className="flex items-center gap-3 px-4 py-4 border-b border-[#E2E8F0]">
+            <div className="flex items-center gap-3 px-4 py-4 border-b border-[#E5E5E5]">
               <svg
-                className="w-5 h-5 text-[#6366F1]"
+                className="w-5 h-5 text-[#0A0A0A]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -155,11 +155,11 @@ export default function Search() {
                 className="flex-1 text-lg outline-none placeholder:text-[#94A3B8] text-[#0F172A]"
               />
               {isLoading && (
-                <div className="w-5 h-5 border-2 border-[#EEF2FF] border-t-[#6366F1] rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-[#E5E5E5] border-t-[#0A0A0A] rounded-full animate-spin" />
               )}
               <button
                 onClick={handleClose}
-                className="px-2 py-1 text-sm text-[#64748B] hover:text-[#6366F1] hover:bg-[#EEF2FF] rounded transition-colors"
+                className="px-2 py-1 text-sm text-[#525252] hover:text-[#0A0A0A] hover:bg-[#F5F5F5] rounded transition-colors"
               >
                 ESC
               </button>
@@ -180,7 +180,7 @@ export default function Search() {
                       <Link
                         href={`/knowledge/${result.category}/${result.slug}`}
                         onClick={handleClose}
-                        className="flex flex-col gap-1 px-4 py-3 hover:bg-[#F8FAFC] transition-colors"
+                        className="flex flex-col gap-1 px-4 py-3 hover:bg-[#F5F5F5] transition-colors"
                       >
                         <div className="flex items-center gap-2">
                           <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${categoryColors[result.category] || 'bg-gray-100 text-gray-600'}`}>
@@ -207,14 +207,14 @@ export default function Search() {
             </div>
 
             {/* フッター */}
-            <div className="px-4 py-3 border-t border-[#E2E8F0] bg-[#F8FAFC] text-xs text-[#64748B] flex items-center gap-4">
+            <div className="px-4 py-3 border-t border-[#E5E5E5] bg-[#FAFAFA] text-xs text-[#525252] flex items-center gap-4">
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#E2E8F0] text-[#6366F1]">↑</kbd>
-                <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#E2E8F0] text-[#6366F1]">↓</kbd>
+                <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#E5E5E5] text-[#0A0A0A]">↑</kbd>
+                <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#E5E5E5] text-[#0A0A0A]">↓</kbd>
                 で移動
               </span>
               <span className="flex items-center gap-1">
-                <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#E2E8F0] text-[#6366F1]">Enter</kbd>
+                <kbd className="px-1.5 py-0.5 bg-white rounded border border-[#E5E5E5] text-[#0A0A0A]">Enter</kbd>
                 で開く
               </span>
             </div>

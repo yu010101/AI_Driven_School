@@ -75,10 +75,90 @@ export default function CategoryPage({
   }
 
   const articles = getAllArticles(category)
-  const { name, description, step } = categoryData[category]
+  const { name, description, step, longDescription } = categoryData[category]
+  const categoryUrl = `${baseUrl}/knowledge/${category}`
+
+  // OG画像URL
+  const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(name)}&category=${category}`
+
+  // CollectionPage Schema (JSON-LD) - 強化版
+  const collectionJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${categoryUrl}#webpage`,
+    name: name,
+    description: longDescription,
+    url: categoryUrl,
+    inLanguage: 'ja',
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': `${baseUrl}/#website`,
+      name: 'AI Driven School',
+      url: baseUrl,
+    },
+    about: {
+      '@type': 'Thing',
+      name: name,
+      description: description,
+    },
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: ogImageUrl,
+      width: 1200,
+      height: 630,
+    },
+    dateModified: articles[0]?.updatedAt || articles[0]?.createdAt || new Date().toISOString(),
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: articles.length,
+      itemListElement: articles.map((article, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: article.title,
+        url: `${baseUrl}/knowledge/${category}/${article.slug}`,
+        description: article.description || article.excerpt,
+        image: `${baseUrl}/api/og?title=${encodeURIComponent(article.title)}&category=${category}`,
+      })),
+    },
+  }
+
+  // Breadcrumb Schema (JSON-LD)
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'ホーム',
+        item: baseUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '記事一覧',
+        item: `${baseUrl}/knowledge`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: name,
+        item: categoryUrl,
+      },
+    ],
+  }
 
   return (
-    <div className="container mx-auto px-4 py-16">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <div className="container mx-auto px-4 py-16">
       <div className="text-center mb-14">
         <div className="step-badge mb-4">{step}</div>
         <h1 className="page-title">{name}</h1>
@@ -115,5 +195,6 @@ export default function CategoryPage({
         </Link>
       </div>
     </div>
+    </>
   )
 }

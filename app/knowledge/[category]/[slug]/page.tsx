@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getArticle, getAllArticles, type Category } from '@/lib/mdx'
+import { getArticle, getAllArticles, type Category, type Reference } from '@/lib/mdx'
 import { remark } from 'remark'
 import remarkHtml from 'remark-html'
 import remarkGfm from 'remark-gfm'
@@ -334,6 +334,14 @@ export default async function ArticlePage({
       '@id': `${baseUrl}/#organization`,
     },
     copyrightYear: new Date(article.createdAt || new Date()).getFullYear(),
+    ...(article.references && article.references.length > 0 && {
+      citation: article.references.map((ref) => ({
+        '@type': 'WebPage',
+        name: ref.title,
+        url: ref.url,
+        ...(ref.author && { author: { '@type': 'Person', name: ref.author } }),
+      })),
+    }),
   }
 
   // Breadcrumb Schema (JSON-LD)
@@ -556,6 +564,38 @@ export default async function ArticlePage({
               <div className="mt-8 pt-6 border-t border-gray-200">
                 <ShareButtons url={articleUrl} title={article.title} />
               </div>
+
+              {/* 参照・引用元 */}
+              {article.references && article.references.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <h2 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    参考文献・引用元
+                  </h2>
+                  <ul className="space-y-2">
+                    {article.references.map((ref, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm">
+                        <span className="text-gray-400 mt-0.5">[{index + 1}]</span>
+                        <div>
+                          <a
+                            href={ref.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {ref.title}
+                          </a>
+                          {ref.author && (
+                            <span className="text-gray-500 ml-2">- {ref.author}</span>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* 関連記事（同カテゴリ） */}

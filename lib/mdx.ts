@@ -4,6 +4,12 @@ import matter from 'gray-matter'
 
 export type Category = 'vibe-coding' | 'build' | 'marketing' | 'sales'
 
+export interface Reference {
+  title: string
+  url: string
+  author?: string
+}
+
 export interface Article {
   slug: string
   title: string
@@ -16,6 +22,7 @@ export interface Article {
     slug: string
     anchor: string
   }>
+  references?: Reference[]
   createdAt?: string
   updatedAt?: string
 }
@@ -61,6 +68,7 @@ export function getAllArticles(category?: Category): Article[] {
         content,
         excerpt: data.excerpt,
         relatedArticles: data.relatedArticles,
+        references: data.references,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
       })
@@ -93,6 +101,7 @@ export function getArticle(category: Category, slug: string): Article | null {
         content,
         excerpt: data.excerpt,
         relatedArticles: data.relatedArticles,
+        references: data.references,
         createdAt: data.createdAt,
         updatedAt: data.updatedAt,
       }

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 
-export type Category = 'vibe-coding' | 'build' | 'marketing'
+export type Category = 'vibe-coding' | 'build' | 'marketing' | 'sales'
 
 export interface Article {
   slug: string
@@ -39,7 +39,7 @@ function getAllMdxFiles(dir: string): string[] {
 }
 
 export function getAllArticles(category?: Category): Article[] {
-  const categories = category ? [category] : ['vibe-coding', 'build', 'marketing']
+  const categories = category ? [category] : ['vibe-coding', 'build', 'marketing', 'sales']
   const articles: Article[] = []
 
   for (const cat of categories) {

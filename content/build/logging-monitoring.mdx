@@ -1,0 +1,230 @@
+---
+title: ログ・監視の実装｜エラーを見逃さない仕組みの作り方
+description: アプリケーションのログ収集と監視の実装方法。Sentry、ログ設計、アラート設定を解説。
+category: build
+tags: [ログ, 監視, Sentry, エラー追跡, 運用]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: error-handling
+    anchor: エラーハンドリング
+  - slug: vercel-deploy
+    anchor: Vercelデプロイ
+---
+
+# ログ・監視の実装
+
+本番でエラーが起きたら、すぐに気づきたい。
+
+## 監視すべきもの
+
+```
+1. エラー発生（JavaScript例外、API失敗）
+2. パフォーマンス（ページ速度、API応答時間）
+3. 可用性（サーバーダウン）
+4. ビジネス指標（登録数、売上）
+```
+
+## Sentryでエラー監視
+
+### セットアップ
+
+```bash
+npx @sentry/wizard@latest -i nextjs
+```
+
+### 環境変数
+
+```env
+SENTRY_DSN=https://xxx@xxx.ingest.sentry.io/xxx
+SENTRY_ORG=your-org
+SENTRY_PROJECT=your-project
+```
+
+### 自動設定
+
+ウィザードが以下を自動生成：
+```
+- sentry.client.config.ts
+- sentry.server.config.ts
+- sentry.edge.config.ts
+- next.config.js の更新
+```
+
+### カスタムエラー送信
+
+```typescript
+import * as Sentry from '@sentry/nextjs'
+
+// エラーをキャプチャ
+try {
+  await riskyOperation()
+} catch (error) {
+  Sentry.captureException(error, {
+    tags: { feature: 'payment' },
+    extra: { userId: user.id },
+  })
+}
+
+// メッセージを送信
+Sentry.captureMessage('注文完了', {
+  level: 'info',
+  extra: { orderId: order.id },
+})
+```
+
+### ユーザー情報の設定
+
+```typescript
+Sentry.setUser({
+  id: user.id,
+  email: user.email,
+  username: user.name,
+})
+```
+
+## ログ設計
+
+### ログレベル
+
+```typescript
+const logger = {
+  debug: (msg: string, data?: object) => console.debug(msg, data),
+  info: (msg: string, data?: object) => console.info(msg, data),
+  warn: (msg: string, data?: object) => console.warn(msg, data),
+  error: (msg: string, data?: object) => console.error(msg, data),
+}
+
+// 使用例
+logger.info('ユーザー登録', { userId: user.id })
+logger.error('決済エラー', { error, orderId })
+```
+
+### 構造化ログ
+
+```typescript
+function log(level: string, message: string, data?: object) {
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level,
+    message,
+    ...data,
+  }))
+}
+```
+
+## Vercelログ
+
+### ログの確認
+
+```
+Vercelダッシュボード → プロジェクト → Logs
+- リアルタイムログ
+- 過去のログ検索
+- フィルター機能
+```
+
+### ログドレイン
+
+```
+Vercel → Project Settings → Log Drains
+外部サービスにログを転送:
+- Datadog
+- Logtail
+- Better Stack
+```
+
+## アラート設定
+
+### Sentryアラート
+
+```
+Sentry → Alerts → Create Alert Rule
+
+条件例:
+- 新しいエラーが発生
+- エラー数が閾値を超えた
+- 特定のタグを含むエラー
+```
+
+### 通知先
+
+```
+- メール
+- Slack
+- PagerDuty
+- Discord Webhook
+```
+
+## パフォーマンス監視
+
+### Sentry Performance
+
+```typescript
+// トランザクション開始
+const transaction = Sentry.startTransaction({
+  name: 'checkout',
+  op: 'transaction',
+})
+
+// 子スパン
+const span = transaction.startChild({
+  op: 'db.query',
+  description: 'SELECT FROM orders',
+})
+
+await queryDatabase()
+span.finish()
+
+transaction.finish()
+```
+
+### Web Vitals
+
+```typescript
+// Next.jsで自動計測
+export function reportWebVitals(metric) {
+  if (metric.label === 'web-vital') {
+    Sentry.captureMessage(`${metric.name}: ${metric.value}`, {
+      level: 'info',
+      tags: { type: 'web-vital' },
+    })
+  }
+}
+```
+
+## ヘルスチェック
+
+### エンドポイント作成
+
+```typescript
+// app/api/health/route.ts
+export async function GET() {
+  try {
+    // DBに接続確認
+    await prisma.$queryRaw`SELECT 1`
+
+    return Response.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+    })
+  } catch (error) {
+    return Response.json(
+      { status: 'unhealthy', error: error.message },
+      { status: 500 }
+    )
+  }
+}
+```
+
+### 外部監視
+
+```
+Better Uptime、UptimeRobot などで
+/api/health を定期的にチェック
+```
+
+## 次のステップ
+
+- [エラーハンドリング](/knowledge/build/error-handling)
+- [テスト環境の構築](/knowledge/build/testing-setup)

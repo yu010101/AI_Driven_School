@@ -1,0 +1,255 @@
+---
+title: AIでドキュメント作成｜README、API仕様書、コメントを自動生成
+description: AIを使ってドキュメントを効率的に作成する方法。README、API仕様書、コードコメントの書き方を解説。
+category: vibe-coding
+tags: [ドキュメント, AI, README, API仕様書, JSDoc]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: code-review-with-ai
+    anchor: AIでコードレビュー
+  - slug: testing-with-ai
+    anchor: AIでテスト作成
+---
+
+# AIでドキュメント作成
+
+ドキュメントは後回しになりがち。AIに任せれば一瞬。
+
+## AIでドキュメントを書くメリット
+
+- **時間短縮**: 手動の1/5以下
+- **網羅性**: 書くべき項目を提案
+- **一貫性**: フォーマットが揃う
+- **多言語**: 翻訳も可能
+
+## README.mdの生成
+
+### 基本的な依頼
+
+```
+このプロジェクトのREADME.mdを書いて：
+
+プロジェクト名: TaskManager
+技術スタック: Next.js, TypeScript, Supabase
+主な機能: タスク管理、チーム共有、リマインダー
+```
+
+### 詳細な依頼
+
+```
+以下を含むREADME.mdを書いて：
+- プロジェクト概要
+- 機能一覧
+- インストール方法
+- 使い方
+- 環境変数の設定
+- 開発への参加方法
+- ライセンス
+
+このpackage.jsonを参考に：
+[package.jsonの内容]
+```
+
+## API仕様書の生成
+
+### コードからSwagger/OpenAPIを生成
+
+```
+このAPIルートからOpenAPI仕様書を生成して：
+
+// POST /api/users
+export async function POST(request: Request) {
+  const { email, password, name } = await request.json()
+  // ユーザー作成処理
+  return Response.json({ user: newUser })
+}
+```
+
+### 生成結果例
+
+```yaml
+openapi: 3.0.0
+paths:
+  /api/users:
+    post:
+      summary: 新規ユーザー作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                name:
+                  type: string
+              required: [email, password, name]
+      responses:
+        '200':
+          description: 作成成功
+```
+
+## コードコメントの追加
+
+### JSDoc/TSDocの生成
+
+```
+この関数にJSDocを追加して：
+
+function calculateShipping(weight, distance, express = false) {
+  const baseRate = 500
+  const weightRate = weight * 10
+  const distanceRate = distance * 2
+  const expressMultiplier = express ? 1.5 : 1
+  return (baseRate + weightRate + distanceRate) * expressMultiplier
+}
+```
+
+生成結果：
+```typescript
+/**
+ * 配送料を計算する
+ *
+ * @param {number} weight - 重量（kg）
+ * @param {number} distance - 配送距離（km）
+ * @param {boolean} [express=false] - 速達オプション
+ * @returns {number} 配送料（円）
+ *
+ * @example
+ * calculateShipping(5, 100) // => 1700
+ * calculateShipping(5, 100, true) // => 2550
+ */
+function calculateShipping(weight: number, distance: number, express: boolean = false): number {
+  const baseRate = 500
+  const weightRate = weight * 10
+  const distanceRate = distance * 2
+  const expressMultiplier = express ? 1.5 : 1
+  return (baseRate + weightRate + distanceRate) * expressMultiplier
+}
+```
+
+## 変更履歴（CHANGELOG）
+
+### コミット履歴から生成
+
+```
+これらのコミットからCHANGELOGを作成して：
+
+abc123 feat: ユーザー認証機能を追加
+def456 fix: ログインエラーを修正
+ghi789 docs: READMEを更新
+jkl012 feat: ダークモードを追加
+```
+
+生成結果：
+```markdown
+# Changelog
+
+## [1.2.0] - 2024-12-20
+
+### Added
+- ユーザー認証機能
+- ダークモード切り替え
+
+### Fixed
+- ログイン時のエラー処理を改善
+
+### Documentation
+- READMEを更新
+```
+
+## 使い方ガイドの作成
+
+### 機能からガイドを生成
+
+```
+このログイン機能の使い方ガイドを書いて：
+
+[ログイン機能のコード]
+
+対象読者: 初めてこのアプリを使うユーザー
+```
+
+### 開発者向けドキュメント
+
+```
+この認証モジュールの開発者向けドキュメントを書いて：
+- アーキテクチャ説明
+- 使用方法
+- カスタマイズ方法
+- トラブルシューティング
+```
+
+## 翻訳
+
+### 日本語→英語
+
+```
+このREADMEを英語に翻訳して。
+技術用語はそのまま、自然な英語で。
+
+[日本語README]
+```
+
+### 多言語対応
+
+```
+このドキュメントを以下の言語に翻訳して：
+- 英語
+- 中国語（簡体字）
+- 韓国語
+```
+
+## 自動化
+
+### コミット時に自動生成
+
+```json
+// package.json
+{
+  "scripts": {
+    "docs:generate": "ai-docs generate",
+    "prepare": "npm run docs:generate"
+  }
+}
+```
+
+### CI/CDで更新
+
+```yaml
+# .github/workflows/docs.yml
+- name: Update Documentation
+  run: |
+    npm run docs:generate
+    git add docs/
+    git commit -m "docs: auto-update" || true
+```
+
+## 注意点
+
+### 正確性の確認
+
+```
+・APIの仕様が実際と一致しているか
+・パラメータの説明が正しいか
+・サンプルコードが動くか
+```
+
+### 最新状態の維持
+
+```
+・コード変更時にドキュメントも更新
+・古いドキュメントは混乱のもと
+・自動生成で常に最新に
+```
+
+## 次のステップ
+
+- [AIでテスト作成](/knowledge/vibe-coding/testing-with-ai)
+- [AIでコードレビュー](/knowledge/vibe-coding/code-review-with-ai)

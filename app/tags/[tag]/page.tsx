@@ -9,6 +9,7 @@ const categoryNames: Record<Category, string> = {
   'vibe-coding': 'バイブコーディング',
   'build': '実装パターン',
   'marketing': '0円マーケティング',
+  'sales': '営業・収益化',
 }
 
 // 全タグを取得してstaticParamsを生成

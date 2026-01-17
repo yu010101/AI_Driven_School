@@ -1,0 +1,250 @@
+---
+title: Webhook連携の作り方｜外部サービスとリアルタイム連携する方法
+description: Webhookを使って外部サービスと連携する方法。Stripe、GitHub、Slackなどからの通知を受け取る実装を解説。
+category: vibe-coding
+tags: [Webhook, API, 連携, Stripe, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-setup
+    anchor: Stripe設定
+  - slug: slack-app
+    anchor: Slackアプリ
+---
+
+# Webhook連携の作り方
+
+外部サービスから「何か起きた」を受け取るWebhook。
+
+## Webhookとは
+
+```
+[外部サービス] --イベント発生--> [あなたのAPI]
+
+例:
+- Stripeで支払い完了 → 注文確定処理
+- GitHubでプッシュ → デプロイ実行
+- Slackでメッセージ → ボット応答
+```
+
+## 基本実装
+
+### エンドポイント作成
+
+```
+Webhookを受け取るAPIエンドポイントを作って：
+- POST /api/webhooks/stripe
+- リクエストボディをパース
+- 署名検証
+- イベントタイプに応じた処理
+```
+
+生成されるコード：
+```typescript
+// app/api/webhooks/stripe/route.ts
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+
+export async function POST(request: Request) {
+  const body = await request.text()
+  const signature = request.headers.get('stripe-signature')!
+
+  let event: Stripe.Event
+
+  // 署名検証
+  try {
+    event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
+  } catch (err) {
+    return Response.json({ error: 'Invalid signature' }, { status: 400 })
+  }
+
+  // イベント処理
+  switch (event.type) {
+    case 'checkout.session.completed':
+      await handleCheckoutComplete(event.data.object)
+      break
+    case 'customer.subscription.updated':
+      await handleSubscriptionUpdate(event.data.object)
+      break
+    default:
+      console.log(`Unhandled event: ${event.type}`)
+  }
+
+  return Response.json({ received: true })
+}
+```
+
+## Stripe Webhook
+
+### セットアップ
+
+```
+1. Stripeダッシュボード → Webhooks
+2. エンドポイントを追加
+3. イベントを選択
+4. Webhook Secretをコピー
+```
+
+### 処理するイベント
+
+```typescript
+// 支払い完了
+case 'checkout.session.completed':
+  // 注文を確定
+  // メール送信
+  break
+
+// サブスク更新
+case 'customer.subscription.updated':
+  // ユーザーのプラン更新
+  break
+
+// 支払い失敗
+case 'invoice.payment_failed':
+  // リマインドメール
+  break
+```
+
+## GitHub Webhook
+
+### リポジトリへのプッシュ
+
+```typescript
+// app/api/webhooks/github/route.ts
+import crypto from 'crypto'
+
+export async function POST(request: Request) {
+  const body = await request.text()
+  const signature = request.headers.get('x-hub-signature-256')
+
+  // 署名検証
+  const expectedSignature = 'sha256=' + crypto
+    .createHmac('sha256', process.env.GITHUB_WEBHOOK_SECRET!)
+    .update(body)
+    .digest('hex')
+
+  if (signature !== expectedSignature) {
+    return Response.json({ error: 'Invalid signature' }, { status: 401 })
+  }
+
+  const event = JSON.parse(body)
+  const eventType = request.headers.get('x-github-event')
+
+  switch (eventType) {
+    case 'push':
+      // デプロイをトリガー
+      break
+    case 'issues':
+      // Issue通知
+      break
+  }
+
+  return Response.json({ received: true })
+}
+```
+
+## Slack Webhook
+
+### Slackからのイベント
+
+```typescript
+// app/api/webhooks/slack/route.ts
+export async function POST(request: Request) {
+  const body = await request.json()
+
+  // URL検証（初回のみ）
+  if (body.type === 'url_verification') {
+    return Response.json({ challenge: body.challenge })
+  }
+
+  // イベント処理
+  if (body.event.type === 'message') {
+    // メッセージに応答
+    await sendSlackMessage(body.event.channel, 'Hello!')
+  }
+
+  return Response.json({ ok: true })
+}
+```
+
+## ローカル開発
+
+### ngrokでトンネル
+
+```bash
+# ngrokをインストール
+npm install -g ngrok
+
+# トンネル開始
+ngrok http 3000
+
+# 表示されたURLをWebhook URLに設定
+# https://xxxx.ngrok.io/api/webhooks/stripe
+```
+
+### Stripe CLIでテスト
+
+```bash
+# Stripe CLIでローカルにフォワード
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+
+# テストイベント送信
+stripe trigger checkout.session.completed
+```
+
+## セキュリティ
+
+### 署名検証は必須
+
+```typescript
+// ❌ 署名検証なし（危険）
+const body = await request.json()
+processEvent(body)
+
+// ⭕ 署名検証あり
+const signature = request.headers.get('x-signature')
+if (!verifySignature(body, signature)) {
+  return Response.json({ error: 'Invalid' }, { status: 401 })
+}
+```
+
+### べき等性
+
+```typescript
+// 同じイベントが複数回来ても大丈夫にする
+const eventId = event.id
+const processed = await db.webhookEvents.findUnique({ where: { eventId } })
+
+if (processed) {
+  return Response.json({ already_processed: true })
+}
+
+await processEvent(event)
+await db.webhookEvents.create({ data: { eventId } })
+```
+
+## 監視とロギング
+
+```typescript
+// すべてのWebhookをログ
+console.log({
+  type: event.type,
+  id: event.id,
+  timestamp: new Date().toISOString(),
+})
+
+// エラー時はアラート
+try {
+  await processEvent(event)
+} catch (error) {
+  await notifyError(error, event)
+  throw error
+}
+```
+
+## 次のステップ
+
+- [Stripe設定ガイド](/knowledge/build/stripe-setup)
+- [Slackアプリの作り方](/knowledge/vibe-coding/slack-app)

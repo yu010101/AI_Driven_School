@@ -46,7 +46,7 @@ const collectionPageJsonLd = {
     '@type': 'ItemList',
     name: 'AI駆動塾 学習カテゴリ',
     description: '非エンジニアでもAIでアプリを作り、売るための3つのステップ',
-    numberOfItems: 3,
+    numberOfItems: 4,
     itemListOrder: 'https://schema.org/ItemListOrderAscending',
     itemListElement: [
       {
@@ -69,6 +69,13 @@ const collectionPageJsonLd = {
         name: '0円マーケティング',
         description: '広告費ゼロで集客する方法',
         url: `${baseUrl}/knowledge/marketing`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: '営業・収益化',
+        description: '売上を立てて継続的に稼ぐ方法',
+        url: `${baseUrl}/knowledge/sales`,
       },
     ],
   },
@@ -111,7 +118,7 @@ export default function Knowledge() {
         <p className="text-lg text-foreground/60">カテゴリを選んでください</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
         {/* バイブコーディング */}
         <Link href="/knowledge/vibe-coding" className="card p-6 group cursor-pointer">
           <div className="step-badge">STEP 1</div>
@@ -144,6 +151,18 @@ export default function Knowledge() {
           </h2>
           <p className="text-foreground/60 text-sm mb-4">
             広告費ゼロで集客する方法
+          </p>
+          <span className="text-primary text-sm font-medium">→ 記事を見る</span>
+        </Link>
+
+        {/* 営業・収益化 */}
+        <Link href="/knowledge/sales" className="card p-6 group cursor-pointer">
+          <div className="step-badge">STEP 4</div>
+          <h2 className="font-bold text-xl mb-2 text-foreground group-hover:text-primary transition-colors">
+            営業・収益化
+          </h2>
+          <p className="text-foreground/60 text-sm mb-4">
+            売上を立てて継続的に稼ぐ方法
           </p>
           <span className="text-primary text-sm font-medium">→ 記事を見る</span>
         </Link>

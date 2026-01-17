@@ -1,0 +1,258 @@
+---
+title: テスト環境の構築｜Jest/Vitestでテストを書き始める方法
+description: Next.jsプロジェクトでのテスト環境構築方法。Jest、Vitest、Testing Libraryの設定を解説。
+category: build
+tags: [テスト, Jest, Vitest, Testing Library, CI]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: ci-cd-setup
+    anchor: CI/CD設定
+  - slug: error-handling
+    anchor: エラーハンドリング
+---
+
+# テスト環境の構築
+
+テストがあると安心して開発できる。
+
+## テストの種類
+
+```
+1. ユニットテスト: 関数単位
+2. 統合テスト: API、DB連携
+3. E2Eテスト: ブラウザ操作
+```
+
+## Vitestセットアップ（推奨）
+
+### インストール
+
+```bash
+npm install -D vitest @vitejs/plugin-react jsdom @testing-library/react @testing-library/jest-dom
+```
+
+### 設定ファイル
+
+```typescript
+// vitest.config.ts
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    globals: true,
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './'),
+    },
+  },
+})
+```
+
+### セットアップファイル
+
+```typescript
+// vitest.setup.ts
+import '@testing-library/jest-dom'
+```
+
+### package.json
+
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+## Jestセットアップ
+
+### インストール
+
+```bash
+npm install -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom
+```
+
+### 設定ファイル
+
+```javascript
+// jest.config.js
+const nextJest = require('next/jest')
+
+const createJestConfig = nextJest({
+  dir: './',
+})
+
+const customJestConfig = {
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: 'jest-environment-jsdom',
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/$1',
+  },
+}
+
+module.exports = createJestConfig(customJestConfig)
+```
+
+## テストの書き方
+
+### 関数のテスト
+
+```typescript
+// lib/utils.test.ts
+import { describe, it, expect } from 'vitest'
+import { formatPrice } from './utils'
+
+describe('formatPrice', () => {
+  it('数値を円表記に変換する', () => {
+    expect(formatPrice(1000)).toBe('¥1,000')
+  })
+
+  it('0の場合は¥0を返す', () => {
+    expect(formatPrice(0)).toBe('¥0')
+  })
+})
+```
+
+### コンポーネントのテスト
+
+```typescript
+// components/Button.test.tsx
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { Button } from './Button'
+
+describe('Button', () => {
+  it('テキストを表示する', () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByText('Click me')).toBeInTheDocument()
+  })
+
+  it('クリックでonClickが呼ばれる', () => {
+    const handleClick = vi.fn()
+    render(<Button onClick={handleClick}>Click me</Button>)
+
+    fireEvent.click(screen.getByText('Click me'))
+    expect(handleClick).toHaveBeenCalledTimes(1)
+  })
+
+  it('disabledの場合はクリックできない', () => {
+    const handleClick = vi.fn()
+    render(<Button onClick={handleClick} disabled>Click me</Button>)
+
+    fireEvent.click(screen.getByText('Click me'))
+    expect(handleClick).not.toHaveBeenCalled()
+  })
+})
+```
+
+### APIのテスト
+
+```typescript
+// app/api/users/route.test.ts
+import { describe, it, expect, vi } from 'vitest'
+import { POST } from './route'
+
+describe('POST /api/users', () => {
+  it('ユーザーを作成できる', async () => {
+    const request = new Request('http://localhost/api/users', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'test@example.com' }),
+    })
+
+    const response = await POST(request)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data.email).toBe('test@example.com')
+  })
+})
+```
+
+## モック
+
+### 関数のモック
+
+```typescript
+import { vi } from 'vitest'
+
+const mockFetch = vi.fn()
+global.fetch = mockFetch
+
+mockFetch.mockResolvedValue({
+  ok: true,
+  json: () => Promise.resolve({ data: 'test' }),
+})
+```
+
+### モジュールのモック
+
+```typescript
+vi.mock('@/lib/db', () => ({
+  prisma: {
+    user: {
+      findUnique: vi.fn(),
+      create: vi.fn(),
+    },
+  },
+}))
+```
+
+## E2Eテスト（Playwright）
+
+### インストール
+
+```bash
+npm init playwright@latest
+```
+
+### テスト例
+
+```typescript
+// e2e/login.spec.ts
+import { test, expect } from '@playwright/test'
+
+test('ログインできる', async ({ page }) => {
+  await page.goto('/login')
+
+  await page.fill('input[name="email"]', 'test@example.com')
+  await page.fill('input[name="password"]', 'password123')
+  await page.click('button[type="submit"]')
+
+  await expect(page).toHaveURL('/dashboard')
+})
+```
+
+## CIでテスト実行
+
+```yaml
+# .github/workflows/test.yml
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm test
+```
+
+## 次のステップ
+
+- [CI/CD設定](/knowledge/build/ci-cd-setup)
+- [エラーハンドリング](/knowledge/build/error-handling)

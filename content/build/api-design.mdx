@@ -1,0 +1,252 @@
+---
+title: APIの設計｜RESTful APIの基本とNext.js App Routerでの実装
+description: RESTful APIの設計原則とNext.js App Routerでの実装方法。ルーティング、エラー処理、認証を解説。
+category: build
+tags: [API, REST, Next.js, 設計, バックエンド]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: error-handling
+    anchor: エラーハンドリング
+  - slug: supabase-database
+    anchor: Supabase Database
+---
+
+# APIの設計
+
+フロントエンドとバックエンドをつなぐAPI。
+
+## RESTの基本原則
+
+### リソース指向
+
+```
+✓ /users          ユーザー一覧
+✓ /users/123      特定のユーザー
+✓ /users/123/posts ユーザーの投稿
+
+✗ /getUsers
+✗ /createUser
+```
+
+### HTTPメソッド
+
+| メソッド | 用途 | 例 |
+|---------|------|-----|
+| GET | 取得 | GET /users |
+| POST | 作成 | POST /users |
+| PUT | 全体更新 | PUT /users/123 |
+| PATCH | 部分更新 | PATCH /users/123 |
+| DELETE | 削除 | DELETE /users/123 |
+
+## Next.js App Routerでの実装
+
+### ルート構造
+
+```
+app/
+├── api/
+│   ├── users/
+│   │   ├── route.ts       # GET /api/users, POST /api/users
+│   │   └── [id]/
+│   │       └── route.ts   # GET/PUT/DELETE /api/users/:id
+│   └── posts/
+│       └── route.ts
+```
+
+### 基本的なCRUD
+
+```typescript
+// app/api/users/route.ts
+import { prisma } from '@/lib/prisma'
+
+// 一覧取得
+export async function GET(request: Request) {
+  const users = await prisma.user.findMany()
+  return Response.json(users)
+}
+
+// 新規作成
+export async function POST(request: Request) {
+  const body = await request.json()
+
+  const user = await prisma.user.create({
+    data: body,
+  })
+
+  return Response.json(user, { status: 201 })
+}
+```
+
+```typescript
+// app/api/users/[id]/route.ts
+import { prisma } from '@/lib/prisma'
+
+// 個別取得
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const user = await prisma.user.findUnique({
+    where: { id: params.id },
+  })
+
+  if (!user) {
+    return Response.json({ error: 'Not found' }, { status: 404 })
+  }
+
+  return Response.json(user)
+}
+
+// 更新
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const body = await request.json()
+
+  const user = await prisma.user.update({
+    where: { id: params.id },
+    data: body,
+  })
+
+  return Response.json(user)
+}
+
+// 削除
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  await prisma.user.delete({
+    where: { id: params.id },
+  })
+
+  return new Response(null, { status: 204 })
+}
+```
+
+## クエリパラメータ
+
+### ページネーション
+
+```typescript
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const page = parseInt(searchParams.get('page') || '1')
+  const limit = parseInt(searchParams.get('limit') || '10')
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.user.count(),
+  ])
+
+  return Response.json({
+    data: users,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  })
+}
+```
+
+### フィルター
+
+```typescript
+const status = searchParams.get('status')
+const search = searchParams.get('search')
+
+const users = await prisma.user.findMany({
+  where: {
+    ...(status && { status }),
+    ...(search && {
+      OR: [
+        { name: { contains: search } },
+        { email: { contains: search } },
+      ],
+    }),
+  },
+})
+```
+
+## 認証付きAPI
+
+### ミドルウェア
+
+```typescript
+// middleware.ts
+import { getToken } from 'next-auth/jwt'
+import { NextResponse } from 'next/server'
+
+export async function middleware(request) {
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    const token = await getToken({ req: request })
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+  }
+
+  return NextResponse.next()
+}
+```
+
+### ルートで認証確認
+
+```typescript
+import { getServerSession } from 'next-auth'
+
+export async function GET() {
+  const session = await getServerSession()
+
+  if (!session) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // 認証済みユーザーのデータを取得
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+  })
+
+  return Response.json(user)
+}
+```
+
+## レスポンス形式
+
+### 成功
+
+```json
+{
+  "data": { ... },
+  "meta": {
+    "pagination": { ... }
+  }
+}
+```
+
+### エラー
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "メールアドレスが無効です",
+    "details": { ... }
+  }
+}
+```
+
+## 次のステップ
+
+- [エラーハンドリング](/knowledge/build/error-handling)
+- [Supabase Database](/knowledge/build/supabase-database)

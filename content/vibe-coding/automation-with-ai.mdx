@@ -1,0 +1,257 @@
+---
+title: AIで自動化｜繰り返し作業をコードで解決する方法
+description: AIを使って日常の繰り返し作業を自動化する方法。スクリプト作成、定期実行、通知連携を解説。
+category: vibe-coding
+tags: [自動化, スクリプト, cron, 効率化, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: webhook-tutorial
+    anchor: Webhook連携
+  - slug: slack-app
+    anchor: Slackアプリ
+---
+
+# AIで自動化
+
+毎日やってる作業、自動化できませんか？
+
+## 自動化できること
+
+```
+・データ収集（スクレイピング）
+・レポート生成
+・ファイル整理
+・メール送信
+・SNS投稿
+・バックアップ
+```
+
+## AIへの指示の仕方
+
+### 作業を言語化
+
+```
+「毎日やっていること：
+1. 競合サイトの価格をチェック
+2. Excelにまとめる
+3. 変動があればSlackに通知
+
+これを自動化したい」
+```
+
+### スクリプト生成
+
+```
+この作業を自動化するPythonスクリプトを書いて：
+- 指定URLから価格を取得
+- CSVに保存
+- 前日と比較して変動があればSlack通知
+```
+
+## 実践例
+
+### Webスクレイピング
+
+```python
+# scraper.py
+import requests
+from bs4 import BeautifulSoup
+import csv
+from datetime import datetime
+
+def scrape_prices(urls):
+    results = []
+    for url in urls:
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.select_one('.price').text
+        results.append({
+            'url': url,
+            'price': price,
+            'date': datetime.now().isoformat()
+        })
+    return results
+
+def save_to_csv(data, filename='prices.csv'):
+    with open(filename, 'a', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=['url', 'price', 'date'])
+        writer.writerows(data)
+```
+
+### 定期実行（cron）
+
+```bash
+# 毎日9時に実行
+0 9 * * * python /path/to/scraper.py
+
+# 1時間ごとに実行
+0 * * * * python /path/to/script.py
+```
+
+### GitHub Actionsで定期実行
+
+```yaml
+# .github/workflows/automation.yml
+name: Daily Automation
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日UTC 0時
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: python scripts/automation.py
+```
+
+## 通知連携
+
+### Slack通知
+
+```python
+import requests
+
+def notify_slack(message):
+    webhook_url = os.environ['SLACK_WEBHOOK_URL']
+    requests.post(webhook_url, json={'text': message})
+
+# 使用例
+if price_changed:
+    notify_slack(f'価格が変動しました: {old_price} → {new_price}')
+```
+
+### Discord通知
+
+```python
+def notify_discord(message):
+    webhook_url = os.environ['DISCORD_WEBHOOK_URL']
+    requests.post(webhook_url, json={'content': message})
+```
+
+### LINE通知
+
+```python
+def notify_line(message):
+    token = os.environ['LINE_NOTIFY_TOKEN']
+    requests.post(
+        'https://notify-api.line.me/api/notify',
+        headers={'Authorization': f'Bearer {token}'},
+        data={'message': message}
+    )
+```
+
+## ファイル自動整理
+
+```
+ダウンロードフォルダを自動整理するスクリプト：
+- 画像 → Imagesフォルダ
+- PDF → Documentsフォルダ
+- 7日以上古いファイル → Archiveフォルダ
+```
+
+生成されるコード：
+```python
+import os
+import shutil
+from datetime import datetime, timedelta
+
+DOWNLOADS = '/Users/you/Downloads'
+RULES = {
+    '.jpg': 'Images', '.png': 'Images', '.gif': 'Images',
+    '.pdf': 'Documents', '.doc': 'Documents', '.docx': 'Documents',
+}
+
+def organize_downloads():
+    for filename in os.listdir(DOWNLOADS):
+        filepath = os.path.join(DOWNLOADS, filename)
+        if os.path.isfile(filepath):
+            ext = os.path.splitext(filename)[1].lower()
+            if ext in RULES:
+                dest_folder = os.path.join(DOWNLOADS, RULES[ext])
+                os.makedirs(dest_folder, exist_ok=True)
+                shutil.move(filepath, os.path.join(dest_folder, filename))
+```
+
+## レポート自動生成
+
+```
+Google Analyticsのデータを取得して
+週次レポートを自動生成したい
+```
+
+```python
+from google.analytics.data import BetaAnalyticsDataClient
+
+def generate_weekly_report():
+    client = BetaAnalyticsDataClient()
+
+    response = client.run_report(
+        property=f'properties/{PROPERTY_ID}',
+        date_ranges=[{'start_date': '7daysAgo', 'end_date': 'today'}],
+        metrics=[
+            {'name': 'activeUsers'},
+            {'name': 'sessions'},
+            {'name': 'bounceRate'},
+        ],
+    )
+
+    # レポート生成
+    report = f"""
+    週次レポート
+    ====================
+    アクティブユーザー: {response.rows[0].metric_values[0].value}
+    セッション: {response.rows[0].metric_values[1].value}
+    直帰率: {response.rows[0].metric_values[2].value}%
+    """
+
+    return report
+```
+
+## 注意点
+
+### エラーハンドリング
+
+```python
+try:
+    result = scrape_data()
+except Exception as e:
+    notify_slack(f'エラーが発生: {e}')
+    raise
+```
+
+### ログ記録
+
+```python
+import logging
+
+logging.basicConfig(
+    filename='automation.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+
+logging.info('自動化スクリプト開始')
+```
+
+### レート制限
+
+```python
+import time
+
+for url in urls:
+    scrape(url)
+    time.sleep(1)  # 1秒待機
+```
+
+## 次のステップ
+
+- [Webhook連携](/knowledge/vibe-coding/webhook-tutorial)
+- [Slackアプリの作り方](/knowledge/vibe-coding/slack-app)

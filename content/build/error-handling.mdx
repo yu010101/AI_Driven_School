@@ -1,0 +1,260 @@
+---
+title: エラーハンドリングの実装｜ユーザーに優しいエラー処理の作り方
+description: Next.jsでのエラーハンドリングの実装方法。エラーページ、API エラー、フォームバリデーションを解説。
+category: build
+tags: [エラーハンドリング, エラーページ, バリデーション, UX, 実装]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: logging-monitoring
+    anchor: ログ・監視
+  - slug: testing-setup
+    anchor: テスト環境
+---
+
+# エラーハンドリングの実装
+
+エラーは起きる。問題は「どう処理するか」。
+
+## エラーの種類
+
+```
+1. クライアントエラー（ユーザーの操作ミス）
+2. サーバーエラー（システムの問題）
+3. ネットワークエラー（通信の問題）
+4. バリデーションエラー（入力値の問題）
+```
+
+## Next.js App Routerでのエラー処理
+
+### error.tsx
+
+```tsx
+// app/error.tsx
+'use client'
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px]">
+      <h2 className="text-2xl font-bold mb-4">エラーが発生しました</h2>
+      <p className="text-gray-600 mb-6">{error.message}</p>
+      <button
+        onClick={() => reset()}
+        className="px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        もう一度試す
+      </button>
+    </div>
+  )
+}
+```
+
+### not-found.tsx
+
+```tsx
+// app/not-found.tsx
+import Link from 'next/link'
+
+export default function NotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[400px]">
+      <h2 className="text-2xl font-bold mb-4">ページが見つかりません</h2>
+      <p className="text-gray-600 mb-6">
+        お探しのページは存在しないか、移動した可能性があります。
+      </p>
+      <Link href="/" className="px-4 py-2 bg-blue-600 text-white rounded">
+        トップページへ
+      </Link>
+    </div>
+  )
+}
+```
+
+## APIエラー処理
+
+### エラーレスポンスの統一
+
+```typescript
+// lib/api-error.ts
+export class APIError extends Error {
+  constructor(
+    public statusCode: number,
+    message: string,
+    public code?: string
+  ) {
+    super(message)
+  }
+}
+
+export function errorResponse(error: unknown) {
+  if (error instanceof APIError) {
+    return Response.json(
+      { error: error.message, code: error.code },
+      { status: error.statusCode }
+    )
+  }
+
+  console.error('Unexpected error:', error)
+  return Response.json(
+    { error: 'Internal server error' },
+    { status: 500 }
+  )
+}
+```
+
+### APIルートでの使用
+
+```typescript
+// app/api/users/route.ts
+import { APIError, errorResponse } from '@/lib/api-error'
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+
+    if (!body.email) {
+      throw new APIError(400, 'メールアドレスは必須です', 'MISSING_EMAIL')
+    }
+
+    const user = await createUser(body)
+    return Response.json(user)
+
+  } catch (error) {
+    return errorResponse(error)
+  }
+}
+```
+
+## フォームバリデーション
+
+### Zodでバリデーション
+
+```typescript
+import { z } from 'zod'
+
+const userSchema = z.object({
+  email: z.string().email('有効なメールアドレスを入力してください'),
+  password: z.string().min(8, 'パスワードは8文字以上で入力してください'),
+  name: z.string().min(1, '名前は必須です'),
+})
+
+function validateUser(data: unknown) {
+  const result = userSchema.safeParse(data)
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors
+    throw new APIError(400, 'バリデーションエラー', { errors })
+  }
+  return result.data
+}
+```
+
+### React Hook Formと連携
+
+```tsx
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+function SignupForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(userSchema),
+  })
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('email')} />
+      {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+
+      <input type="password" {...register('password')} />
+      {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+
+      <button type="submit">登録</button>
+    </form>
+  )
+}
+```
+
+## フロントエンドでのエラー処理
+
+### try-catch
+
+```typescript
+async function fetchData() {
+  try {
+    const response = await fetch('/api/data')
+    if (!response.ok) {
+      throw new Error('データの取得に失敗しました')
+    }
+    return await response.json()
+  } catch (error) {
+    toast.error(error.message)
+    return null
+  }
+}
+```
+
+### Error Boundary
+
+```tsx
+'use client'
+
+import { Component, ReactNode } from 'react'
+
+class ErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback
+    }
+    return this.props.children
+  }
+}
+```
+
+## ユーザーフレンドリーなエラー表示
+
+### トースト通知
+
+```typescript
+import { toast } from 'sonner'
+
+// 成功
+toast.success('保存しました')
+
+// エラー
+toast.error('保存に失敗しました')
+
+// 詳細付き
+toast.error('保存に失敗しました', {
+  description: '通信エラーが発生しました。再度お試しください。',
+})
+```
+
+### インラインエラー
+
+```tsx
+<div className="relative">
+  <input className={errors.email ? 'border-red-500' : ''} />
+  {errors.email && (
+    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+  )}
+</div>
+```
+
+## 次のステップ
+
+- [ログ・監視の実装](/knowledge/build/logging-monitoring)
+- [テスト環境の構築](/knowledge/build/testing-setup)

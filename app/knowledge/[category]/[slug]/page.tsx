@@ -8,13 +8,14 @@ import type { Metadata } from 'next'
 import { ShareButtons } from '@/components/ShareButtons'
 import { ReadingProgress } from '@/components/ReadingProgress'
 
-const categories: Category[] = ['vibe-coding', 'build', 'marketing']
+const categories: Category[] = ['vibe-coding', 'build', 'marketing', 'sales']
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 const categoryNames: Record<Category, string> = {
   'vibe-coding': 'バイブコーディング',
   'build': '実装パターン',
   'marketing': '0円マーケティング',
+  'sales': '営業・収益化',
 }
 
 // 読了時間を計算（日本語は400文字/分として計算）
@@ -236,11 +237,11 @@ export default async function ArticlePage({
 
   // CTAの決定
   const ctaHref =
-    category === 'marketing'
+    category === 'marketing' || category === 'sales'
       ? '/free/zero-marketing-book'
       : '/free/vibe-coding-book'
   const ctaText =
-    category === 'marketing'
+    category === 'marketing' || category === 'sales'
       ? '0円マーケティングの教科書を読む'
       : 'バイブコーディングの教科書を読む'
 

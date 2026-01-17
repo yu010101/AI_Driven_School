@@ -1,0 +1,229 @@
+---
+title: AIでダッシュボードを作る｜データ可視化アプリの作り方
+description: AIを使ってダッシュボードを作成する方法。チャート、テーブル、フィルター機能の実装を解説。
+category: vibe-coding
+tags: [ダッシュボード, データ可視化, チャート, React, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: nextjs-starter
+    anchor: Next.jsスターター
+  - slug: saas-mvp
+    anchor: SaaS MVP
+---
+
+# AIでダッシュボードを作る
+
+データを見える化するダッシュボード。AIなら30分で作れる。
+
+## 完成イメージ
+
+```
+┌─────────────────────────────────────────┐
+│ Dashboard              [期間選択]       │
+├──────────┬──────────┬──────────────────┤
+│ 売上     │ ユーザー │ コンバージョン   │
+│ ¥1.2M   │ 3,456   │ 4.5%            │
+├──────────┴──────────┴──────────────────┤
+│ [売上推移グラフ]                        │
+├─────────────────────────────────────────┤
+│ [最近の取引テーブル]                    │
+└─────────────────────────────────────────┘
+```
+
+## 技術スタック
+
+```
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Recharts（グラフ）
+- Tanstack Table（テーブル）
+```
+
+## AIへの指示
+
+### ステップ1: プロジェクト作成
+
+```
+Next.js 14でダッシュボードを作りたい。
+以下の要素を含めて：
+- サマリーカード（売上、ユーザー数、コンバージョン率）
+- 売上推移の折れ線グラフ
+- 最近の取引テーブル
+- 日付範囲フィルター
+
+Tailwind CSSでスタイリング、Rechartsでグラフを作って。
+```
+
+### ステップ2: サマリーカード
+
+```
+サマリーカードコンポーネントを作って：
+- アイコン
+- ラベル
+- 数値（大きく表示）
+- 前期比（増減を色分け）
+```
+
+生成されるコード：
+```tsx
+interface StatCardProps {
+  icon: React.ReactNode
+  label: string
+  value: string
+  change: number
+}
+
+export function StatCard({ icon, label, value, change }: StatCardProps) {
+  const isPositive = change >= 0
+  return (
+    <div className="bg-white rounded-xl p-6 shadow-sm">
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-blue-100 rounded-lg">
+          {icon}
+        </div>
+        <div>
+          <p className="text-sm text-gray-500">{label}</p>
+          <p className="text-2xl font-bold">{value}</p>
+          <p className={`text-sm ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+            {isPositive ? '↑' : '↓'} {Math.abs(change)}%
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+### ステップ3: グラフ
+
+```
+Rechartsで売上推移の折れ線グラフを作って：
+- X軸: 日付
+- Y軸: 売上（円）
+- ツールチップ付き
+- レスポンシブ対応
+```
+
+生成されるコード：
+```tsx
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+
+const data = [
+  { date: '1/1', sales: 4000 },
+  { date: '1/2', sales: 3000 },
+  // ...
+]
+
+export function SalesChart() {
+  return (
+    <div className="bg-white rounded-xl p-6 shadow-sm">
+      <h3 className="font-bold mb-4">売上推移</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <XAxis dataKey="date" />
+          <YAxis />
+          <Tooltip />
+          <Line
+            type="monotone"
+            dataKey="sales"
+            stroke="#3b82f6"
+            strokeWidth={2}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}
+```
+
+### ステップ4: テーブル
+
+```
+最近の取引を表示するテーブルを作って：
+- カラム: 日時、顧客名、金額、ステータス
+- ソート機能
+- ページネーション
+```
+
+### ステップ5: フィルター
+
+```
+日付範囲フィルターを追加：
+- 今日、今週、今月、カスタム
+- 選択するとデータが更新される
+```
+
+## データの取得
+
+### モックデータ
+
+```tsx
+// lib/mock-data.ts
+export const salesData = generateSalesData()
+
+function generateSalesData() {
+  return Array.from({ length: 30 }, (_, i) => ({
+    date: new Date(2024, 0, i + 1).toLocaleDateString(),
+    sales: Math.floor(Math.random() * 10000) + 5000,
+  }))
+}
+```
+
+### APIから取得
+
+```
+Supabaseからデータを取得するAPIを作って：
+- /api/stats: サマリーデータ
+- /api/sales: 売上データ
+- /api/transactions: 取引一覧
+```
+
+## レスポンシブ対応
+
+```
+モバイルでも見やすいようにレスポンシブ対応して：
+- カードは縦並び
+- グラフはスクロール可能
+- テーブルは横スクロール
+```
+
+## 改善のポイント
+
+### リアルタイム更新
+
+```
+WebSocketでリアルタイム更新を追加して。
+新しい取引があったら自動で表示を更新。
+```
+
+### エクスポート機能
+
+```
+CSVエクスポート機能を追加：
+- 表示中のデータをCSVでダウンロード
+- 日付範囲を含むファイル名
+```
+
+### ダークモード
+
+```
+ダークモード対応を追加：
+- システム設定に連動
+- 手動切り替えも可能
+```
+
+## 完成形の指示
+
+```
+これまでの要素をまとめたダッシュボードページを作って。
+- レイアウトはグリッド
+- ローディング状態も実装
+- エラーハンドリングも追加
+```
+
+## 次のステップ
+
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)
+- [Next.jsスターター](/knowledge/vibe-coding/nextjs-starter)

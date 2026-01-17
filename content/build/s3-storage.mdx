@@ -1,0 +1,213 @@
+---
+title: ファイルストレージの実装｜S3/R2で画像やファイルを保存する
+description: AWS S3やCloudflare R2を使ったファイルアップロードの実装方法。画像アップロード、署名付きURLを解説。
+category: build
+tags: [S3, R2, ファイルアップロード, ストレージ, 画像]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-database
+    anchor: Supabase Database
+  - slug: vercel-deploy
+    anchor: Vercelデプロイ
+---
+
+# ファイルストレージの実装
+
+ユーザーがアップロードした画像はどこに保存する？
+
+## サービス比較
+
+| サービス | 無料枠 | 特徴 |
+|---------|-------|-----|
+| Cloudflare R2 | 10GB | 転送量無料 |
+| Supabase Storage | 1GB | Supabaseと統合 |
+| AWS S3 | 従量課金 | 最も柔軟 |
+| Vercel Blob | 制限あり | Next.jsと統合 |
+
+## Cloudflare R2
+
+### セットアップ
+
+```
+1. Cloudflareダッシュボード → R2
+2. バケットを作成
+3. APIトークンを取得
+```
+
+### 環境変数
+
+```env
+R2_ACCOUNT_ID=your_account_id
+R2_ACCESS_KEY_ID=your_access_key
+R2_SECRET_ACCESS_KEY=your_secret_key
+R2_BUCKET_NAME=your_bucket
+```
+
+### アップロード実装
+
+```typescript
+// lib/r2.ts
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+
+const r2 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+})
+
+export async function uploadFile(file: Buffer, key: string, contentType: string) {
+  await r2.send(new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME,
+    Key: key,
+    Body: file,
+    ContentType: contentType,
+  }))
+
+  return `https://your-bucket.r2.dev/${key}`
+}
+```
+
+### APIルート
+
+```typescript
+// app/api/upload/route.ts
+import { uploadFile } from '@/lib/r2'
+
+export async function POST(request: Request) {
+  const formData = await request.formData()
+  const file = formData.get('file') as File
+
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const key = `uploads/${Date.now()}-${file.name}`
+
+  const url = await uploadFile(buffer, key, file.type)
+
+  return Response.json({ url })
+}
+```
+
+## Supabase Storage
+
+### セットアップ
+
+```typescript
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+```
+
+### アップロード
+
+```typescript
+export async function uploadToSupabase(file: File, path: string) {
+  const { data, error } = await supabase.storage
+    .from('uploads')
+    .upload(path, file)
+
+  if (error) throw error
+
+  const { data: { publicUrl } } = supabase.storage
+    .from('uploads')
+    .getPublicUrl(path)
+
+  return publicUrl
+}
+```
+
+## 署名付きURL
+
+### アップロード用
+
+```typescript
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+
+export async function getUploadUrl(key: string, contentType: string) {
+  const command = new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET_NAME,
+    Key: key,
+    ContentType: contentType,
+  })
+
+  const url = await getSignedUrl(r2, command, { expiresIn: 3600 })
+  return url
+}
+```
+
+### クライアントから直接アップロード
+
+```typescript
+// フロントエンド
+const { url } = await fetch('/api/get-upload-url', {
+  method: 'POST',
+  body: JSON.stringify({ filename: file.name }),
+}).then(r => r.json())
+
+await fetch(url, {
+  method: 'PUT',
+  body: file,
+  headers: { 'Content-Type': file.type },
+})
+```
+
+## 画像最適化
+
+### Next.js Image
+
+```tsx
+<Image
+  src="https://your-bucket.r2.dev/image.jpg"
+  width={800}
+  height={600}
+  alt="画像"
+/>
+```
+
+### next.config.js
+
+```javascript
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'your-bucket.r2.dev',
+      },
+    ],
+  },
+}
+```
+
+## セキュリティ
+
+### ファイルタイプ検証
+
+```typescript
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+if (!ALLOWED_TYPES.includes(file.type)) {
+  throw new Error('許可されていないファイル形式です')
+}
+```
+
+### ファイルサイズ制限
+
+```typescript
+const MAX_SIZE = 5 * 1024 * 1024 // 5MB
+
+if (file.size > MAX_SIZE) {
+  throw new Error('ファイルサイズが大きすぎます')
+}
+```
+
+## 次のステップ
+
+- [Supabase Database](/knowledge/build/supabase-database)
+- [Vercelデプロイ](/knowledge/build/vercel-deploy)

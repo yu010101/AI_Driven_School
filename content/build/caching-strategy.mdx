@@ -1,0 +1,228 @@
+---
+title: キャッシュ戦略｜Next.jsとVercelでの高速化テクニック
+description: Next.jsでのキャッシュ戦略。ISR、SWR、CDNキャッシュ、データベースキャッシュを解説。
+category: build
+tags: [キャッシュ, パフォーマンス, Next.js, ISR, SWR]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: vercel-deploy
+    anchor: Vercelデプロイ
+  - slug: api-design
+    anchor: API設計
+---
+
+# キャッシュ戦略
+
+速いサイトは正義。キャッシュで爆速に。
+
+## キャッシュの種類
+
+```
+1. ブラウザキャッシュ（クライアント）
+2. CDNキャッシュ（エッジ）
+3. アプリキャッシュ（サーバー）
+4. DBキャッシュ（Redis等）
+```
+
+## Next.js App Routerのキャッシュ
+
+### 静的生成（デフォルト）
+
+```typescript
+// ビルド時に生成、キャッシュ
+export default async function Page() {
+  const data = await fetch('https://api.example.com/data')
+  return <div>{data}</div>
+}
+```
+
+### ISR（Incremental Static Regeneration）
+
+```typescript
+// 60秒ごとに再生成
+export const revalidate = 60
+
+export default async function Page() {
+  const data = await fetch('https://api.example.com/data')
+  return <div>{data}</div>
+}
+```
+
+### 動的レンダリング
+
+```typescript
+// 毎回サーバーで生成
+export const dynamic = 'force-dynamic'
+
+export default async function Page() {
+  const data = await fetch('https://api.example.com/data', {
+    cache: 'no-store',
+  })
+  return <div>{data}</div>
+}
+```
+
+## fetchのキャッシュ
+
+### キャッシュあり（デフォルト）
+
+```typescript
+const data = await fetch('https://api.example.com/data')
+// 結果がキャッシュされる
+```
+
+### 時間指定
+
+```typescript
+const data = await fetch('https://api.example.com/data', {
+  next: { revalidate: 3600 }, // 1時間
+})
+```
+
+### キャッシュなし
+
+```typescript
+const data = await fetch('https://api.example.com/data', {
+  cache: 'no-store',
+})
+```
+
+## SWR（クライアントサイド）
+
+### インストール
+
+```bash
+npm install swr
+```
+
+### 基本的な使い方
+
+```typescript
+import useSWR from 'swr'
+
+const fetcher = (url: string) => fetch(url).then(r => r.json())
+
+function Profile() {
+  const { data, error, isLoading } = useSWR('/api/user', fetcher)
+
+  if (isLoading) return <div>Loading...</div>
+  if (error) return <div>Error</div>
+  return <div>Hello {data.name}!</div>
+}
+```
+
+### キャッシュ設定
+
+```typescript
+const { data } = useSWR('/api/user', fetcher, {
+  revalidateOnFocus: false,     // フォーカス時の再検証オフ
+  revalidateOnReconnect: false, // 再接続時の再検証オフ
+  refreshInterval: 30000,       // 30秒ごとに更新
+  dedupingInterval: 2000,       // 2秒間は重複リクエストしない
+})
+```
+
+## CDNキャッシュ
+
+### Cache-Controlヘッダー
+
+```typescript
+// app/api/data/route.ts
+export async function GET() {
+  const data = await fetchData()
+
+  return Response.json(data, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+    },
+  })
+}
+```
+
+### Vercelでの設定
+
+```typescript
+// vercel.json
+{
+  "headers": [
+    {
+      "source": "/api/public/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=3600"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## オンデマンド再検証
+
+### タグベース
+
+```typescript
+// データ取得時にタグ付け
+const posts = await fetch('https://api.example.com/posts', {
+  next: { tags: ['posts'] },
+})
+
+// 特定のタグを無効化
+import { revalidateTag } from 'next/cache'
+revalidateTag('posts')
+```
+
+### パスベース
+
+```typescript
+import { revalidatePath } from 'next/cache'
+
+// 特定のパスを無効化
+revalidatePath('/posts')
+
+// レイアウトも含めて無効化
+revalidatePath('/posts', 'layout')
+```
+
+## Redisキャッシュ
+
+### Upstashでセットアップ
+
+```bash
+npm install @upstash/redis
+```
+
+```typescript
+import { Redis } from '@upstash/redis'
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_URL!,
+  token: process.env.UPSTASH_REDIS_TOKEN!,
+})
+
+// キャッシュから取得、なければDBから
+async function getCachedUser(id: string) {
+  const cached = await redis.get(`user:${id}`)
+  if (cached) return cached
+
+  const user = await prisma.user.findUnique({ where: { id } })
+  await redis.set(`user:${id}`, user, { ex: 3600 })
+  return user
+}
+```
+
+## キャッシュ戦略の選び方
+
+| データ種別 | 戦略 |
+|----------|-----|
+| ほぼ変わらない | 静的生成 |
+| たまに更新 | ISR (revalidate: 3600) |
+| リアルタイム性必要 | SWR + 短いrevalidate |
+| ユーザー固有 | no-store + クライアントキャッシュ |
+
+## 次のステップ
+
+- [Vercelデプロイ](/knowledge/build/vercel-deploy)
+- [API設計](/knowledge/build/api-design)

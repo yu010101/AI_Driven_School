@@ -1,0 +1,250 @@
+---
+title: メール送信の実装｜Resend/SendGridでトランザクションメールを送る
+description: Resend、SendGridを使ったメール送信の実装方法。ウェルカムメール、通知メール、テンプレートの作り方を解説。
+category: build
+tags: [メール送信, Resend, SendGrid, トランザクションメール, 実装]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-auth
+    anchor: Supabase Auth
+  - slug: webhook-tutorial
+    anchor: Webhook連携
+---
+
+# メール送信の実装
+
+ユーザー登録、パスワードリセット、通知...メール送信は必須機能。
+
+## サービス比較
+
+| サービス | 無料枠 | 特徴 |
+|---------|-------|-----|
+| Resend | 100通/日 | モダン、React Email対応 |
+| SendGrid | 100通/日 | 老舗、実績豊富 |
+| AWS SES | 従量課金 | 安い、設定が複雑 |
+
+## Resendでの実装
+
+### セットアップ
+
+```bash
+npm install resend
+```
+
+```env
+RESEND_API_KEY=re_xxxxx
+```
+
+### 基本的な送信
+
+```typescript
+// lib/email.ts
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string
+  subject: string
+  html: string
+}) {
+  const { data, error } = await resend.emails.send({
+    from: 'noreply@yourdomain.com',
+    to,
+    subject,
+    html,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  return data
+}
+```
+
+### APIルートから送信
+
+```typescript
+// app/api/send-email/route.ts
+import { sendEmail } from '@/lib/email'
+
+export async function POST(request: Request) {
+  const { to, subject, html } = await request.json()
+
+  await sendEmail({ to, subject, html })
+
+  return Response.json({ success: true })
+}
+```
+
+## React Emailでテンプレート
+
+### インストール
+
+```bash
+npm install @react-email/components
+```
+
+### テンプレート作成
+
+```tsx
+// emails/welcome.tsx
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Html,
+  Preview,
+  Section,
+  Text,
+} from '@react-email/components'
+
+interface WelcomeEmailProps {
+  name: string
+}
+
+export default function WelcomeEmail({ name }: WelcomeEmailProps) {
+  return (
+    <Html>
+      <Head />
+      <Preview>ようこそ！</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Text style={heading}>ようこそ、{name}さん！</Text>
+          <Text style={paragraph}>
+            アカウント登録ありがとうございます。
+          </Text>
+          <Section style={buttonContainer}>
+            <Button style={button} href="https://example.com/dashboard">
+              ダッシュボードへ
+            </Button>
+          </Section>
+        </Container>
+      </Body>
+    </Html>
+  )
+}
+
+const main = { backgroundColor: '#f6f9fc', padding: '40px 0' }
+const container = { backgroundColor: '#ffffff', padding: '40px' }
+const heading = { fontSize: '24px', fontWeight: 'bold' }
+const paragraph = { fontSize: '16px', lineHeight: '24px' }
+const buttonContainer = { textAlign: 'center' as const }
+const button = {
+  backgroundColor: '#5469d4',
+  color: '#fff',
+  padding: '12px 24px',
+  borderRadius: '4px',
+}
+```
+
+### テンプレートで送信
+
+```typescript
+import { render } from '@react-email/render'
+import WelcomeEmail from '@/emails/welcome'
+
+const emailHtml = render(<WelcomeEmail name="田中さん" />)
+
+await sendEmail({
+  to: 'user@example.com',
+  subject: 'ようこそ！',
+  html: emailHtml,
+})
+```
+
+## SendGridでの実装
+
+### セットアップ
+
+```bash
+npm install @sendgrid/mail
+```
+
+```typescript
+import sgMail from '@sendgrid/mail'
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!)
+
+export async function sendEmail({
+  to,
+  subject,
+  html,
+}: {
+  to: string
+  subject: string
+  html: string
+}) {
+  await sgMail.send({
+    to,
+    from: 'noreply@yourdomain.com',
+    subject,
+    html,
+  })
+}
+```
+
+## よくあるメール
+
+### ウェルカムメール
+
+```typescript
+await sendEmail({
+  to: user.email,
+  subject: 'ようこそ！',
+  html: render(<WelcomeEmail name={user.name} />),
+})
+```
+
+### パスワードリセット
+
+```typescript
+const resetUrl = `https://example.com/reset?token=${token}`
+
+await sendEmail({
+  to: user.email,
+  subject: 'パスワードリセット',
+  html: render(<PasswordResetEmail url={resetUrl} />),
+})
+```
+
+### 注文確認
+
+```typescript
+await sendEmail({
+  to: order.email,
+  subject: `注文確認 #${order.id}`,
+  html: render(<OrderConfirmationEmail order={order} />),
+})
+```
+
+## ドメイン設定
+
+### カスタムドメイン
+
+```
+1. Resendダッシュボードでドメイン追加
+2. DNSにTXTレコードを追加
+3. 検証完了を待つ
+```
+
+### SPF/DKIM設定
+
+```
+迷惑メール回避のため必須：
+- SPF: 送信元を検証
+- DKIM: 改ざん防止
+- DMARC: ポリシー設定
+```
+
+## 次のステップ
+
+- [Supabase Auth](/knowledge/build/supabase-auth)
+- [Webhook連携](/knowledge/vibe-coding/webhook-tutorial)

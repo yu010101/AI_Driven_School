@@ -1,0 +1,200 @@
+---
+title: Aider入門｜ターミナルで動くAIペアプログラミングツール
+description: Aiderの使い方を解説。インストール、基本操作、効果的な使い方を紹介します。
+category: vibe-coding
+tags: [Aider, ターミナル, AIペアプロ, コード生成, CLI]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: claude-code-guide
+    anchor: Claude Code完全ガイド
+  - slug: ai-pair-programming
+    anchor: AIペアプログラミング
+---
+
+# Aider入門
+
+Aiderはターミナルで動くAIペアプログラミングツール。
+
+## Aiderとは
+
+### 特徴
+
+- **CLI**: ターミナルで完結
+- **Git統合**: 変更を自動コミット
+- **マルチファイル**: 複数ファイルを同時編集
+- **OSS**: オープンソース、無料
+
+### Claude Codeとの違い
+
+| 項目 | Aider | Claude Code |
+|-----|-------|-------------|
+| 料金 | APIキーのみ | 従量課金 |
+| Git統合 | ◎自動 | ○手動 |
+| ファイル追加 | 手動 | 自動 |
+| UI | シンプル | リッチ |
+
+## インストール
+
+```bash
+# pipでインストール
+pip install aider-chat
+
+# または pipx
+pipx install aider-chat
+```
+
+## APIキーの設定
+
+```bash
+# OpenAI
+export OPENAI_API_KEY=sk-...
+
+# Anthropic（Claude）
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+## 基本的な使い方
+
+### 起動
+
+```bash
+# プロジェクトディレクトリで起動
+cd my-project
+aider
+
+# 特定のファイルを指定
+aider src/main.py tests/test_main.py
+
+# モデルを指定
+aider --model claude-3-5-sonnet-20241022
+```
+
+### コマンド
+
+```
+/add <file>: ファイルを追加
+/drop <file>: ファイルを削除
+/clear: 会話をクリア
+/undo: 最後の変更を取り消し
+/diff: 差分を表示
+/commit: コミット
+/help: ヘルプ
+```
+
+## 実践例
+
+### 機能追加
+
+```
+> /add src/api.py
+> ユーザー認証機能を追加して
+
+Aider: src/api.pyを編集しました。
+変更をコミットしますか？ (y/n)
+```
+
+### バグ修正
+
+```
+> /add src/utils.py
+> 23行目のエラーを修正して
+
+Aider: NullPointerエラーを修正しました。
+```
+
+### リファクタリング
+
+```
+> /add src/handlers/*.py
+> ハンドラーのコードを共通化して
+```
+
+## 効果的な使い方
+
+### 1. 関連ファイルをまとめて追加
+
+```
+> /add src/models/user.py src/routes/user.py src/services/user.py
+> ユーザー削除機能を追加して
+```
+
+### 2. 段階的に進める
+
+```
+# ❌ 一度に全部
+> 認証機能とデータベースとAPIを全部作って
+
+# ⭕ 段階的に
+> まずユーザーモデルを作って
+> 次に認証APIを作って
+> テストを書いて
+```
+
+### 3. エラーを貼り付ける
+
+```
+> このエラーを修正して:
+> TypeError: 'NoneType' object is not subscriptable
+> at line 45 in src/main.py
+```
+
+## 設定ファイル
+
+`.aider.conf.yml`で設定を保存：
+
+```yaml
+model: claude-3-5-sonnet-20241022
+auto-commits: true
+dark-mode: true
+```
+
+## Git統合
+
+### 自動コミット
+
+```bash
+# 自動コミットを有効化（デフォルト）
+aider --auto-commits
+
+# 無効化
+aider --no-auto-commits
+```
+
+### コミットメッセージ
+
+Aiderが自動で適切なコミットメッセージを生成：
+
+```
+aider: Add user authentication feature
+
+- Added login/logout endpoints
+- Implemented JWT token generation
+- Added password hashing
+```
+
+## 注意点
+
+### コスト管理
+
+```bash
+# トークン使用量を表示
+> /tokens
+
+# 安いモデルを使う
+aider --model gpt-4o-mini
+```
+
+### 大きなファイル
+
+```
+# 大きなファイルは分割して追加
+> /add src/components/Header.tsx
+> /add src/components/Footer.tsx
+# 一度に全部追加しない
+```
+
+## 次のステップ
+
+- [Claude Code完全ガイド](/knowledge/vibe-coding/claude-code-guide)
+- [AIペアプログラミング](/knowledge/vibe-coding/ai-pair-programming)

@@ -1,0 +1,267 @@
+---
+title: データベース設計｜個人開発で失敗しないDB設計の基本
+description: データベース設計の基本。テーブル設計、リレーション、インデックス、正規化を解説。
+category: build
+tags: [データベース, 設計, PostgreSQL, Prisma, スキーマ]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-database
+    anchor: Supabase Database
+  - slug: neon-database
+    anchor: Neon Database
+---
+
+# データベース設計
+
+良いDB設計 = 将来の自分を助ける。
+
+## 設計の基本原則
+
+```
+1. シンプルに保つ
+2. 必要最小限から始める
+3. 後から拡張できるように
+4. 一貫性を保つ
+```
+
+## テーブル設計
+
+### 基本的なテーブル
+
+```sql
+-- ユーザー
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT UNIQUE NOT NULL,
+  name TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 投稿
+CREATE TABLE posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  content TEXT,
+  published BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+### Prismaスキーマ
+
+```prisma
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+## リレーション
+
+### 1対多（One-to-Many）
+
+```prisma
+// 1人のユーザーが複数の投稿を持つ
+model User {
+  posts Post[]
+}
+
+model Post {
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+}
+```
+
+### 多対多（Many-to-Many）
+
+```prisma
+// 投稿とタグ
+model Post {
+  tags Tag[]
+}
+
+model Tag {
+  posts Post[]
+}
+
+// 暗黙的な中間テーブルが作られる
+```
+
+### 明示的な中間テーブル
+
+```prisma
+model Post {
+  tags PostTag[]
+}
+
+model Tag {
+  posts PostTag[]
+}
+
+model PostTag {
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id])
+  tagId  String
+
+  @@id([postId, tagId])
+}
+```
+
+## インデックス
+
+### いつインデックスを張るか
+
+```
+✓ WHERE句で頻繁に使うカラム
+✓ JOINで使うカラム
+✓ ORDER BYで使うカラム
+✓ UNIQUEにしたいカラム
+```
+
+### Prismaでのインデックス
+
+```prisma
+model Post {
+  id        String @id
+  title     String
+  authorId  String
+  createdAt DateTime
+
+  @@index([authorId])
+  @@index([createdAt])
+}
+```
+
+### 複合インデックス
+
+```prisma
+model Post {
+  authorId  String
+  published Boolean
+  createdAt DateTime
+
+  // 「著者の公開済み投稿を日付順」で取得する場合
+  @@index([authorId, published, createdAt])
+}
+```
+
+## よくあるパターン
+
+### ソフトデリート
+
+```prisma
+model Post {
+  deletedAt DateTime?
+
+  @@index([deletedAt])
+}
+
+// 取得時
+const posts = await prisma.post.findMany({
+  where: { deletedAt: null }
+})
+```
+
+### 監査ログ
+
+```prisma
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // CREATE, UPDATE, DELETE
+  table     String
+  recordId  String
+  userId    String?
+  oldData   Json?
+  newData   Json?
+  createdAt DateTime @default(now())
+}
+```
+
+### 設定テーブル
+
+```prisma
+model UserSetting {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+  theme  String @default("light")
+  locale String @default("ja")
+  // ...
+}
+```
+
+## アンチパターン
+
+### 避けるべきこと
+
+```
+❌ 1つのカラムに複数の値（カンマ区切り）
+❌ 動的なカラム追加
+❌ 必要以上の正規化
+❌ インデックスの張りすぎ
+```
+
+### EAV（Entity-Attribute-Value）は避ける
+
+```sql
+-- ❌ EAVパターン（避ける）
+CREATE TABLE user_attributes (
+  user_id INT,
+  attribute_name TEXT,
+  attribute_value TEXT
+);
+
+-- ⭕ 普通のテーブル
+CREATE TABLE users (
+  id INT,
+  name TEXT,
+  email TEXT,
+  age INT
+);
+```
+
+## マイグレーション
+
+### 安全なマイグレーション
+
+```bash
+# 開発環境
+npx prisma db push
+
+# 本番環境
+npx prisma migrate deploy
+```
+
+### 破壊的変更を避ける
+
+```
+⭕ 新しいカラムを追加（NULL許可）
+⭕ インデックスを追加
+❌ カラムを削除（まず使わないようにしてから）
+❌ 型を変更（新しいカラムを追加して移行）
+```
+
+## 次のステップ
+
+- [Supabase Database](/knowledge/build/supabase-database)
+- [Neon Database](/knowledge/build/neon-database)

@@ -1,0 +1,257 @@
+---
+title: AIでECサイトを作る｜商品一覧からカート、決済までの実装
+description: AIを使ってECサイトを作成する方法。商品一覧、カート機能、Stripe決済の実装を解説。
+category: vibe-coding
+tags: [ECサイト, カート, 決済, Stripe, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: stripe-setup
+    anchor: Stripe設定
+  - slug: saas-mvp
+    anchor: SaaS MVP
+---
+
+# AIでECサイトを作る
+
+商品を売りたい？ECサイトはAIで作れる。
+
+## 完成イメージ
+
+```
+[商品一覧] → [商品詳細] → [カート] → [決済] → [完了]
+```
+
+## 技術スタック
+
+```
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Stripe（決済）
+- Supabase（データベース）
+```
+
+## AIへの指示
+
+### ステップ1: 商品一覧
+
+```
+ECサイトの商品一覧ページを作って：
+- グリッドレイアウト（2列/モバイル、4列/PC）
+- 商品カード（画像、名前、価格）
+- カテゴリフィルター
+- 並び替え（価格順、新着順）
+```
+
+生成されるコード：
+```tsx
+export default function ProductsPage() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex gap-4 mb-6">
+        <CategoryFilter />
+        <SortSelect />
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {products.map(product => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### ステップ2: 商品詳細
+
+```
+商品詳細ページを作って：
+- 大きな商品画像
+- 商品名、価格、説明
+- 数量選択
+- カートに追加ボタン
+- 関連商品
+```
+
+### ステップ3: カート機能
+
+```
+カート機能を実装して：
+- Zustandで状態管理
+- カートに追加/削除
+- 数量変更
+- 小計計算
+- localStorage保存
+```
+
+生成されるコード：
+```tsx
+// store/cart.ts
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+
+interface CartStore {
+  items: CartItem[]
+  addItem: (product: Product) => void
+  removeItem: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
+  clearCart: () => void
+  total: () => number
+}
+
+export const useCart = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addItem: (product) => {
+        const items = get().items
+        const existing = items.find(item => item.id === product.id)
+        if (existing) {
+          set({
+            items: items.map(item =>
+              item.id === product.id
+                ? { ...item, quantity: item.quantity + 1 }
+                : item
+            )
+          })
+        } else {
+          set({ items: [...items, { ...product, quantity: 1 }] })
+        }
+      },
+      // ... 他のメソッド
+    }),
+    { name: 'cart-storage' }
+  )
+)
+```
+
+### ステップ4: カートページ
+
+```
+カートページを作って：
+- 商品一覧（画像、名前、価格、数量）
+- 数量変更ボタン
+- 削除ボタン
+- 小計、送料、合計
+- 購入手続きへボタン
+```
+
+### ステップ5: Stripe決済
+
+```
+Stripe Checkoutで決済を実装：
+- APIルートでCheckoutセッション作成
+- 成功ページにリダイレクト
+- Webhookで注文確定
+```
+
+生成されるコード：
+```tsx
+// app/api/checkout/route.ts
+import Stripe from 'stripe'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+
+export async function POST(request: Request) {
+  const { items } = await request.json()
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: items.map(item => ({
+      price_data: {
+        currency: 'jpy',
+        product_data: {
+          name: item.name,
+          images: [item.image],
+        },
+        unit_amount: item.price,
+      },
+      quantity: item.quantity,
+    })),
+    mode: 'payment',
+    success_url: `${process.env.NEXT_PUBLIC_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
+  })
+
+  return Response.json({ url: session.url })
+}
+```
+
+### ステップ6: 注文完了
+
+```
+注文完了ページを作って：
+- 「ありがとうございます」メッセージ
+- 注文番号
+- 注文内容の確認
+- トップに戻るボタン
+```
+
+## データベース設計
+
+```
+Supabaseのテーブル設計をして：
+- products: 商品マスタ
+- orders: 注文
+- order_items: 注文明細
+```
+
+生成されるSQL：
+```sql
+-- 商品テーブル
+create table products (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  description text,
+  price integer not null,
+  image_url text,
+  category text,
+  stock integer default 0,
+  created_at timestamptz default now()
+);
+
+-- 注文テーブル
+create table orders (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users,
+  status text default 'pending',
+  total integer not null,
+  stripe_session_id text,
+  created_at timestamptz default now()
+);
+```
+
+## 改善のポイント
+
+### 在庫管理
+
+```
+在庫管理機能を追加：
+- 在庫数の表示
+- 在庫切れ表示
+- カートに追加時の在庫チェック
+```
+
+### レビュー機能
+
+```
+商品レビュー機能を追加：
+- 星評価（1-5）
+- レビュー本文
+- 平均評価の表示
+```
+
+### 検索機能
+
+```
+商品検索機能を追加：
+- キーワード検索
+- 価格範囲フィルター
+- 検索結果ページ
+```
+
+## 次のステップ
+
+- [Stripe設定ガイド](/knowledge/build/stripe-setup)
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)

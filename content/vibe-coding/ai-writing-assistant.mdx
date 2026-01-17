@@ -1,0 +1,214 @@
+---
+title: AIライティングアシスタントを作る｜文章作成支援ツールの作り方
+description: AIを使ってライティングアシスタントツールを作成する方法。文章生成、校正、要約機能の実装を解説。
+category: vibe-coding
+tags: [ライティング, 文章生成, OpenAI, AI, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: ai-chatbot
+    anchor: AIチャットボット
+  - slug: saas-mvp
+    anchor: SaaS MVP
+---
+
+# AIライティングアシスタントを作る
+
+文章作成を助けるAIツール。自分で作れる。
+
+## 完成イメージ
+
+```
+┌─────────────────────────────────────────┐
+│ AI Writing Assistant                    │
+├─────────────────────────────────────────┤
+│ [執筆モード] [校正モード] [要約モード]   │
+├─────────────────────────────────────────┤
+│                                         │
+│ [テキストエディタ]                      │
+│                                         │
+├─────────────────────────────────────────┤
+│ [生成] [校正] [要約] [コピー]           │
+└─────────────────────────────────────────┘
+```
+
+## 技術スタック
+
+```
+- Next.js 14
+- TypeScript
+- OpenAI API（GPT-4）
+- Vercel AI SDK
+```
+
+## AIへの指示
+
+### ステップ1: 基本UI
+
+```
+ライティングアシスタントのUIを作って：
+- テキストエディタ（テキストエリア）
+- モード切り替えタブ
+- 実行ボタン
+- 出力エリア
+```
+
+生成されるコード：
+```tsx
+'use client'
+
+import { useState } from 'react'
+
+type Mode = 'write' | 'proofread' | 'summarize'
+
+export default function WritingAssistant() {
+  const [mode, setMode] = useState<Mode>('write')
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      {/* モード切り替え */}
+      <div className="flex gap-2 mb-4">
+        {(['write', 'proofread', 'summarize'] as Mode[]).map(m => (
+          <button
+            key={m}
+            onClick={() => setMode(m)}
+            className={`px-4 py-2 rounded ${
+              mode === m ? 'bg-blue-600 text-white' : 'bg-gray-100'
+            }`}
+          >
+            {m === 'write' ? '執筆' : m === 'proofread' ? '校正' : '要約'}
+          </button>
+        ))}
+      </div>
+
+      {/* 入力 */}
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-48 p-4 border rounded"
+        placeholder="テキストを入力..."
+      />
+
+      {/* 実行ボタン */}
+      <button
+        onClick={handleSubmit}
+        disabled={isLoading}
+        className="mt-4 px-6 py-2 bg-blue-600 text-white rounded"
+      >
+        {isLoading ? '処理中...' : '実行'}
+      </button>
+
+      {/* 出力 */}
+      {output && (
+        <div className="mt-6 p-4 bg-gray-50 rounded">
+          <pre className="whitespace-pre-wrap">{output}</pre>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### ステップ2: API実装
+
+```
+OpenAI APIを使ったエンドポイントを作って：
+- /api/write: 文章生成
+- /api/proofread: 校正
+- /api/summarize: 要約
+```
+
+生成されるコード：
+```typescript
+// app/api/write/route.ts
+import OpenAI from 'openai'
+
+const openai = new OpenAI()
+
+export async function POST(request: Request) {
+  const { prompt, mode } = await request.json()
+
+  const systemPrompts = {
+    write: 'あなたはプロのライターです。与えられたテーマで文章を書いてください。',
+    proofread: 'あなたは編集者です。文章の誤字脱字、文法、表現を改善してください。',
+    summarize: 'あなたは要約の専門家です。文章を簡潔に要約してください。',
+  }
+
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o',
+    messages: [
+      { role: 'system', content: systemPrompts[mode] },
+      { role: 'user', content: prompt },
+    ],
+  })
+
+  return Response.json({
+    result: completion.choices[0].message.content,
+  })
+}
+```
+
+### ステップ3: ストリーミング
+
+```
+Vercel AI SDKでストリーミング対応：
+- リアルタイムで文字が表示される
+- 長い文章でも待ち時間が短く感じる
+```
+
+### ステップ4: 追加機能
+
+```
+以下の機能を追加：
+- トーン変更（カジュアル/フォーマル）
+- 文字数指定
+- キーワード強調
+- 履歴保存
+```
+
+## 機能拡張
+
+### テンプレート
+
+```
+執筆テンプレートを追加：
+- ブログ記事
+- メール
+- SNS投稿
+- レポート
+```
+
+### 校正の詳細表示
+
+```
+校正結果を詳細に表示：
+- 修正箇所をハイライト
+- 修正理由の説明
+- 元の文との比較
+```
+
+### エクスポート
+
+```
+エクスポート機能：
+- Markdownでダウンロード
+- クリップボードにコピー
+- PDFで保存
+```
+
+## 使用量制限
+
+```
+APIコストを管理する仕組み：
+- 1日の使用回数制限
+- ユーザー認証
+- 使用量の表示
+```
+
+## 次のステップ
+
+- [AIチャットボット](/knowledge/vibe-coding/ai-chatbot)
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)

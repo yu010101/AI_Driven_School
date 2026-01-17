@@ -1,0 +1,172 @@
+---
+title: GitHub Copilot完全ガイド｜AI補完で開発効率を2倍にする方法
+description: GitHub Copilotの使い方を解説。インストールから実践的な活用テクニック、Cursor/Claude Codeとの違いまで。
+category: vibe-coding
+tags: [GitHub Copilot, AI補完, 開発効率, コード生成, IDE]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: cursor-vs-copilot
+    anchor: Cursor vs Copilot
+  - slug: cursor-guide
+    anchor: Cursor完全ガイド
+---
+
+# GitHub Copilot完全ガイド
+
+Copilotは「コード補完のAI版」。タイプ中に次の行を予測してくれる。
+
+## Copilotとは
+
+### 特徴
+
+- **リアルタイム補完**: タイプしながら候補が出る
+- **コンテキスト理解**: ファイル全体を見て提案
+- **多言語対応**: ほぼすべての言語に対応
+- **IDE統合**: VS Code, JetBrains, Neovim対応
+
+### 料金
+
+| プラン | 料金 | 対象 |
+|-------|------|------|
+| Individual | $10/月 | 個人 |
+| Business | $19/月 | チーム |
+| Enterprise | $39/月 | 大企業 |
+
+学生・OSS開発者は無料。
+
+## セットアップ
+
+### VS Codeの場合
+
+1. 拡張機能から「GitHub Copilot」をインストール
+2. GitHubアカウントでサインイン
+3. 有効化を確認
+
+```
+# 動作確認
+# 関数名を書くと候補が出る
+function calculateTax(
+```
+
+## 基本的な使い方
+
+### 補完の受け入れ
+
+```
+Tab: 候補を受け入れ
+Esc: 候補を拒否
+Ctrl+]: 次の候補
+Ctrl+[: 前の候補
+```
+
+### コメントから生成
+
+```javascript
+// ユーザー一覧をAPIから取得して表示する関数
+// ↓ Copilotが生成
+async function fetchAndDisplayUsers() {
+  const response = await fetch('/api/users')
+  const users = await response.json()
+  users.forEach(user => {
+    console.log(user.name)
+  })
+}
+```
+
+### 関数名から生成
+
+```javascript
+function validateEmail(email) {
+  // ↓ Copilotが予測
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return regex.test(email)
+}
+```
+
+## 効果的な使い方
+
+### 1. 明確な名前をつける
+
+```javascript
+// ❌ 曖昧な名前
+function process(data) {}
+
+// ⭕ 明確な名前
+function filterActiveUsers(users) {}
+```
+
+### 2. コメントで意図を伝える
+
+```javascript
+// 配列を日付の降順でソートし、最新5件を返す
+function getRecentItems(items) {
+  // Copilotが適切なコードを生成
+}
+```
+
+### 3. 例を示す
+
+```javascript
+// 入力: "hello world"
+// 出力: "Hello World"
+function capitalizeWords(str) {
+  // Copilotが理解して生成
+}
+```
+
+## Copilot Chat
+
+### チャット機能
+
+コードについて質問できる：
+
+```
+/explain: コードの説明
+/fix: バグの修正
+/tests: テストの生成
+/docs: ドキュメント生成
+```
+
+### 使用例
+
+```
+/explain このコードは何をしていますか？
+/fix このエラーを修正してください
+/tests この関数のテストを書いてください
+```
+
+## CursorやClaude Codeとの違い
+
+| 機能 | Copilot | Cursor | Claude Code |
+|-----|---------|--------|-------------|
+| 補完 | ◎ | ○ | △ |
+| チャット | ○ | ◎ | ◎ |
+| ファイル編集 | △ | ◎ | ◎ |
+| 価格 | $10/月 | $20/月 | 従量課金 |
+
+### 使い分け
+
+- **Copilot**: 補完メイン、既存コードの拡張
+- **Cursor**: 対話しながら開発、大きな変更
+- **Claude Code**: ターミナル作業、複雑な指示
+
+## 注意点
+
+### セキュリティ
+
+```
+❌ 機密情報を含むコードで使用
+❌ 社内専用コードでの無制限使用
+⭕ 公開可能なコードでの使用
+```
+
+### 著作権
+
+- 学習データに既存コードが含まれる
+- 商用利用時は確認が必要
+
+## 次のステップ
+
+- [Cursor vs Copilot比較](/knowledge/vibe-coding/cursor-vs-copilot)
+- [Cursor完全ガイド](/knowledge/vibe-coding/cursor-guide)

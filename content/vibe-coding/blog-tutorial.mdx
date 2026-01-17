@@ -1,0 +1,232 @@
+---
+title: AIでブログサイトを作る｜MDXでコンテンツ管理するブログの作り方
+description: AIを使ってブログサイトを作成する方法。MDXでの記事管理、SEO対策、RSSフィードの実装を解説。
+category: vibe-coding
+tags: [ブログ, MDX, SEO, RSS, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: nextjs-starter
+    anchor: Next.jsスターター
+  - slug: landing-page-tutorial
+    anchor: ランディングページ
+---
+
+# AIでブログサイトを作る
+
+自分のブログを持ちたい？WordPressより軽くて速いブログが作れる。
+
+## 完成イメージ
+
+```
+[トップ] - 記事一覧
+[記事ページ] - 本文、目次、シェアボタン
+[カテゴリ] - カテゴリ別一覧
+[About] - 自己紹介
+```
+
+## 技術スタック
+
+```
+- Next.js 14
+- MDX（記事管理）
+- Tailwind CSS
+- gray-matter（フロントマター解析）
+```
+
+## AIへの指示
+
+### ステップ1: プロジェクト作成
+
+```
+Next.js 14でMDXブログを作りたい。
+以下の機能を含めて：
+- MDXファイルで記事管理
+- 記事一覧ページ
+- 記事詳細ページ
+- カテゴリ/タグ機能
+- SEO対策（メタタグ、OGP）
+```
+
+### ステップ2: MDX設定
+
+```
+MDXを使えるように設定して：
+- contentフォルダに記事を配置
+- フロントマターでメタ情報管理
+- Markdownの基本スタイル
+```
+
+記事の例：
+```mdx
+---
+title: 初めてのブログ記事
+description: このブログの最初の記事です
+date: 2024-01-01
+category: tech
+tags: [Next.js, React]
+---
+
+# 初めてのブログ記事
+
+本文がここに入ります。
+```
+
+### ステップ3: 記事一覧
+
+```
+ブログのトップページを作って：
+- 新着順に記事を表示
+- タイトル、日付、説明を表示
+- カテゴリバッジ
+- ページネーション
+```
+
+生成されるコード：
+```tsx
+export default async function BlogPage() {
+  const posts = getAllPosts()
+
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-12">
+      <h1 className="text-4xl font-bold mb-8">Blog</h1>
+
+      <div className="space-y-8">
+        {posts.map(post => (
+          <article key={post.slug} className="border-b pb-8">
+            <Link href={`/blog/${post.slug}`}>
+              <h2 className="text-2xl font-bold hover:text-blue-600">
+                {post.title}
+              </h2>
+            </Link>
+            <p className="text-gray-500 mt-2">{post.date}</p>
+            <p className="mt-4">{post.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### ステップ4: 記事ページ
+
+```
+記事詳細ページを作って：
+- タイトル、日付、カテゴリ
+- 目次（自動生成）
+- 本文（MDXレンダリング）
+- 関連記事
+- シェアボタン
+```
+
+### ステップ5: カテゴリページ
+
+```
+カテゴリ別の記事一覧ページを作って：
+- /category/[slug]
+- カテゴリ名を表示
+- 該当記事の一覧
+```
+
+### ステップ6: SEO対策
+
+```
+SEO対策を追加：
+- 動的なmetadataの生成
+- OGP画像の設定
+- sitemap.xml
+- robots.txt
+```
+
+生成されるコード：
+```tsx
+// app/blog/[slug]/page.tsx
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const post = getPostBySlug(params.slug)
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      publishedTime: post.date,
+    },
+  }
+}
+```
+
+## 追加機能
+
+### RSSフィード
+
+```
+RSSフィードを生成：
+- /rss.xml
+- 最新20記事を含む
+- Feedlyなどで購読可能に
+```
+
+### 検索機能
+
+```
+記事検索機能を追加：
+- キーワード検索
+- タイトルと本文を検索
+- 検索結果ページ
+```
+
+### 目次の自動生成
+
+```
+記事の見出しから目次を自動生成：
+- h2, h3を抽出
+- クリックでスクロール
+- 現在位置をハイライト
+```
+
+### コードブロック
+
+```
+コードブロックを見やすく：
+- シンタックスハイライト
+- コピーボタン
+- ファイル名表示
+```
+
+## デザインの改善
+
+### タイポグラフィ
+
+```
+記事本文のタイポグラフィを改善：
+- 読みやすいフォントサイズ
+- 適切な行間
+- 見出しの階層
+- リストのスタイル
+```
+
+### ダークモード
+
+```
+ダークモード対応：
+- トグルボタン
+- システム設定に連動
+- 設定の保存
+```
+
+## デプロイ
+
+```
+Vercelにデプロイする手順：
+- GitHubにプッシュ
+- Vercelで連携
+- 自動デプロイ設定
+```
+
+## 次のステップ
+
+- [ランディングページの作り方](/knowledge/vibe-coding/landing-page-tutorial)
+- [SEO対策の基本](/knowledge/marketing/seo-indie)

@@ -1,0 +1,269 @@
+---
+title: CI/CD設定｜GitHub Actionsで自動テスト・デプロイを実現
+description: GitHub Actionsを使ったCI/CDパイプラインの構築方法。自動テスト、型チェック、デプロイを解説。
+category: build
+tags: [CI/CD, GitHub Actions, 自動化, デプロイ, DevOps]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: testing-setup
+    anchor: テスト環境
+  - slug: vercel-deploy
+    anchor: Vercelデプロイ
+---
+
+# CI/CD設定
+
+プッシュしたら自動でテスト・デプロイ。
+
+## CI/CDとは
+
+```
+CI（継続的インテグレーション）
+- コードをマージするたびに自動テスト
+- 問題を早期発見
+
+CD（継続的デリバリー/デプロイ）
+- テストが通ったら自動デプロイ
+- 手動作業を削減
+```
+
+## GitHub Actions基本
+
+### ワークフローファイル
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+```
+
+## 実用的なCI設定
+
+### 型チェック + Lint + テスト
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run typecheck
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, test]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+```
+
+### package.json
+
+```json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}
+```
+
+## PRでのチェック
+
+### ブランチ保護
+
+```
+Settings → Branches → Add rule
+
+保護設定:
+✓ Require a pull request before merging
+✓ Require status checks to pass
+  - lint
+  - typecheck
+  - test
+  - build
+```
+
+### PRコメントにテスト結果
+
+```yaml
+- name: Test with coverage
+  run: npm run test:coverage
+
+- name: Upload coverage
+  uses: codecov/codecov-action@v3
+```
+
+## 環境変数
+
+### シークレット設定
+
+```
+Settings → Secrets and variables → Actions
+- VERCEL_TOKEN
+- DATABASE_URL
+- etc.
+```
+
+### ワークフローで使用
+
+```yaml
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+steps:
+  - run: npm test
+    env:
+      TEST_DB_URL: ${{ secrets.TEST_DB_URL }}
+```
+
+## Vercel自動デプロイ
+
+### GitHub連携
+
+```
+1. VercelでGitHubリポジトリをインポート
+2. 自動でPRプレビュー、mainデプロイが設定される
+```
+
+### 手動デプロイ（Actions経由）
+
+```yaml
+deploy:
+  runs-on: ubuntu-latest
+  needs: [test]
+  if: github.ref == 'refs/heads/main'
+  steps:
+    - uses: actions/checkout@v4
+    - uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+```
+
+## キャッシュ活用
+
+### npmキャッシュ
+
+```yaml
+- uses: actions/setup-node@v4
+  with:
+    node-version: 20
+    cache: 'npm'
+```
+
+### カスタムキャッシュ
+
+```yaml
+- uses: actions/cache@v4
+  with:
+    path: .next/cache
+    key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}
+```
+
+## 並列実行
+
+```yaml
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    # ...
+
+  test:
+    runs-on: ubuntu-latest
+    # ...
+
+  # lintとtestは並列実行
+  # buildは両方完了後
+  build:
+    needs: [lint, test]
+```
+
+## スケジュール実行
+
+```yaml
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 毎日0時
+
+jobs:
+  daily-check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run health-check
+```
+
+## 次のステップ
+
+- [テスト環境の構築](/knowledge/build/testing-setup)
+- [Vercelデプロイ](/knowledge/build/vercel-deploy)

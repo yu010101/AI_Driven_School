@@ -1,0 +1,198 @@
+---
+title: AIでフォームビルダーを作る｜ドラッグ&ドロップでフォーム作成ツール
+description: AIを使ってノーコード風のフォームビルダーを作成する方法。フィールド追加、バリデーション、送信処理を解説。
+category: vibe-coding
+tags: [フォーム, ビルダー, ドラッグ&ドロップ, React, チュートリアル]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: saas-mvp
+    anchor: SaaS MVP
+  - slug: dashboard-tutorial
+    anchor: ダッシュボード
+---
+
+# AIでフォームビルダーを作る
+
+Googleフォームのようなフォームビルダー。AIで作れる。
+
+## 完成イメージ
+
+```
+┌─────────────────────────────────────────┐
+│ フォームビルダー                        │
+├──────────────────┬──────────────────────┤
+│ [フィールド一覧] │   [プレビュー]       │
+│ □ テキスト      │                      │
+│ □ メール       │   名前: [        ]   │
+│ □ 数値         │   メール: [       ]   │
+│ □ 選択         │   [送信]             │
+│ □ チェック      │                      │
+└──────────────────┴──────────────────────┘
+```
+
+## 技術スタック
+
+```
+- Next.js 14
+- TypeScript
+- dnd-kit（ドラッグ&ドロップ）
+- React Hook Form（フォーム管理）
+- Zod（バリデーション）
+```
+
+## AIへの指示
+
+### ステップ1: データ構造
+
+```
+フォームビルダーのデータ構造を設計して：
+- フォーム全体の情報
+- フィールドの種類（テキスト、数値、選択など）
+- バリデーションルール
+- フィールドの並び順
+```
+
+生成されるコード：
+```typescript
+interface FormField {
+  id: string
+  type: 'text' | 'email' | 'number' | 'select' | 'checkbox' | 'textarea'
+  label: string
+  placeholder?: string
+  required: boolean
+  options?: string[]  // 選択肢
+  validation?: {
+    min?: number
+    max?: number
+    pattern?: string
+  }
+}
+
+interface Form {
+  id: string
+  title: string
+  description?: string
+  fields: FormField[]
+  createdAt: Date
+}
+```
+
+### ステップ2: フィールドパレット
+
+```
+左側のフィールドパレットを作って：
+- 追加できるフィールドタイプ一覧
+- ドラッグでキャンバスに追加
+- アイコン付き
+```
+
+### ステップ3: キャンバス
+
+```
+中央のキャンバス（フォーム編集エリア）を作って：
+- ドロップされたフィールドを表示
+- フィールドの並べ替え
+- クリックで編集
+- 削除ボタン
+```
+
+生成されるコード：
+```tsx
+import { DndContext, closestCenter } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+
+export function FormCanvas({ fields, onReorder, onSelect }) {
+  return (
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={fields} strategy={verticalListSortingStrategy}>
+        <div className="space-y-4 p-4 bg-gray-50 rounded-lg min-h-[400px]">
+          {fields.map(field => (
+            <SortableField
+              key={field.id}
+              field={field}
+              onClick={() => onSelect(field)}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
+  )
+}
+```
+
+### ステップ4: フィールド設定パネル
+
+```
+右側のフィールド設定パネルを作って：
+- ラベル編集
+- プレースホルダー
+- 必須/任意
+- バリデーションルール
+- 選択肢の編集（選択フィールドの場合）
+```
+
+### ステップ5: プレビュー
+
+```
+作成したフォームのプレビューを作って：
+- 実際の見た目で表示
+- 入力可能
+- バリデーション動作確認
+```
+
+### ステップ6: 送信処理
+
+```
+フォーム送信の仕組みを作って：
+- APIエンドポイント
+- バリデーション
+- データベース保存
+- 完了メッセージ
+```
+
+## 追加機能
+
+### フォーム共有
+
+```
+フォームを共有する機能：
+- 公開URLの生成
+- 埋め込みコード
+- QRコード
+```
+
+### 回答確認
+
+```
+送信された回答を確認する機能：
+- 回答一覧
+- CSVエクスポート
+- グラフ表示
+```
+
+### フォームテンプレート
+
+```
+テンプレート機能：
+- お問い合わせフォーム
+- アンケート
+- 申し込みフォーム
+```
+
+## 保存と読み込み
+
+```
+フォームの保存・読み込み：
+- localStorage
+- Supabaseでクラウド保存
+- JSON形式でエクスポート
+```
+
+## 次のステップ
+
+- [SaaS MVPの作り方](/knowledge/vibe-coding/saas-mvp)
+- [ダッシュボードの作り方](/knowledge/vibe-coding/dashboard-tutorial)

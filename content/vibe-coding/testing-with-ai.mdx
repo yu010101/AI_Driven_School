@@ -1,0 +1,246 @@
+---
+title: AIでテスト作成｜テストを書く時間を90%削減する方法
+description: AIを使ってテストコードを効率的に作成する方法。ユニットテスト、E2Eテスト、テストケースの設計を解説。
+category: vibe-coding
+tags: [テスト, AI, 自動生成, ユニットテスト, TDD]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: code-review-with-ai
+    anchor: AIでコードレビュー
+  - slug: debugging-with-ai
+    anchor: AIでデバッグ
+---
+
+# AIでテスト作成
+
+テストは重要だけど面倒。AIに書かせれば一瞬。
+
+## AIにテストを書かせるメリット
+
+- **時間短縮**: 手動の1/10の時間
+- **網羅性**: エッジケースも提案
+- **一貫性**: スタイルが揃う
+- **学習**: テストの書き方を学べる
+
+## 基本的な依頼方法
+
+### シンプルな依頼
+
+```
+この関数のユニットテストを書いて：
+
+function add(a: number, b: number): number {
+  return a + b
+}
+```
+
+### 詳細な依頼
+
+```
+この関数のテストを書いて。
+- Jest + TypeScript
+- エッジケースも含める
+- AAA（Arrange-Act-Assert）パターンで
+- 日本語のdescribeで
+
+[コードを貼り付け]
+```
+
+## テストケースの設計
+
+### AIにケースを提案させる
+
+```
+この関数のテストケースを洗い出して：
+
+function validateEmail(email: string): boolean {
+  // メールアドレスのバリデーション
+}
+```
+
+AIの回答：
+```
+テストケース：
+1. 正常系
+   - 標準的なメールアドレス
+   - サブドメインあり
+
+2. 異常系
+   - @がない
+   - ドメインがない
+   - 空文字
+   - null/undefined
+
+3. エッジケース
+   - 日本語を含む
+   - 非常に長いアドレス
+   - 特殊文字を含む
+```
+
+## 実践例
+
+### ユニットテスト
+
+```
+依頼：
+「この関数のJestテストを書いて」
+
+function calculateDiscount(price: number, discountRate: number): number {
+  if (price < 0 || discountRate < 0 || discountRate > 100) {
+    throw new Error('Invalid input')
+  }
+  return price * (1 - discountRate / 100)
+}
+```
+
+生成されるテスト：
+```typescript
+describe('calculateDiscount', () => {
+  describe('正常系', () => {
+    it('10%割引が正しく計算される', () => {
+      expect(calculateDiscount(1000, 10)).toBe(900)
+    })
+
+    it('0%割引は元の価格を返す', () => {
+      expect(calculateDiscount(1000, 0)).toBe(1000)
+    })
+
+    it('100%割引は0を返す', () => {
+      expect(calculateDiscount(1000, 100)).toBe(0)
+    })
+  })
+
+  describe('異常系', () => {
+    it('負の価格でエラー', () => {
+      expect(() => calculateDiscount(-100, 10)).toThrow('Invalid input')
+    })
+
+    it('負の割引率でエラー', () => {
+      expect(() => calculateDiscount(100, -10)).toThrow('Invalid input')
+    })
+
+    it('100%を超える割引率でエラー', () => {
+      expect(() => calculateDiscount(100, 150)).toThrow('Invalid input')
+    })
+  })
+})
+```
+
+### 統合テスト
+
+```
+依頼：
+「このAPIエンドポイントの統合テストを書いて。
+supertestを使って、認証が必要なケースも含めて」
+
+// POST /api/posts - 新規投稿作成
+```
+
+### E2Eテスト
+
+```
+依頼：
+「ログインフローのPlaywrightテストを書いて。
+- 正常ログイン
+- パスワード間違い
+- 未登録ユーザー
+のケースを含めて」
+```
+
+## テストの改善
+
+### カバレッジを上げる
+
+```
+「このテストのカバレッジが80%なんだけど、
+足りないケースを追加して」
+
+[既存のテストコード]
+[カバレッジレポート]
+```
+
+### テストをリファクタリング
+
+```
+「このテストが冗長になってきた。
+共通化してリファクタリングして」
+
+[テストコード]
+```
+
+## TDD（テスト駆動開発）との組み合わせ
+
+### 1. 仕様からテストを生成
+
+```
+「以下の仕様でテストを先に書いて：
+- パスワードは8文字以上
+- 大文字小文字を含む
+- 数字を含む
+- 記号を含む」
+```
+
+### 2. テストを通す実装を生成
+
+```
+「このテストをすべてパスする実装を書いて」
+
+[テストコード]
+```
+
+### 3. リファクタリング
+
+```
+「テストを維持しながら、実装をリファクタリングして」
+```
+
+## ツール別の書き方
+
+### Jest
+
+```
+「Jestでこの関数のテストを書いて。
+モックも必要なら追加して」
+```
+
+### Vitest
+
+```
+「Vitestでテストを書いて。
+vi.mockを使ってAPIをモック」
+```
+
+### Playwright
+
+```
+「Playwrightでログインページのテストを書いて」
+```
+
+### Cypress
+
+```
+「Cypressでフォーム送信のテストを書いて」
+```
+
+## 注意点
+
+### 生成されたテストの確認
+
+```
+・テストが本当に意味のあるアサーションをしているか
+・エッジケースが適切に網羅されているか
+・モックの設定が正しいか
+```
+
+### 実際に実行して確認
+
+```bash
+npm test
+# 生成されたテストが通るか確認
+```
+
+## 次のステップ
+
+- [AIでデバッグ](/knowledge/vibe-coding/debugging-with-ai)
+- [AIでコードレビュー](/knowledge/vibe-coding/code-review-with-ai)

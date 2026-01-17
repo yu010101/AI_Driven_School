@@ -1,0 +1,204 @@
+---
+title: Cline（旧Claude Dev）入門｜VS Codeで使えるAIコーディングアシスタント
+description: Clineの使い方を解説。インストール、設定、効果的な活用方法を紹介します。
+category: vibe-coding
+tags: [Cline, Claude Dev, VS Code, 拡張機能, AIアシスタント]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: cursor-guide
+    anchor: Cursor完全ガイド
+  - slug: claude-code-guide
+    anchor: Claude Code完全ガイド
+---
+
+# Cline（旧Claude Dev）入門
+
+ClineはVS Code拡張機能として動くAIコーディングアシスタント。
+
+## Clineとは
+
+### 特徴
+
+- **VS Code拡張**: IDEに統合
+- **自律的**: ファイル作成・編集を自動実行
+- **ターミナル操作**: コマンド実行も可能
+- **APIキー利用**: 自分のキーで従量課金
+
+### 他ツールとの比較
+
+| 項目 | Cline | Cursor | Claude Code |
+|-----|-------|--------|-------------|
+| 環境 | VS Code拡張 | 専用IDE | ターミナル |
+| 料金 | APIキーのみ | $20/月 | 従量課金 |
+| 自律性 | ◎ | ○ | ◎ |
+| 承認 | 各操作で確認 | 一括 | 各操作で確認 |
+
+## インストール
+
+### VS Code拡張機能
+
+1. VS Code拡張機能で「Cline」を検索
+2. インストール
+3. APIキーを設定
+
+### APIキー設定
+
+```
+1. サイドバーのClineアイコンをクリック
+2. 設定（歯車アイコン）
+3. API Providerを選択（Anthropic推奨）
+4. APIキーを入力
+```
+
+## 基本的な使い方
+
+### タスクの指示
+
+```
+サイドバーのClineパネルで：
+
+「ログイン機能を追加して」
+↓
+Clineが計画を立てて実行
+```
+
+### 承認フロー
+
+```
+Cline: src/auth.tsを作成します
+[Approve] [Reject]
+
+Cline: npm install jsonwebtokenを実行します
+[Approve] [Reject]
+```
+
+各操作ごとに確認できるので安心。
+
+## 実践例
+
+### 新機能の追加
+
+```
+入力: 「ユーザー登録フォームを作って」
+
+Clineの動き:
+1. components/RegisterForm.tsxを作成
+2. 必要なパッケージをインストール
+3. バリデーションを追加
+4. テストを作成
+```
+
+### バグ修正
+
+```
+入力: 「このエラーを修正して: TypeError at line 45」
+
+Clineの動き:
+1. エラー箇所を特定
+2. 原因を分析
+3. 修正を提案
+4. 修正を適用
+```
+
+### リファクタリング
+
+```
+入力: 「この関数を小さく分割して」
+
+Clineの動き:
+1. 関数を分析
+2. 分割案を提示
+3. 承認後に実行
+```
+
+## 効果的な使い方
+
+### 1. 具体的に指示
+
+```
+❌「APIを作って」
+⭕「/api/usersエンドポイントで、ユーザー一覧を
+   JSON形式で返すAPIを作って。ページネーション付きで」
+```
+
+### 2. コンテキストを与える
+
+```
+「このプロジェクトはNext.js 14を使っています。
+App Routerで新しいページを追加してください」
+```
+
+### 3. 段階的に進める
+
+```
+1. 「まずデータモデルを設計して」
+2. 「次にAPIを作って」
+3. 「最後にUIを作って」
+```
+
+## 設定のカスタマイズ
+
+### Auto-approve
+
+```
+設定で自動承認を有効化:
+- Read files: 自動承認
+- Write files: 手動承認
+- Execute commands: 手動承認
+```
+
+### モデル選択
+
+```
+Anthropic:
+- claude-3-5-sonnet（推奨）
+- claude-3-haiku（軽量タスク）
+
+OpenAI:
+- gpt-4o
+- gpt-4o-mini
+```
+
+## コスト管理
+
+### トークン表示
+
+各リクエストでトークン数とコストを表示：
+
+```
+Request: 1,234 tokens ($0.02)
+Response: 2,345 tokens ($0.03)
+Total: $0.05
+```
+
+### 節約のコツ
+
+```
+・小さなタスクに分割
+・不要なファイルは含めない
+・軽量モデル（haiku）を活用
+```
+
+## 注意点
+
+### セキュリティ
+
+```
+⚠️ コマンド実行は必ず確認
+⚠️ 機密ファイルへのアクセスに注意
+⚠️ APIキーの管理
+```
+
+### 制限
+
+```
+・大きなプロジェクトでは遅くなる
+・複雑な依存関係の解決は苦手
+・テストの実行結果の解釈に限界
+```
+
+## 次のステップ
+
+- [Cursor完全ガイド](/knowledge/vibe-coding/cursor-guide)
+- [AIペアプログラミング](/knowledge/vibe-coding/ai-pair-programming)

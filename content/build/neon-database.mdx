@@ -1,0 +1,222 @@
+---
+title: Neon入門｜サーバーレスPostgreSQLの使い方
+description: NeonでPostgreSQLを使う方法。セットアップ、接続、Prismaとの連携を解説。
+category: build
+tags: [Neon, PostgreSQL, データベース, サーバーレス, Prisma]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-database
+    anchor: Supabase Database
+  - slug: prisma-setup
+    anchor: Prisma設定
+---
+
+# Neon入門
+
+サーバーレスPostgreSQL。使った分だけ課金。
+
+## Neonの特徴
+
+- **サーバーレス**: 自動スケール
+- **ブランチ機能**: DBのブランチが作れる
+- **無料枠**: 0.5GB、1プロジェクト
+- **接続プール**: 組み込み済み
+
+## セットアップ
+
+### 1. アカウント作成
+
+```
+1. neon.tech にアクセス
+2. GitHubまたはGoogleでサインアップ
+3. プロジェクトを作成
+4. 接続文字列をコピー
+```
+
+### 2. 環境変数設定
+
+```env
+DATABASE_URL="postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require"
+```
+
+## Prismaとの連携
+
+### インストール
+
+```bash
+npm install prisma @prisma/client
+npx prisma init
+```
+
+### スキーマ定義
+
+```prisma
+// prisma/schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  posts     Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime @default(now())
+}
+```
+
+### マイグレーション
+
+```bash
+npx prisma db push
+# または
+npx prisma migrate dev --name init
+```
+
+## 基本操作
+
+### 作成
+
+```typescript
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+
+const user = await prisma.user.create({
+  data: {
+    email: 'user@example.com',
+    name: 'User Name',
+  },
+})
+```
+
+### 取得
+
+```typescript
+// 全件取得
+const users = await prisma.user.findMany()
+
+// 条件付き
+const user = await prisma.user.findUnique({
+  where: { email: 'user@example.com' },
+})
+
+// リレーション含む
+const userWithPosts = await prisma.user.findUnique({
+  where: { id: userId },
+  include: { posts: true },
+})
+```
+
+### 更新
+
+```typescript
+const updated = await prisma.user.update({
+  where: { id: userId },
+  data: { name: 'New Name' },
+})
+```
+
+### 削除
+
+```typescript
+await prisma.user.delete({
+  where: { id: userId },
+})
+```
+
+## ブランチ機能
+
+### ブランチの活用
+
+```
+・本番: main ブランチ
+・開発: dev ブランチ
+・テスト: test ブランチ
+```
+
+本番データをコピーして開発できる。
+
+### 環境ごとの接続
+
+```env
+# .env.development
+DATABASE_URL="postgresql://...dev-branch..."
+
+# .env.production
+DATABASE_URL="postgresql://...main-branch..."
+```
+
+## 接続プール
+
+### Neon組み込みプール
+
+```env
+# プール経由（推奨）
+DATABASE_URL="postgresql://user:pass@ep-xxx-pooler.region.aws.neon.tech/neondb"
+
+# ダイレクト（マイグレーション用）
+DIRECT_URL="postgresql://user:pass@ep-xxx.region.aws.neon.tech/neondb"
+```
+
+### Prisma設定
+
+```prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+```
+
+## Next.jsでの使い方
+
+```typescript
+// lib/prisma.ts
+import { PrismaClient } from '@prisma/client'
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma
+}
+```
+
+## 注意点
+
+### コールドスタート
+
+```
+アイドル状態からの起動に数秒かかる場合がある。
+→ 無料枠の制限、有料プランで改善
+```
+
+### SSL必須
+
+```
+接続文字列に ?sslmode=require が必要
+```
+
+## 次のステップ
+
+- [Supabase Database](/knowledge/build/supabase-database)
+- [Prisma入門](/knowledge/build/prisma-setup)

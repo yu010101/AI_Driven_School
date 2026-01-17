@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getAllArticles, type Category } from '@/lib/mdx'
 import type { Metadata } from 'next'
 
-const categories: Category[] = ['vibe-coding', 'build', 'marketing']
+const categories: Category[] = ['vibe-coding', 'build', 'marketing', 'sales']
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 const categoryData: Record<Category, { name: string; description: string; step: string; longDescription: string }> = {
@@ -23,7 +23,13 @@ const categoryData: Record<Category, { name: string; description: string; step: 
     name: '0円マーケティング',
     description: '広告費ゼロで集客する方法',
     longDescription: '作ったアプリを広告費ゼロで集客する方法を解説。X（Twitter）、note、SEOを活用した0円マーケティングの実践ノウハウを公開します。',
-    step: '3. 売る',
+    step: '3. 集める',
+  },
+  'sales': {
+    name: '営業・収益化',
+    description: '売上を立てて継続的に稼ぐ方法',
+    longDescription: '個人開発でも売上を立てる営業・収益化のノウハウ。価格設定、セールスファネル、顧客対応、継続課金など、稼ぎ続けるための実践テクニックを解説します。',
+    step: '4. 売る',
   },
 }
 

@@ -1,0 +1,201 @@
+---
+title: Firebase Authentication入門｜Googleログインを最速で実装する方法
+description: Firebase Authenticationを使った認証の実装方法。Googleログイン、メール認証、セッション管理を解説。
+category: build
+tags: [Firebase, 認証, Googleログイン, セキュリティ, 実装]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: supabase-auth
+    anchor: Supabase Auth
+  - slug: google-auth
+    anchor: Googleログイン
+---
+
+# Firebase Authentication入門
+
+FirebaseならGoogleログインが5分で実装できる。
+
+## Firebase Authの特徴
+
+- **無料枠が大きい**: 月5万認証まで無料
+- **多彩な認証方法**: Google, Apple, GitHub, メール等
+- **SDK充実**: Web, iOS, Android, Flutter
+- **セキュリティルール**: Firestoreと連携
+
+## セットアップ
+
+### 1. Firebaseプロジェクト作成
+
+```
+1. console.firebase.google.com
+2. プロジェクトを追加
+3. Webアプリを追加
+4. 設定をコピー
+```
+
+### 2. パッケージインストール
+
+```bash
+npm install firebase
+```
+
+### 3. 初期化
+
+```typescript
+// lib/firebase.ts
+import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+}
+
+const app = initializeApp(firebaseConfig)
+export const auth = getAuth(app)
+```
+
+## Googleログイン実装
+
+### ログイン処理
+
+```typescript
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+
+const provider = new GoogleAuthProvider()
+
+async function signInWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, provider)
+    const user = result.user
+    console.log('ログイン成功:', user.email)
+  } catch (error) {
+    console.error('ログインエラー:', error)
+  }
+}
+```
+
+### ログアウト
+
+```typescript
+import { signOut } from 'firebase/auth'
+
+async function logout() {
+  await signOut(auth)
+}
+```
+
+### 認証状態の監視
+
+```typescript
+import { onAuthStateChanged } from 'firebase/auth'
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log('ログイン中:', user.uid)
+  } else {
+    console.log('未ログイン')
+  }
+})
+```
+
+## Reactでの実装
+
+```tsx
+// hooks/useAuth.ts
+import { useState, useEffect } from 'react'
+import { User, onAuthStateChanged } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
+
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user)
+      setLoading(false)
+    })
+    return unsubscribe
+  }, [])
+
+  return { user, loading }
+}
+```
+
+## メール/パスワード認証
+
+### 新規登録
+
+```typescript
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+
+async function signUp(email: string, password: string) {
+  const result = await createUserWithEmailAndPassword(auth, email, password)
+  return result.user
+}
+```
+
+### ログイン
+
+```typescript
+import { signInWithEmailAndPassword } from 'firebase/auth'
+
+async function signIn(email: string, password: string) {
+  const result = await signInWithEmailAndPassword(auth, email, password)
+  return result.user
+}
+```
+
+### パスワードリセット
+
+```typescript
+import { sendPasswordResetEmail } from 'firebase/auth'
+
+async function resetPassword(email: string) {
+  await sendPasswordResetEmail(auth, email)
+}
+```
+
+## セキュリティルール
+
+```javascript
+// Firestoreルール
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+## 注意点
+
+### クライアントサイドのみ
+
+```
+Firebase AuthはクライアントサイドSDK。
+サーバーサイドでの検証にはAdmin SDKを使用。
+```
+
+### トークン検証
+
+```typescript
+// サーバーサイド（Admin SDK）
+import { getAuth } from 'firebase-admin/auth'
+
+async function verifyToken(idToken: string) {
+  const decodedToken = await getAuth().verifyIdToken(idToken)
+  return decodedToken.uid
+}
+```
+
+## 次のステップ
+
+- [Supabase Auth](/knowledge/build/supabase-auth)
+- [ソーシャルログイン](/knowledge/build/social-login)

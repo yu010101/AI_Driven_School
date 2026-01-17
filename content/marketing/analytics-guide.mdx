@@ -1,0 +1,225 @@
+---
+title: アナリティクス活用ガイド｜データで改善ポイントを見つける方法
+description: Google Analytics、Plausible、Posthoghでアクセス解析する方法。見るべき指標、改善の仕方を解説。
+category: marketing
+tags: [アナリティクス, Google Analytics, データ分析, 改善, KPI]
+createdAt: '2024-12-20'
+updatedAt: '2024-12-20'
+relatedArticles:
+  - slug: seo-indie
+    anchor: 個人開発のSEO
+  - slug: ab-testing
+    anchor: A/Bテスト
+---
+
+# アナリティクス活用ガイド
+
+「なんとなく」から「データで判断」へ。
+
+## ツール選び
+
+| ツール | 無料枠 | 特徴 |
+|-------|-------|-----|
+| Google Analytics 4 | 無料 | 高機能、学習コスト高 |
+| Plausible | 月$9〜 | シンプル、プライバシー重視 |
+| Posthog | 100万イベント | プロダクト分析に強い |
+| Umami | 自己ホスト | 無料、軽量 |
+
+## GA4の設定
+
+### インストール
+
+```typescript
+// app/layout.tsx
+import Script from 'next/script'
+
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <head>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `}
+        </Script>
+      </head>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+## 見るべき指標
+
+### 基本指標
+
+| 指標 | 意味 | 目安 |
+|-----|-----|-----|
+| ユーザー | 訪問者数 | 増加傾向か |
+| セッション | 訪問回数 | - |
+| ページビュー | 見られた回数 | - |
+| 直帰率 | 1ページで離脱 | 40-60% |
+| 平均滞在時間 | 読まれているか | 2分以上 |
+
+### 重要な分析
+
+```
+1. どこから来ているか（流入元）
+2. どのページが見られているか
+3. どこで離脱しているか
+4. コンバージョンしているか
+```
+
+## 流入元分析
+
+### チャネル別
+
+```
+Organic Search: 検索エンジン経由
+Direct: 直接アクセス
+Referral: 他サイトから
+Social: SNSから
+Email: メールから
+```
+
+### わかること
+
+```
+・SEOが効いているか
+・SNSの効果
+・どの施策が効果的か
+```
+
+## ページ分析
+
+### よく見られるページ
+
+```
+上位ページ:
+1. トップページ
+2. 人気記事
+3. ランディングページ
+```
+
+### 改善のヒント
+
+```
+人気ページ → さらに強化
+直帰率高い → 導線を改善
+滞在時間短い → コンテンツを改善
+```
+
+## コンバージョン設定
+
+### 目標の例
+
+```
+・会員登録
+・無料トライアル開始
+・購入完了
+・資料ダウンロード
+```
+
+### GA4での設定
+
+```
+管理 → イベント → コンバージョンとしてマーク
+
+追跡するイベント:
+- sign_up
+- start_trial
+- purchase
+```
+
+## イベントトラッキング
+
+### カスタムイベント送信
+
+```typescript
+// ボタンクリック時
+gtag('event', 'cta_click', {
+  page: '/pricing',
+  button: 'start_trial'
+})
+
+// フォーム送信時
+gtag('event', 'form_submit', {
+  form_name: 'contact'
+})
+```
+
+## レポートの見方
+
+### 週次で確認
+
+```
+・ユーザー数の推移
+・上位流入元
+・上位ページ
+・コンバージョン数
+```
+
+### 月次で確認
+
+```
+・前月比の成長率
+・チャネル別の傾向
+・新規コンテンツの効果
+・目標達成率
+```
+
+## 改善アクション
+
+### 直帰率が高い場合
+
+```
+・ファーストビューを改善
+・読み込み速度を改善
+・コンテンツの質を上げる
+・CTAを明確に
+```
+
+### 滞在時間が短い場合
+
+```
+・コンテンツを充実させる
+・関連記事を表示
+・読みやすくする
+```
+
+### CVRが低い場合
+
+```
+・CTAを目立たせる
+・価値提案を明確に
+・フォームを簡略化
+・信頼性を高める（レビュー等）
+```
+
+## プライバシー対応
+
+### Cookie同意
+
+```tsx
+// Cookie同意バナーを表示
+// 同意後にのみトラッキング開始
+```
+
+### プライバシー重視のツール
+
+```
+Plausible、Umamiなど
+Cookieを使わないツールを検討
+```
+
+## 次のステップ
+
+- [A/Bテストの方法](/knowledge/marketing/ab-testing)
+- [個人開発のSEO](/knowledge/marketing/seo-indie)

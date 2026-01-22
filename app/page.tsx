@@ -198,9 +198,63 @@ function CategoryCard({ category }: { category: CategoryStats }) {
 export default function Home() {
   const recentArticles = getRecentArticles(8)
   const categoryStats = getCategoryStats()
+  const totalArticles = categoryStats.reduce((sum, cat) => sum + cat.count, 0)
+
+  // ItemList Schema (JSON-LD) - 新着記事用
+  const recentArticlesJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${baseUrl}/#recent-articles`,
+    name: '新着記事',
+    description: 'AI駆動塾の最新記事一覧',
+    numberOfItems: recentArticles.length,
+    itemListElement: recentArticles.map((article, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: article.title,
+      url: `${baseUrl}/knowledge/${article.category}/${article.slug}`,
+      description: article.description,
+    })),
+  }
+
+  // WebPage Schema with aggregateRating風の情報
+  const homePageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${baseUrl}/#homepage`,
+    name: '非エンジニアでも「作れて・動いて・売れる」をAIで実現 | AI駆動塾',
+    description: 'バイブコーディング × 個人開発 × 0円マーケ ── 実践知を体系化した知識データベース',
+    url: baseUrl,
+    inLanguage: 'ja',
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': `${baseUrl}/#website`,
+    },
+    about: {
+      '@type': 'Thing',
+      name: 'AI駆動開発',
+    },
+    mainEntity: {
+      '@type': 'ItemList',
+      name: '学習コンテンツ',
+      numberOfItems: totalArticles,
+    },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '.badge-glow'],
+    },
+  }
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(recentArticlesJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homePageJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(educationalOrgJsonLd) }}

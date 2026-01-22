@@ -276,10 +276,13 @@ export default async function ArticlePage({
   // OG画像URL
   const ogImageUrl = `${baseUrl}/api/og?title=${encodeURIComponent(article.title)}&category=${category}`
 
+  // 技術系記事はTechArticle、それ以外はArticle
+  const isTechArticle = category === 'vibe-coding' || category === 'build'
+
   // Article Schema (JSON-LD) - 強化版
   const articleJsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': isTechArticle ? 'TechArticle' : 'Article',
     '@id': `${articleUrl}#article`,
     headline: article.title,
     description: article.description,
@@ -341,6 +344,11 @@ export default async function ArticlePage({
         url: ref.url,
         ...(ref.author && { author: { '@type': 'Person', name: ref.author } }),
       })),
+    }),
+    // TechArticle固有のプロパティ
+    ...(isTechArticle && {
+      proficiencyLevel: '初心者',
+      dependencies: 'AIツール（Cursor、ChatGPT等）',
     }),
   }
 
@@ -407,6 +415,33 @@ export default async function ArticlePage({
     })),
   } : null
 
+  // LearningResource Schema (JSON-LD) - 教育コンテンツ用
+  const learningResourceJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'LearningResource',
+    '@id': `${articleUrl}#learning`,
+    name: article.title,
+    description: article.description,
+    url: articleUrl,
+    learningResourceType: howToSteps.length >= 3 ? 'Tutorial' : 'Article',
+    educationalLevel: '初心者',
+    audience: {
+      '@type': 'Audience',
+      audienceType: '非エンジニア、個人開発者',
+    },
+    inLanguage: 'ja',
+    isAccessibleForFree: true,
+    creator: {
+      '@type': 'Person',
+      '@id': `${baseUrl}/#author`,
+      name: 'AI駆動塾',
+    },
+    teaches: category === 'vibe-coding' ? 'AIを使ったアプリ開発' :
+             category === 'build' ? 'アプリの機能実装' :
+             category === 'marketing' ? '0円マーケティング' : '営業・収益化',
+    timeRequired: `PT${readingTime}M`,
+  }
+
   // 目次を抽出
   const toc = extractTOC(article.content)
 
@@ -433,6 +468,10 @@ export default async function ArticlePage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(learningResourceJsonLd) }}
+      />
 
       <ReadingProgress />
 

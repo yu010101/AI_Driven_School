@@ -758,6 +758,23 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     white-space: nowrap;
     border-width: 0;
   }
+
+  /* 横スクロールバー非表示 */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* テキスト省略 */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 /* アニメーション削減 */

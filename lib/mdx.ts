@@ -117,3 +117,62 @@ export function getArticleSlugs(category: Category): string[] {
 
   return files.map(file => path.basename(file).replace(/\.(mdx|md)$/, ''))
 }
+
+// 新着記事を取得（最新N件）
+export function getRecentArticles(limit: number = 8): Article[] {
+  return getAllArticles().slice(0, limit)
+}
+
+// カテゴリ別の記事数を取得
+export interface CategoryStats {
+  category: Category
+  count: number
+  label: string
+  description: string
+  icon: string
+  color: string
+}
+
+export function getCategoryStats(): CategoryStats[] {
+  const categories: Array<{
+    category: Category
+    label: string
+    description: string
+    icon: string
+    color: string
+  }> = [
+    {
+      category: 'vibe-coding',
+      label: 'バイブコーディング',
+      description: 'AIでアプリを作る',
+      icon: 'code',
+      color: '#6366F1',
+    },
+    {
+      category: 'build',
+      label: '実装パターン',
+      description: 'ログイン・決済など',
+      icon: 'build',
+      color: '#06B6D4',
+    },
+    {
+      category: 'marketing',
+      label: 'マーケティング',
+      description: '0円で集客する',
+      icon: 'chart',
+      color: '#F97316',
+    },
+    {
+      category: 'sales',
+      label: 'セールス',
+      description: '売上を伸ばす',
+      icon: 'sales',
+      color: '#10B981',
+    },
+  ]
+
+  return categories.map(cat => ({
+    ...cat,
+    count: getAllArticles(cat.category).length,
+  }))
+}

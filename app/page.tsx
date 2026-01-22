@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { getRecentArticles, getCategoryStats, type Article, type CategoryStats } from '@/lib/mdx'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
@@ -88,7 +89,116 @@ const softwareAppJsonLd = {
   inLanguage: 'ja',
 }
 
+// カテゴリアイコンコンポーネント
+function CategoryIcon({ icon, className, color }: { icon: string; className?: string; color?: string }) {
+  const style = color ? { color } : undefined
+  const icons: Record<string, JSX.Element> = {
+    code: (
+      <svg className={className} style={style} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+      </svg>
+    ),
+    build: (
+      <svg className={className} style={style} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+      </svg>
+    ),
+    chart: (
+      <svg className={className} style={style} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+      </svg>
+    ),
+    sales: (
+      <svg className={className} style={style} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  }
+  return icons[icon] || null
+}
+
+// 記事カードコンポーネント
+function ArticleCard({ article }: { article: Article }) {
+  const categoryColors: Record<string, string> = {
+    'vibe-coding': '#6366F1',
+    'build': '#06B6D4',
+    'marketing': '#F97316',
+    'sales': '#10B981',
+  }
+  const categoryLabels: Record<string, string> = {
+    'vibe-coding': 'VC',
+    'build': '実装',
+    'marketing': 'マーケ',
+    'sales': 'セールス',
+  }
+
+  return (
+    <Link
+      href={`/knowledge/${article.category}/${article.slug}`}
+      className="flex-shrink-0 w-72 group"
+    >
+      <div className="h-full bg-white rounded-2xl border border-[#E5E5E5]/60 p-5 hover:shadow-lg hover:shadow-black/5 hover:border-[#E5E5E5] transition-all duration-300 hover:-translate-y-1">
+        <div className="flex items-center gap-2 mb-3">
+          <span
+            className="px-2 py-0.5 text-xs font-bold rounded-md text-white"
+            style={{ backgroundColor: categoryColors[article.category] }}
+          >
+            {categoryLabels[article.category]}
+          </span>
+          {article.updatedAt && (
+            <span className="text-xs text-[#94A3B8]">
+              {new Date(article.updatedAt).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric' })}
+            </span>
+          )}
+        </div>
+        <h3 className="font-bold text-[#0A0A0A] mb-2 line-clamp-2 group-hover:text-[#6366F1] transition-colors">
+          {article.title}
+        </h3>
+        <p className="text-sm text-[#525252] line-clamp-2">
+          {article.description}
+        </p>
+      </div>
+    </Link>
+  )
+}
+
+// カテゴリカードコンポーネント
+function CategoryCard({ category }: { category: CategoryStats }) {
+  return (
+    <Link
+      href={`/knowledge/${category.category}`}
+      className="group"
+    >
+      <div className="relative overflow-hidden rounded-2xl border border-[#E5E5E5]/60 p-6 bg-white hover:shadow-lg hover:shadow-black/5 transition-all duration-300 hover:-translate-y-1">
+        <div
+          className="absolute top-0 right-0 w-24 h-24 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"
+          style={{ backgroundColor: category.color }}
+        />
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
+          style={{ backgroundColor: `${category.color}15` }}
+        >
+          <CategoryIcon icon={category.icon} className="w-6 h-6" color={category.color} />
+        </div>
+        <h3 className="font-bold text-lg text-[#0A0A0A] mb-1 group-hover:text-[#6366F1] transition-colors">
+          {category.label}
+        </h3>
+        <p className="text-sm text-[#525252] mb-3">{category.description}</p>
+        <div className="flex items-center justify-between">
+          <span className="text-2xl font-bold" style={{ color: category.color }}>
+            {category.count}
+          </span>
+          <span className="text-xs text-[#94A3B8]">記事</span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export default function Home() {
+  const recentArticles = getRecentArticles(8)
+  const categoryStats = getCategoryStats()
+
   return (
     <>
       <script
@@ -338,6 +448,78 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 新着記事セクション */}
+      <section className="py-16 md:py-24 bg-[#FAFAFA]">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#6366F1] to-[#06B6D4] rounded-xl flex items-center justify-center">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-[#0A0A0A]">新着記事</h2>
+                <p className="text-sm text-[#525252]">最新のナレッジをチェック</p>
+              </div>
+            </div>
+            <Link
+              href="/knowledge"
+              className="hidden sm:flex items-center gap-2 text-[#6366F1] font-semibold hover:gap-3 transition-all"
+            >
+              すべて見る
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+
+          {/* 横スクロールエリア */}
+          <div className="relative -mx-4 px-4">
+            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+              {recentArticles.map((article) => (
+                <div key={article.slug} className="snap-start">
+                  <ArticleCard article={article} />
+                </div>
+              ))}
+            </div>
+            {/* フェードエッジ */}
+            <div className="absolute top-0 right-0 bottom-4 w-16 bg-gradient-to-l from-[#FAFAFA] to-transparent pointer-events-none" />
+          </div>
+
+          <Link
+            href="/knowledge"
+            className="sm:hidden flex items-center justify-center gap-2 mt-4 text-[#6366F1] font-semibold"
+          >
+            すべて見る
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+      </section>
+
+      {/* カテゴリから探す */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <span className="inline-block px-4 py-1.5 bg-[#0A0A0A] text-white text-xs font-bold rounded-full mb-4">
+              CATEGORIES
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0A0A0A] mb-4">カテゴリから探す</h2>
+            <p className="text-[#525252] text-lg">
+              全{categoryStats.reduce((sum, cat) => sum + cat.count, 0)}記事を4つのカテゴリで整理
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+            {categoryStats.map((category) => (
+              <CategoryCard key={category.category} category={category} />
+            ))}
           </div>
         </div>
       </section>

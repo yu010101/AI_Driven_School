@@ -6,7 +6,7 @@ import { getCourses } from '@/lib/courses'
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 export const metadata: Metadata = {
-  title: 'AIで業務を自動化する実践スキルを身につける',
+  title: 'AI道場 — AIで業務を自動化する実践スキルを身につける',
   description: 'コピペ1行から始める。Anthropic公式認定も取れる。議事録・メール・データ分析、実務で使えるAIスキルを無料で学べます。',
 }
 

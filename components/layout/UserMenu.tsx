@@ -19,13 +19,23 @@ export default function UserMenu() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.user) setUser(data.user);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    let cancelled = false;
+    const fetchUser = () => {
+      fetch("/api/auth/me")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((data) => {
+          if (cancelled) return;
+          if (data?.user) setUser(data.user);
+          setLoading(false);
+        })
+        .catch(() => {
+          if (!cancelled) setLoading(false);
+        });
+    };
+    fetchUser();
+    // Re-check after navigation (cookie may have been set just before redirect)
+    const timer = setTimeout(fetchUser, 2000);
+    return () => { cancelled = true; clearTimeout(timer); };
   }, []);
 
   useEffect(() => {

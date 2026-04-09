@@ -47,7 +47,7 @@ export function Navigation() {
                 </Link>
               )
             })}
-            <div className="ml-2">
+            <div className="ml-2" data-testid="desktop-user-menu">
               <UserMenu />
             </div>
           </div>

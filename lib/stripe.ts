@@ -21,13 +21,13 @@ export const PLANS = {
   },
   pro: {
     name: "Pro",
-    priceId: process.env.STRIPE_PRO_PRICE_ID || "price_pro_placeholder",
+    priceId: process.env.STRIPE_PRO_PRICE_ID || "",
     maxLevel: 9,
     amount: 2980,
   },
   team: {
     name: "チーム",
-    priceId: process.env.STRIPE_TEAM_PRICE_ID || "price_team_placeholder",
+    priceId: process.env.STRIPE_TEAM_PRICE_ID || "",
     maxLevel: 9,
     amount: 10000,
   },

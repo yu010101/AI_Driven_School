@@ -1,6 +1,7 @@
 import { getCourse, getLessons, getLesson } from "@/lib/courses";
 import { notFound } from "next/navigation";
 import LessonClient from "./LessonClient";
+import AccessGate from "@/components/AccessGate";
 
 interface Props {
   params: { courseId: string; lessonId: string };
@@ -18,25 +19,27 @@ export default function LessonPage({ params }: Props) {
   const nextLesson = allLessons[currentIndex + 1] ?? null;
 
   return (
-    <LessonClient
-      courseId={params.courseId}
-      courseTitle={course.title}
-      lesson={{
-        title: lesson.meta.title,
-        step: lesson.meta.step,
-        totalSteps: lesson.meta.totalSteps,
-        expectedCommand: lesson.meta.expectedCommand,
-        acceptableCommands: lesson.meta.acceptableCommands,
-        simulatedOutput: lesson.meta.simulatedOutput,
-        hint: lesson.meta.hint,
-        content: lesson.content,
-        slug: lesson.slug,
-        relatedArticles: lesson.meta.relatedArticles,
-        quiz: lesson.meta.quiz,
-      }}
-      nextLessonSlug={nextLesson?.slug ?? null}
-      isLastLessonOfCourse={currentIndex === allLessons.length - 1}
-    />
+    <AccessGate requiredLevel={course.level}>
+      <LessonClient
+        courseId={params.courseId}
+        courseTitle={course.title}
+        lesson={{
+          title: lesson.meta.title,
+          step: lesson.meta.step,
+          totalSteps: lesson.meta.totalSteps,
+          expectedCommand: lesson.meta.expectedCommand,
+          acceptableCommands: lesson.meta.acceptableCommands,
+          simulatedOutput: lesson.meta.simulatedOutput,
+          hint: lesson.meta.hint,
+          content: lesson.content,
+          slug: lesson.slug,
+          relatedArticles: lesson.meta.relatedArticles,
+          quiz: lesson.meta.quiz,
+        }}
+        nextLessonSlug={nextLesson?.slug ?? null}
+        isLastLessonOfCourse={currentIndex === allLessons.length - 1}
+      />
+    </AccessGate>
   );
 }
 

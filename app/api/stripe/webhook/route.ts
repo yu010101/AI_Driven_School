@@ -21,6 +21,16 @@ export async function POST(req: NextRequest) {
 
   const db = await getDB();
 
+  // Idempotency check — prevent duplicate event processing
+  const existing = await db
+    .prepare("SELECT id FROM stripe_events WHERE event_id = ?")
+    .bind(event.id)
+    .first();
+
+  if (existing) {
+    return NextResponse.json({ received: true }); // Already processed
+  }
+
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
@@ -116,6 +126,12 @@ export async function POST(req: NextRequest) {
       break;
     }
   }
+
+  // Record processed event for idempotency
+  await db
+    .prepare("INSERT INTO stripe_events (event_id, event_type) VALUES (?, ?) ON CONFLICT (event_id) DO NOTHING")
+    .bind(event.id, event.type)
+    .run();
 
   return NextResponse.json({ received: true });
 }

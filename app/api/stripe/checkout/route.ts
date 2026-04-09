@@ -17,7 +17,29 @@ export async function POST(req: NextRequest) {
   }
 
   const planInfo = PLANS[plan];
+
+  // Validate price ID is configured
+  if (!planInfo.priceId) {
+    console.error(`Stripe price ID not configured for plan: ${plan}`);
+    return NextResponse.json({ error: "プランの設定に問題があります。管理者にお問い合わせください。" }, { status: 500 });
+  }
+
   const db = await getDB();
+
+  // Check for existing active subscription
+  const activeSub = await db
+    .prepare(
+      "SELECT plan, status FROM subscriptions WHERE user_id = ? AND status IN ('active', 'trialing')"
+    )
+    .bind(user.userId)
+    .first();
+
+  if (activeSub) {
+    return NextResponse.json(
+      { error: `既に${activeSub.plan === "pro" ? "Pro" : "チーム"}プランに加入中です。プラン変更はアカウント設定から行えます。` },
+      { status: 400 }
+    );
+  }
 
   // Get or create Stripe customer
   let sub = await db
@@ -34,7 +56,6 @@ export async function POST(req: NextRequest) {
     });
     customerId = customer.id;
 
-    // Create subscription record (inactive)
     await db
       .prepare(
         "INSERT INTO subscriptions (user_id, stripe_customer_id, plan, status) VALUES (?, ?, ?, 'inactive') ON CONFLICT (user_id) DO UPDATE SET stripe_customer_id = ?"
@@ -50,7 +71,7 @@ export async function POST(req: NextRequest) {
     mode: "subscription",
     line_items: [
       {
-        price: planInfo.priceId!,
+        price: planInfo.priceId,
         quantity: 1,
       },
     ],

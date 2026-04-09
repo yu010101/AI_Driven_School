@@ -3,8 +3,8 @@
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import CertQuiz from "@/components/CertQuiz";
+import AccessGate from "@/components/AccessGate";
 
-// Lazy imports will be replaced once data files exist
 import { claude101Questions } from "@/lib/cert-data/claude-101";
 import { codeInActionQuestions } from "@/lib/cert-data/code-in-action";
 import { mcpQuestions } from "@/lib/cert-data/mcp";
@@ -51,7 +51,6 @@ function getQuestions(examId: string) {
     case "subagents":
       return subagentsQuestions;
     case "mock-exam":
-      // Combine all questions for mock exam
       return [
         ...claude101Questions,
         ...codeInActionQuestions,
@@ -80,11 +79,13 @@ export default function CertExamPage() {
   }
 
   return (
-    <CertQuiz
-      title={config.title}
-      description={config.description}
-      questions={questions}
-      isMockExam={examId === "mock-exam"}
-    />
+    <AccessGate requiredLevel={7}>
+      <CertQuiz
+        title={config.title}
+        description={config.description}
+        questions={questions}
+        isMockExam={examId === "mock-exam"}
+      />
+    </AccessGate>
   );
 }

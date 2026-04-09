@@ -54,6 +54,13 @@ export const orgMembers = pgTable(
   })
 );
 
+export const stripeEvents = pgTable("stripe_events", {
+  id: serial("id").primaryKey(),
+  eventId: text("event_id").notNull().unique(),
+  eventType: text("event_type").notNull(),
+  processedAt: timestamp("processed_at").defaultNow().notNull(),
+});
+
 export const lessonProgress = pgTable(
   "lesson_progress",
   {

@@ -58,9 +58,11 @@ function PricingContent() {
   const searchParams = useSearchParams();
   const canceled = searchParams.get("checkout") === "cancel";
   const [loading, setLoading] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const handleCheckout = async (plan: string) => {
     setLoading(plan);
+    setCheckoutError(null);
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
@@ -70,16 +72,22 @@ function PricingContent() {
       const data = await res.json();
 
       if (res.status === 401) {
-        // Not logged in — redirect to auth with plan intent
         window.location.href = `/auth?redirect=/pricing&plan=${plan}`;
+        return;
+      }
+
+      if (!res.ok) {
+        setCheckoutError(data.error || "チェックアウトに失敗しました。");
         return;
       }
 
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        setCheckoutError("チェックアウトURLの取得に失敗しました。もう一度お試しください。");
       }
     } catch {
-      alert("エラーが発生しました。もう一度お試しください。");
+      setCheckoutError("接続エラーが発生しました。ネットワーク接続を確認してください。");
     } finally {
       setLoading(null);
     }
@@ -100,6 +108,12 @@ function PricingContent() {
         {canceled && (
           <div className="max-w-md mx-auto mb-8 p-4 bg-[#F5F5F5] rounded-xl text-sm text-[#525252] text-center">
             チェックアウトがキャンセルされました。プランを選び直してください。
+          </div>
+        )}
+
+        {checkoutError && (
+          <div className="max-w-md mx-auto mb-8 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700 text-center">
+            {checkoutError}
           </div>
         )}
 

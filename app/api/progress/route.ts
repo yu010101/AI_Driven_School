@@ -46,6 +46,10 @@ export async function POST(req: NextRequest) {
   const { courseId, lessonSlug, xpEarned, type, examId, score, total } = await req.json();
   const db = await getDB();
 
+  // Server-side XP validation: cap per-lesson XP to prevent manipulation
+  const MAX_XP_PER_LESSON = 150;
+  const validXp = Math.min(Math.max(0, xpEarned || 0), MAX_XP_PER_LESSON);
+
   if (type === "quiz") {
     await db
       .prepare("INSERT INTO quiz_results (user_id, exam_id, score, total) VALUES (?, ?, ?, ?)")
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest) {
     .prepare(
       "INSERT INTO lesson_progress (user_id, course_id, lesson_slug, completed, xp_earned) VALUES (?, ?, ?, true, ?) ON CONFLICT(user_id, course_id, lesson_slug) DO NOTHING"
     )
-    .bind(user.userId, courseId, lessonSlug, xpEarned || 0)
+    .bind(user.userId, courseId, lessonSlug, validXp)
     .run();
 
   return NextResponse.json({ ok: true });

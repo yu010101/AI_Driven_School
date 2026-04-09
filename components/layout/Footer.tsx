@@ -11,6 +11,8 @@ export function Footer() {
           </div>
           <div className="flex items-center gap-6 text-sm text-[#525252]">
             <Link href="/enterprise">法人</Link>
+            <Link href="/terms">利用規約</Link>
+            <Link href="/privacy">プライバシー</Link>
             <a href="mailto:yuichiyoshida@radineer.com">お問い合わせ</a>
             <a href="https://x.com/L_go_mrk" target="_blank" rel="noopener noreferrer">X</a>
           </div>

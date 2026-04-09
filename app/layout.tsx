@@ -1,11 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import './globals.css'
 import { Navigation } from '@/components/layout/Navigation'
 import { Footer } from '@/components/layout/Footer'
-
-// Google Analytics ID（.envで設定: NEXT_PUBLIC_GA_ID）
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+import CookieConsent from '@/components/CookieConsent'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 const siteName = 'AI道場'
@@ -240,25 +237,6 @@ export default function RootLayout({
         />
       </head>
 
-      {/* Google Analytics 4 - .envでNEXT_PUBLIC_GA_IDを設定 */}
-      {GA_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_ID}', {
-                page_path: window.location.pathname,
-              });
-            `}
-          </Script>
-        </>
-      )}
       <body className="min-h-screen flex flex-col">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-background">
           メインコンテンツへスキップ
@@ -266,6 +244,7 @@ export default function RootLayout({
         <Navigation />
         <main id="main-content" className="flex-1" role="main">{children}</main>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   )

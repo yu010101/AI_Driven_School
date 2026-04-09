@@ -27,6 +27,8 @@ export async function GET() {
       role: profile?.role || "free",
       plan: subscription.plan,
       planStatus: subscription.status,
+      currentPeriodEnd: subscription.currentPeriodEnd,
+      cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
     },
   });
 }

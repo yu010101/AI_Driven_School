@@ -27,12 +27,27 @@ export default function AccountPage() {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [plan, setPlan] = useState("free");
+  const [periodEnd, setPeriodEnd] = useState<string | null>(null);
+  const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/account/profile").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/account/profile").then((r) => {
+        if (r.status === 401) return { redirect: true };
+        if (!r.ok) return { error: true };
+        return r.json();
+      }),
       fetch("/api/auth/me").then((r) => (r.ok ? r.json() : null)),
     ]).then(([profileData, meData]) => {
+      if (profileData?.redirect || profileData?.error) {
+        if (profileData?.redirect) {
+          router.push("/auth");
+        } else {
+          setMessage("データの読み込みに失敗しました。ページを再読込してください。");
+          setLoading(false);
+        }
+        return;
+      }
       if (!profileData?.profile) {
         router.push("/auth");
         return;
@@ -41,6 +56,11 @@ export default function AccountPage() {
       setName(profileData.profile.name || "");
       setCompany(profileData.profile.company || "");
       if (meData?.user?.plan) setPlan(meData.user.plan);
+      if (meData?.user?.currentPeriodEnd) setPeriodEnd(meData.user.currentPeriodEnd);
+      if (meData?.user?.cancelAtPeriodEnd) setCancelAtPeriodEnd(meData.user.cancelAtPeriodEnd);
+      setLoading(false);
+    }).catch(() => {
+      setMessage("接続エラーが発生しました。ネットワーク接続を確認してください。");
       setLoading(false);
     });
   }, [router]);
@@ -190,6 +210,13 @@ export default function AccountPage() {
                   ? "Level 0-3 のコースにアクセス可能"
                   : "全コース + 認定試験にアクセス可能"}
               </p>
+              {periodEnd && plan !== "free" && (
+                <p className="text-xs text-[#a3a3a3] mt-1">
+                  {cancelAtPeriodEnd
+                    ? `${new Date(periodEnd).toLocaleDateString("ja-JP")} に解約予定`
+                    : `次回更新: ${new Date(periodEnd).toLocaleDateString("ja-JP")}`}
+                </p>
+              )}
             </div>
             {plan === "free" ? (
               <Link

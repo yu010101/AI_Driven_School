@@ -2,10 +2,21 @@ export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { createToken } from "@/lib/db/auth";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limit: 10 login attempts per minute per IP
+    const ip = getClientIp(req.headers);
+    const limit = rateLimit(`login:${ip}`, 10, 60_000);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "試行回数が多すぎます。しばらく待ってからお試しください。" },
+        { status: 429 }
+      );
+    }
+
     const { email, password } = await req.json();
 
     if (!email || !password) {

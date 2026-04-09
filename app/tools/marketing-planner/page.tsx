@@ -14,40 +14,40 @@ const questions = [
     id: 'productType',
     question: 'どんなプロダクトですか？',
     options: [
-      { value: 'saas', label: 'SaaS/Webアプリ', icon: '💻' },
-      { value: 'mobile', label: 'モバイルアプリ', icon: '📱' },
-      { value: 'content', label: 'コンテンツ/教材', icon: '📚' },
-      { value: 'service', label: 'サービス/コンサル', icon: '🤝' },
+      { value: 'saas', label: 'SaaS/Webアプリ', icon: '' },
+      { value: 'mobile', label: 'モバイルアプリ', icon: '' },
+      { value: 'content', label: 'コンテンツ/教材', icon: '' },
+      { value: 'service', label: 'サービス/コンサル', icon: '' },
     ],
   },
   {
     id: 'targetAudience',
     question: 'ターゲット層は？',
     options: [
-      { value: 'developer', label: '開発者/エンジニア', icon: '👨‍💻' },
-      { value: 'business', label: 'ビジネス/経営者', icon: '👔' },
-      { value: 'creator', label: 'クリエイター', icon: '🎨' },
-      { value: 'general', label: '一般ユーザー', icon: '👥' },
+      { value: 'developer', label: '開発者/エンジニア', icon: '' },
+      { value: 'business', label: 'ビジネス/経営者', icon: '' },
+      { value: 'creator', label: 'クリエイター', icon: '' },
+      { value: 'general', label: '一般ユーザー', icon: '' },
     ],
   },
   {
     id: 'budget',
     question: 'マーケティング予算は？',
     options: [
-      { value: 'zero', label: '0円', icon: '🆓' },
-      { value: 'low', label: '月1万円以下', icon: '💴' },
-      { value: 'medium', label: '月1-5万円', icon: '💰' },
-      { value: 'high', label: '月5万円以上', icon: '💎' },
+      { value: 'zero', label: '0円', icon: '' },
+      { value: 'low', label: '月1万円以下', icon: '' },
+      { value: 'medium', label: '月1-5万円', icon: '' },
+      { value: 'high', label: '月5万円以上', icon: '' },
     ],
   },
   {
     id: 'timeframe',
     question: 'いつまでに結果を出したい？',
     options: [
-      { value: 'asap', label: '今すぐ', icon: '🔥' },
-      { value: 'month', label: '1ヶ月以内', icon: '📅' },
-      { value: 'quarter', label: '3ヶ月以内', icon: '📊' },
-      { value: 'longterm', label: '半年以上', icon: '🎯' },
+      { value: 'asap', label: '今すぐ', icon: '' },
+      { value: 'month', label: '1ヶ月以内', icon: '' },
+      { value: 'quarter', label: '3ヶ月以内', icon: '' },
+      { value: 'longterm', label: '半年以上', icon: '' },
     ],
   },
 ]
@@ -177,7 +177,7 @@ export default function MarketingPlannerPage() {
     <div className="py-12 md:py-20">
       <div className="container mx-auto px-4">
         <header className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 bg-[#F97316] text-white text-xs font-bold rounded-full mb-4">
+          <span className="inline-block px-4 py-1.5 bg-[#0A0A0A] text-white text-xs font-bold rounded-full mb-4">
             MARKETING PLANNER
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
@@ -197,7 +197,7 @@ export default function MarketingPlannerPage() {
               </div>
               <div className="h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#F97316] to-[#FB923C] transition-all duration-500"
+                  className="h-full bg-[#0A0A0A] transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -212,10 +212,10 @@ export default function MarketingPlannerPage() {
                   <button
                     key={option.value}
                     onClick={() => handleSelect(currentQuestion.id, option.value)}
-                    className="p-6 border-2 border-[#E5E7EB] rounded-xl hover:border-[#F97316] hover:bg-[#F97316]/5 transition-all text-center group"
+                    className="p-6 border-2 border-[#E5E7EB] rounded-xl hover:border-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-all text-center group"
                   >
                     <span className="text-4xl mb-3 block">{option.icon}</span>
-                    <span className="font-medium group-hover:text-[#F97316]">
+                    <span className="font-medium group-hover:text-[#0A0A0A]">
                       {option.label}
                     </span>
                   </button>
@@ -227,22 +227,21 @@ export default function MarketingPlannerPage() {
           <div className="max-w-4xl mx-auto">
             <div className="card p-8 md:p-12">
               <div className="text-center mb-8">
-                <span className="text-5xl mb-4 block">📈</span>
                 <h2 className="text-2xl font-bold mb-2">あなたのマーケティング計画</h2>
-                <p className="text-xl text-[#F97316] font-bold">{result.title}</p>
+                <p className="text-xl text-[#0A0A0A] font-bold">{result.title}</p>
               </div>
 
               {/* チャネル */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">📢 推奨チャネル</h3>
+                <h3 className="font-bold text-lg mb-4">推奨チャネル</h3>
                 <div className="grid md:grid-cols-2 gap-4">
                   {result.channels.map((channel) => (
                     <div key={channel.name} className="p-4 bg-[#F5F5F5] rounded-xl">
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-bold">{channel.name}</span>
                         <span className={`px-2 py-0.5 text-xs rounded ${
-                          channel.priority === '高' ? 'bg-[#F97316] text-white' :
-                          channel.priority === '中' ? 'bg-[#06B6D4] text-white' :
+                          channel.priority === '高' ? 'bg-[#0A0A0A] text-white' :
+                          channel.priority === '中' ? 'bg-[#525252] text-white' :
                           'bg-[#94A3B8] text-white'
                         }`}>
                           優先度: {channel.priority}
@@ -256,19 +255,19 @@ export default function MarketingPlannerPage() {
 
               {/* アクション */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4">📋 アクションプラン</h3>
+                <h3 className="font-bold text-lg mb-4">アクションプラン</h3>
                 <div className="space-y-4">
                   {result.actions.map((action, index) => (
                     <div key={index} className="flex gap-4">
                       <div className="w-24 shrink-0">
-                        <span className="inline-block px-3 py-1 bg-[#6366F1]/10 text-[#6366F1] text-sm font-bold rounded-lg">
+                        <span className="inline-block px-3 py-1 bg-[#0A0A0A]/10 text-[#0A0A0A] text-sm font-bold rounded-lg">
                           {action.period}
                         </span>
                       </div>
                       <ul className="flex-1 space-y-1">
                         {action.tasks.map((task, i) => (
                           <li key={i} className="flex items-start gap-2 text-[#525252]">
-                            <span className="text-[#6366F1]">✓</span>
+                            <span className="text-[#0A0A0A]">✓</span>
                             {task}
                           </li>
                         ))}
@@ -279,12 +278,12 @@ export default function MarketingPlannerPage() {
               </div>
 
               {/* Tips */}
-              <div className="p-6 bg-[#F97316]/5 rounded-xl">
-                <h3 className="font-bold text-lg mb-4">💡 成功のコツ</h3>
+              <div className="p-6 bg-[#0A0A0A]/5 rounded-xl">
+                <h3 className="font-bold text-lg mb-4">成功のコツ</h3>
                 <ul className="space-y-2">
                   {result.tips.map((tip, index) => (
                     <li key={index} className="flex items-start gap-2 text-[#525252]">
-                      <span className="text-[#F97316]">•</span>
+                      <span className="text-[#0A0A0A]">•</span>
                       {tip}
                     </li>
                   ))}
@@ -294,7 +293,7 @@ export default function MarketingPlannerPage() {
               <div className="mt-8 flex justify-center gap-4">
                 <button
                   onClick={handleReset}
-                  className="px-6 py-3 border-2 border-[#E5E7EB] rounded-xl hover:border-[#F97316] transition-colors"
+                  className="px-6 py-3 border-2 border-[#E5E7EB] rounded-xl hover:border-[#0A0A0A] transition-colors"
                 >
                   もう一度診断する
                 </button>

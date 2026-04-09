@@ -1,0 +1,281 @@
+---
+title: "Claude Code vs GitHub Copilot どっちを選ぶ？【完全比較】"
+description: "Claude CodeとGitHub Copilotを徹底比較。機能、料金、使い方の違いを解説。用途別のおすすめも紹介。"
+tags: ["Claude Code", "GitHub Copilot", "比較", "AIコーディング", "選び方"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code"
+    url: "https://docs.anthropic.com/en/docs/claude-code"
+    author: "Anthropic"
+  - title: "GitHub Copilot"
+    url: "https://github.com/features/copilot"
+    author: "GitHub"
+---
+
+## 結論
+
+| 用途 | おすすめ |
+|------|---------|
+| アプリを丸ごと作りたい | **Claude Code** |
+| コード補完が欲しい | **GitHub Copilot** |
+| 非エンジニア | **Claude Code** |
+| チーム開発 | **両方** |
+
+## そもそもの違い
+
+### Claude Code
+
+**「AIと対話してアプリを作る」ツール**
+
+```
+あなた: 「ログイン機能を作って」
+Claude: ファイルを作成し、コードを実装し、テストまで実行
+```
+
+特徴:
+- 対話形式
+- ファイル作成・編集を自動で行う
+- プロジェクト全体を理解
+- 大きなタスクを任せられる
+
+### GitHub Copilot
+
+**「コードを書くのを補助する」ツール**
+
+```
+あなた: function login( ← ここまで書く
+Copilot: username, password) { ... ← 続きを提案
+```
+
+特徴:
+- エディタ内でリアルタイム補完
+- あくまで「補助」
+- 細かいコード補完が得意
+- 自分でコードを書く前提
+
+## 機能比較
+
+### コード生成
+
+| 機能 | Claude Code | Copilot |
+|------|-------------|---------|
+| 自然言語から生成 | ✅ 得意 | △ Chatのみ |
+| リアルタイム補完 | ❌ | ✅ 得意 |
+| ファイル自動作成 | ✅ | ❌ |
+| 複数ファイル編集 | ✅ | ❌ |
+| テスト実行 | ✅ | ❌ |
+
+### コード理解
+
+| 機能 | Claude Code | Copilot |
+|------|-------------|---------|
+| プロジェクト全体把握 | ✅ | △ 限定的 |
+| 設定ファイル | CLAUDE.md | なし |
+| コードベース検索 | ✅ Subagent | △ |
+
+### 対話機能
+
+| 機能 | Claude Code | Copilot |
+|------|-------------|---------|
+| チャット | ✅ メイン機能 | ✅ Copilot Chat |
+| 質問回答 | ✅ | ✅ |
+| 提案の説明 | ✅ | △ |
+
+## 使い方の違い
+
+### Claude Code の使い方
+
+```bash
+# ターミナルで起動
+claude
+
+# 指示を出す
+> ユーザー認証機能を追加して
+```
+
+Claudeが:
+1. 必要なファイルを特定
+2. コードを生成
+3. ファイルを作成・編集
+4. テストを実行
+
+### Copilot の使い方
+
+```javascript
+// エディタでコードを書き始める
+function authenticateUser(
+
+// Copilotが続きを提案（グレーで表示）
+// username, password) {
+//   const user = await db.findUser(username)
+//   return bcrypt.compare(password, user.hash)
+// }
+
+// Tabキーで採用
+```
+
+## 料金比較
+
+### Claude Code
+
+| プラン | 料金 | 特徴 |
+|--------|------|------|
+| API従量課金 | 使った分だけ | 目安: 月$20-100 |
+| Claude Pro | $20/月 | 制限あり |
+| Claude Max | $100/月 | ヘビーユーザー向け |
+
+### GitHub Copilot
+
+| プラン | 料金 | 特徴 |
+|--------|------|------|
+| Individual | $10/月 | 個人向け |
+| Business | $19/月/人 | チーム向け |
+| Enterprise | $39/月/人 | 大企業向け |
+
+### コスト比較
+
+**個人開発者:**
+- Claude Code: $20-50/月
+- Copilot: $10/月
+
+**チーム（5人）:**
+- Claude Code: 各自のAPI費用
+- Copilot Business: $95/月（5人）
+
+## ユースケース別
+
+### 「アプリを作りたい」→ Claude Code
+
+```
+非エンジニア: 「ToDoアプリを作って」
+Claude: ファイル作成 → 実装 → 動作確認 → 完成
+```
+
+Copilotではこれはできない。
+
+### 「コーディングを速くしたい」→ Copilot
+
+```javascript
+// 関数名を書くだけで
+function calculateTax(
+
+// Copilotが実装を提案
+// price, taxRate) {
+//   return price * (1 + taxRate)
+// }
+```
+
+Claude Codeでこの細かい補完はできない。
+
+### 「バグを直したい」→ Claude Code
+
+```
+あなた: 「このエラーを直して」
+Claude: エラー原因を分析 → 修正案を提示 → 修正を実行
+```
+
+### 「テストを書きたい」→ 両方OK
+
+**Claude Code:**
+```
+「この関数のテストを書いて」→ テストファイルを作成
+```
+
+**Copilot:**
+```javascript
+// テストを書き始めると続きを提案
+describe('calculateTax', () => {
+  it('should calculate tax correctly', () => {
+    // Copilotが提案
+  })
+})
+```
+
+## 両方使う戦略
+
+### 併用がおすすめ
+
+**Claude Code:**
+- 新機能の実装
+- リファクタリング
+- バグ調査
+- ドキュメント生成
+
+**Copilot:**
+- 日常的なコーディング
+- 細かい関数の実装
+- コード補完
+
+### 具体的なワークフロー
+
+```
+1. Claude Code で新機能の骨格を作成
+   「ユーザー認証機能を追加して」
+
+2. VS Code + Copilot で細部を調整
+   - 関数の中身を補完
+   - エラーハンドリングを追加
+
+3. Claude Code で最終確認
+   「コードをレビューして」
+```
+
+## 選び方フローチャート
+
+```
+プログラミング経験は？
+├── ほぼない → Claude Code
+└── ある
+    ├── 大きなタスクを任せたい → Claude Code
+    ├── 補完でスピードアップしたい → Copilot
+    └── 両方 → 両方使う
+```
+
+## よくある質問
+
+### Q: Copilot Chat があれば Claude Code は不要？
+
+**A: 用途が違います**
+
+Copilot Chat:
+- 質問に回答
+- コード説明
+- **ファイル編集は手動**
+
+Claude Code:
+- 質問に回答
+- コード説明
+- **ファイル編集も自動**
+
+### Q: 両方使うとコストがかさむ？
+
+**A: 使い分ければ最適化可能**
+
+- Copilot Individual: $10/月（固定）
+- Claude Code: 使った分だけ
+
+日常はCopilotで補完、大きなタスクだけClaude Codeを使えば、トータルコストは抑えられます。
+
+### Q: どちらから始めるべき？
+
+**A: 目的による**
+
+- 「アプリを作りたい」→ Claude Codeから
+- 「コーディングを速くしたい」→ Copilotから
+- 「両方試したい」→ Claude Code（無料枠で試せる）
+
+## まとめ
+
+| 観点 | Claude Code | GitHub Copilot |
+|------|-------------|----------------|
+| 主な機能 | 対話でアプリ作成 | コード補完 |
+| 操作形態 | CLI | エディタ統合 |
+| 得意分野 | 大きなタスク | 細かい補完 |
+| 対象ユーザー | 非エンジニア〜 | エンジニア |
+| 料金 | $20-100/月 | $10-19/月 |
+
+**結論:**
+- 非エンジニアは **Claude Code**
+- エンジニアは **両方使う** のがベスト
+- コスト重視なら **Copilot** から始める

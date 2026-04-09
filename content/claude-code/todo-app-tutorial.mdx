@@ -1,0 +1,276 @@
+---
+title: "30分でToDoアプリを作る【Claude Code実践チュートリアル】"
+description: "Claude Codeを使って、実際にToDoアプリを作るハンズオンチュートリアル。コードを1行も書かずにアプリが完成します。"
+tags: ["Claude Code", "チュートリアル", "ToDo", "ハンズオン", "初心者向け"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code Getting Started"
+    url: "https://docs.anthropic.com/en/docs/claude-code/getting-started"
+    author: "Anthropic"
+---
+
+## このチュートリアルで作るもの
+
+シンプルだけど実用的なToDoアプリを作ります。
+
+**機能:**
+- タスクの追加・削除・完了
+- ローカルストレージに保存（リロードしても消えない）
+- シンプルなUI
+
+**所要時間:** 約30分
+
+**前提:**
+- Claude Codeがインストール済み
+- Node.jsがインストール済み
+
+## STEP 1: プロジェクト作成
+
+まず、プロジェクトディレクトリを作成します。
+
+```bash
+mkdir my-todo-app
+cd my-todo-app
+```
+
+## STEP 2: Claude Codeを起動
+
+```bash
+claude
+```
+
+インタラクティブモードでClaudeが起動します。
+
+## STEP 3: プロジェクトの初期化を依頼
+
+以下のように指示します:
+
+```
+React + TypeScript + Viteでプロジェクトを初期化して。
+Tailwind CSSも設定して。
+```
+
+Claudeが以下を自動で行います:
+1. `npm create vite@latest . -- --template react-ts` を実行
+2. 依存関係をインストール
+3. Tailwind CSSの設定
+
+**ポイント:** Claudeは必要なコマンドを自動で判断して実行します。
+
+## STEP 4: ToDoアプリの実装を依頼
+
+プロジェクトが初期化されたら、次の指示を出します:
+
+```
+シンプルなToDoアプリを実装して。
+
+要件:
+- タスクの追加（テキスト入力 + Enterキーで追加）
+- タスクの完了（クリックで取り消し線）
+- タスクの削除（×ボタン）
+- ローカルストレージに保存
+- Tailwind CSSでスタイリング
+- レスポンシブ対応
+```
+
+Claudeは以下のファイルを作成・編集します:
+
+### 生成されるコード例
+
+**src/App.tsx:**
+```tsx
+import { useState, useEffect } from 'react'
+
+interface Todo {
+  id: number
+  text: string
+  completed: boolean
+}
+
+function App() {
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const saved = localStorage.getItem('todos')
+    return saved ? JSON.parse(saved) : []
+  })
+  const [input, setInput] = useState('')
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos))
+  }, [todos])
+
+  const addTodo = () => {
+    if (!input.trim()) return
+    setTodos([...todos, { id: Date.now(), text: input, completed: false }])
+    setInput('')
+  }
+
+  const toggleTodo = (id: number) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ))
+  }
+
+  const deleteTodo = (id: number) => {
+    setTodos(todos.filter(todo => todo.id !== id))
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 className="text-2xl font-bold text-center mb-6">ToDo App</h1>
+
+        <div className="flex gap-2 mb-4">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+            placeholder="新しいタスク..."
+            className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={addTodo}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            追加
+          </button>
+        </div>
+
+        <ul className="space-y-2">
+          {todos.map(todo => (
+            <li
+              key={todo.id}
+              className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg"
+            >
+              <span
+                onClick={() => toggleTodo(todo.id)}
+                className={`flex-1 cursor-pointer ${
+                  todo.completed ? 'line-through text-gray-400' : ''
+                }`}
+              >
+                {todo.text}
+              </span>
+              <button
+                onClick={() => deleteTodo(todo.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                ×
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+export default App
+```
+
+## STEP 5: 動作確認
+
+Claudeに開発サーバーの起動を依頼:
+
+```
+開発サーバーを起動して
+```
+
+ブラウザで `http://localhost:5173` を開くと、ToDoアプリが動作しています。
+
+## STEP 6: 機能追加（オプション）
+
+基本機能ができたら、追加機能を依頼してみましょう:
+
+```
+以下の機能を追加して:
+- タスクの編集（ダブルクリックで編集モード）
+- フィルター（全て / 未完了 / 完了）
+- 完了タスクの一括削除
+```
+
+Claudeがコードを修正して機能を追加します。
+
+## STEP 7: ビルド
+
+完成したらビルドを依頼:
+
+```
+本番用にビルドして
+```
+
+`dist/` フォルダに静的ファイルが生成されます。
+
+## つまずきやすいポイント
+
+### 問題1: エラーが出た
+
+```
+エラーが出た。修正して。
+```
+
+エラーメッセージを見せれば、Claudeが自動で修正します。
+
+### 問題2: デザインを変えたい
+
+```
+ダークモードに対応して
+```
+
+```
+ボタンの角を丸くして、影をつけて
+```
+
+UIの調整も日本語で指示するだけ。
+
+### 問題3: コンテキストが溢れた
+
+長い作業の途中でClaudeの反応が遅くなったら:
+
+```bash
+/compact
+```
+
+または新しいタスクを始める前に:
+
+```bash
+/clear
+```
+
+## 完成したプロジェクトの構成
+
+```
+my-todo-app/
+├── index.html
+├── package.json
+├── src/
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── tailwind.config.js
+├── vite.config.ts
+└── tsconfig.json
+```
+
+## 学んだこと
+
+このチュートリアルで体験したこと:
+
+1. **プロジェクト初期化**: Claudeに任せれば設定ファイルも自動生成
+2. **コード生成**: 要件を伝えるだけで実装される
+3. **機能追加**: 追加要件も日本語で指示
+4. **デバッグ**: エラーが出たら「直して」で解決
+
+## 次のステップ
+
+ToDoアプリが作れました！次はより実践的な開発フローを学びましょう。
+
+→ [Next.jsプロジェクトをClaude Codeで高速開発](/knowledge/claude-code/nextjs-development)
+
+## まとめ
+
+- Claude Codeを使えば、コードを書かずにアプリが作れる
+- 要件を日本語で伝えるだけ
+- エラーが出ても「直して」で解決
+- 機能追加も「〇〇を追加して」で対応
+- 30分で実用的なアプリが完成

@@ -1,15 +1,14 @@
 import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 
-export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const title = searchParams.get('title') || 'AI駆動塾'
+  const title = searchParams.get('title') || 'AI道場'
   const category = searchParams.get('category') || ''
 
   const categoryColors: Record<string, string> = {
-    'vibe-coding': '#6366F1',
+    'vibe-coding': '#0A0A0A',
     'build': '#0A0A0A',
     'marketing': '#0A0A0A',
   }
@@ -58,7 +57,7 @@ export async function GET(request: NextRequest) {
           >
             <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>AI</span>
           </div>
-          <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#0A0A0A' }}>駆動塾</span>
+          <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#0A0A0A' }}>AI道場</span>
           {categoryName && (
             <span
               style={{
@@ -108,7 +107,7 @@ export async function GET(request: NextRequest) {
             fontSize: '20px',
           }}
         >
-          <span>ai-driven-school.vercel.app</span>
+          <span>ai-driven-school.com</span>
         </div>
       </div>
     ),

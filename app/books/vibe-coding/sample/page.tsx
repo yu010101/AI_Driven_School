@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-driven-school.vercel.app'
 
 export const metadata: Metadata = {
-  title: '【無料サンプル】Vibe Coding入門 第1章 | AI駆動塾',
+  title: '【無料サンプル】Vibe Coding入門 第1章',
   description: 'Vibe Coding入門の第1章を無料で公開。バイブコーディングとは何か、AIと一緒に開発するワークフロー、よくある失敗と対処法を解説。',
   openGraph: {
     type: 'article',

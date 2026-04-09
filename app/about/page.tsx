@@ -5,17 +5,17 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'AI駆動塾は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。バイブコーディング、実装パターン、0円マーケティングを無料で学べます。',
+  description: 'AI道場は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。バイブコーディング、実装パターン、0円マーケティングを無料で学べます。',
   openGraph: {
     type: 'website',
-    title: 'About | AI駆動塾',
-    description: 'AI駆動塾は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
+    title: 'About',
+    description: 'AI道場は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
     url: `${baseUrl}/about`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About | AI駆動塾',
-    description: 'AI駆動塾は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
+    title: 'About',
+    description: 'AI道場は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
   },
   alternates: {
     canonical: `${baseUrl}/about`,
@@ -27,14 +27,14 @@ const aboutJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
   '@id': `${baseUrl}/about#webpage`,
-  name: 'About | AI駆動塾',
-  description: 'AI駆動塾は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
+  name: 'About',
+  description: 'AI道場は、非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。',
   url: `${baseUrl}/about`,
   inLanguage: 'ja',
   isPartOf: {
     '@type': 'WebSite',
     '@id': `${baseUrl}/#website`,
-    name: 'AI Driven School',
+    name: 'AI道場',
     url: baseUrl,
   },
   about: {
@@ -43,8 +43,8 @@ const aboutJsonLd = {
   mainEntity: {
     '@type': 'Organization',
     '@id': `${baseUrl}/#organization`,
-    name: 'AI駆動塾',
-    alternateName: 'AI Driven School',
+    name: 'AI道場',
+    alternateName: 'AI道場',
     url: baseUrl,
     description: '非エンジニアでもAIを使ってアプリを作り、売る方法を発信',
     logo: {
@@ -56,7 +56,7 @@ const aboutJsonLd = {
     founder: {
       '@type': 'Person',
       '@id': `${baseUrl}/#author`,
-      name: 'AI駆動塾',
+      name: 'AI道場',
       url: 'https://x.com/L_go_mrk',
       jobTitle: 'AI開発エバンジェリスト',
       sameAs: [
@@ -70,7 +70,7 @@ const aboutJsonLd = {
     ],
     knowsAbout: [
       'バイブコーディング',
-      'AI駆動開発',
+      'AI活用',
       '個人開発',
       '0円マーケティング',
     ],
@@ -115,7 +115,7 @@ export default function About() {
 
       <div className="space-y-8">
         <section className="card p-8">
-          <h2 className="sub-heading">AI駆動塾とは</h2>
+          <h2 className="sub-heading">AI道場とは</h2>
           <p className="text-foreground/80 leading-relaxed mt-4">
             非エンジニアでもAIを使ってアプリを作り、売る方法を発信しています。
           </p>

@@ -42,14 +42,14 @@ export function ReadingProgress() {
           {/* Vertical Progress Track */}
           <div className="w-1.5 h-24 bg-white/80 backdrop-blur-sm rounded-full shadow-lg border border-[#E5E5E5]/50 overflow-hidden">
             <div
-              className="w-full bg-gradient-to-b from-[#6366F1] via-[#06B6D4] to-[#F97316] rounded-full transition-all duration-300 ease-out"
+              className="w-full bg-[#0A0A0A] rounded-full transition-all duration-300 ease-out"
               style={{ height: `${progress}%` }}
             />
           </div>
 
           {/* Percentage Badge */}
           <div className="bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full shadow-lg border border-[#E5E5E5]/50">
-            <span className="text-xs font-bold bg-gradient-to-r from-[#6366F1] to-[#06B6D4] bg-clip-text text-transparent">
+            <span className="text-xs font-bold text-[#0A0A0A] font-bold">
               {Math.round(progress)}%
             </span>
           </div>
@@ -59,13 +59,13 @@ export function ReadingProgress() {
       {/* Scroll to Top Button - Appears at 50%+ */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed right-6 bottom-6 z-40 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-[#E5E5E5]/50 flex items-center justify-center transition-all duration-500 hover:scale-110 hover:shadow-xl hover:border-[#6366F1]/30 group ${
+        className={`fixed right-6 bottom-6 z-40 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-[#E5E5E5]/50 flex items-center justify-center transition-all duration-500 hover:scale-110 hover:shadow-xl hover:border-[#0A0A0A]/30 group ${
           progress > 20 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
         aria-label="トップへ戻る"
       >
         <svg
-          className="w-5 h-5 text-[#525252] group-hover:text-[#6366F1] transition-colors"
+          className="w-5 h-5 text-[#525252] group-hover:text-[#0A0A0A] transition-colors"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

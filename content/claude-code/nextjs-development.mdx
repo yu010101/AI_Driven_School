@@ -1,0 +1,317 @@
+---
+title: "Next.jsプロジェクトをClaude Codeで高速開発【実践ガイド】"
+description: "Claude Codeを使ったNext.js開発の実践ガイド。プロジェクト作成からデプロイまで、効率的な開発フローを解説。"
+tags: ["Claude Code", "Next.js", "実践", "開発フロー", "TypeScript"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code Documentation"
+    url: "https://docs.anthropic.com/en/docs/claude-code"
+    author: "Anthropic"
+---
+
+## なぜNext.js × Claude Codeなのか
+
+Next.jsは設定が多く、ベストプラクティスを覚えるのが大変です。
+
+Claude Codeを使うと:
+- App Routerの正しい使い方を自動で適用
+- TypeScriptの型定義も自動生成
+- Server Components / Client Componentsの使い分けも自動判断
+
+## プロジェクト開始
+
+### 方法1: create-next-appを使う
+
+```bash
+mkdir my-nextjs-app
+cd my-nextjs-app
+claude
+```
+
+```
+Next.js 14のプロジェクトを作成して。
+TypeScript、Tailwind CSS、App Router、ESLint を有効にして。
+```
+
+### 方法2: 既存プロジェクトで始める
+
+```bash
+cd existing-project
+claude
+```
+
+```
+このプロジェクトの構造を把握して、CLAUDE.mdに情報をまとめて。
+```
+
+## 効率的な開発フロー
+
+### Phase 1: 設計（Plan Mode）
+
+大きな機能を作る前に、必ずPlan Modeで設計します。
+
+```bash
+/plan
+```
+
+```
+ユーザー認証機能を追加したい。
+
+要件:
+- メールアドレス + パスワードでログイン
+- ソーシャルログイン（Google）
+- セッション管理
+- 認証が必要なページの保護
+
+まず現状を調査して、実装計画を立てて。
+```
+
+Claudeが:
+1. 既存コードを調査
+2. 使用すべきライブラリを提案（NextAuth.js など）
+3. ファイル構成を設計
+4. 実装手順を整理
+
+### Phase 2: 実装（Implement）
+
+計画を確認したら実装開始:
+
+```bash
+/implement
+```
+
+```
+計画通りに実装を開始して。まずNextAuth.jsのセットアップから。
+```
+
+### Phase 3: テスト
+
+```
+実装した認証機能のテストを書いて。
+```
+
+### Phase 4: リファクタリング
+
+```
+認証関連のコードをレビューして、改善点があれば直して。
+```
+
+## よく使う開発パターン
+
+### パターン1: 新しいページを追加
+
+```
+/about ページを作って。
+- 会社概要を表示
+- レスポンシブ対応
+- メタデータ設定（SEO対策）
+```
+
+生成されるファイル:
+```
+app/about/page.tsx
+app/about/layout.tsx (必要なら)
+```
+
+### パターン2: APIルートを追加
+
+```
+POST /api/contact のエンドポイントを作って。
+- name, email, message を受け取る
+- バリデーション
+- メール送信（Resend を使用）
+- エラーハンドリング
+```
+
+生成されるファイル:
+```
+app/api/contact/route.ts
+lib/email.ts
+```
+
+### パターン3: コンポーネントを作成
+
+```
+再利用可能なButtonコンポーネントを作って。
+
+Props:
+- variant: 'primary' | 'secondary' | 'danger'
+- size: 'sm' | 'md' | 'lg'
+- loading: boolean
+- disabled: boolean
+
+Tailwind CSSでスタイリング。
+```
+
+生成されるファイル:
+```
+components/ui/Button.tsx
+```
+
+### パターン4: データベース連携
+
+```
+PrismaでUserモデルを追加して。
+
+フィールド:
+- id (自動生成)
+- email (ユニーク)
+- name
+- createdAt
+- updatedAt
+
+マイグレーションも実行して。
+```
+
+## Server Components vs Client Components
+
+Claude Codeは適切に使い分けます。
+
+### Server Component（デフォルト）
+
+```
+ブログ記事一覧ページを作って。
+データはサーバーサイドで取得。
+```
+
+生成例:
+```tsx
+// app/blog/page.tsx
+export default async function BlogPage() {
+  const posts = await getPosts() // サーバーで実行
+  return (
+    <div>
+      {posts.map(post => (
+        <article key={post.id}>{post.title}</article>
+      ))}
+    </div>
+  )
+}
+```
+
+### Client Component
+
+```
+いいねボタンを作って。
+クリックでカウントが増える。
+状態管理が必要。
+```
+
+生成例:
+```tsx
+// components/LikeButton.tsx
+'use client'
+
+import { useState } from 'react'
+
+export function LikeButton({ initialCount }: { initialCount: number }) {
+  const [count, setCount] = useState(initialCount)
+  return (
+    <button onClick={() => setCount(c => c + 1)}>
+      ❤️ {count}
+    </button>
+  )
+}
+```
+
+## CLAUDE.md の設定例
+
+Next.jsプロジェクトでは、以下のCLAUDE.mdが効果的:
+
+```markdown
+# プロジェクト概要
+
+Next.js 14 + TypeScript + Tailwind CSS のWebアプリ
+
+# 技術スタック
+
+- Next.js 14 (App Router)
+- TypeScript (strict mode)
+- Tailwind CSS
+- Prisma (ORM)
+- Supabase (DB + Auth)
+
+# ディレクトリ構造
+
+- app/ - ページとAPIルート
+- components/ - 再利用可能なコンポーネント
+- lib/ - ユーティリティ、DB接続
+- types/ - 型定義
+
+# コーディング規約
+
+- Server Components優先（'use client'は必要な時だけ）
+- コンポーネントは関数コンポーネントのみ
+- スタイルはTailwind CSSのみ
+- API routeはtry-catchでエラーハンドリング
+
+# ワークフロー
+
+1. コード変更後: npm run typecheck
+2. テスト: npm test
+3. リント: npm run lint
+
+# 禁止事項
+
+- any型の使用
+- console.log の残存
+- pages/ ディレクトリの使用（App Router統一）
+```
+
+## デプロイ
+
+### Vercelにデプロイ
+
+```
+Vercelにデプロイする準備をして。
+環境変数の設定方法も教えて。
+```
+
+Claudeが:
+1. `vercel.json` の設定（必要なら）
+2. 環境変数の一覧を整理
+3. デプロイコマンドの実行
+
+## トラブルシューティング
+
+### ハイドレーションエラー
+
+```
+ハイドレーションエラーが出た。原因を調査して直して。
+```
+
+よくある原因:
+- Server/Clientの不一致
+- Date オブジェクトのフォーマット
+- ブラウザ拡張機能の干渉
+
+### ビルドエラー
+
+```
+npm run build でエラー。修正して。
+```
+
+Claudeがエラーログを読んで自動修正。
+
+### 型エラー
+
+```
+TypeScriptのエラーを全部直して。
+```
+
+## 次のステップ
+
+Next.js開発の基本をマスターしました！
+
+次は、バグ修正のワークフローを学びましょう。
+
+→ [バグ修正の実践ワークフロー](/knowledge/claude-code/debugging-workflow)
+
+## まとめ
+
+- Plan Mode で設計してから実装
+- 機能単位で指示を出す
+- Server/Client Componentsの使い分けはClaudeが判断
+- CLAUDE.md でプロジェクト固有のルールを設定
+- エラーが出たら「直して」で解決

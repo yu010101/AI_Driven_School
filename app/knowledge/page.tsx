@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   description: 'バイブコーディング、実装パターン、0円マーケティングの記事一覧。非エンジニアでもAIでアプリを作れるようになる実践的なノウハウを公開中。',
   openGraph: {
     type: 'website',
-    title: '記事一覧 | AI駆動塾',
+    title: '記事一覧',
     description: 'バイブコーディング、実装パターン、0円マーケティングの記事一覧',
     url: `${baseUrl}/knowledge`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: '記事一覧 | AI駆動塾',
+    title: '記事一覧',
     description: 'バイブコーディング、実装パターン、0円マーケティングの記事一覧',
   },
   alternates: {
@@ -34,17 +34,17 @@ const collectionPageJsonLd = {
   isPartOf: {
     '@type': 'WebSite',
     '@id': `${baseUrl}/#website`,
-    name: 'AI Driven School',
+    name: 'AI道場',
     url: baseUrl,
   },
   about: {
     '@type': 'Thing',
-    name: 'AI駆動開発',
+    name: 'AI活用',
     description: '非エンジニアでもAIでアプリを作れるようになる実践的なノウハウ',
   },
   mainEntity: {
     '@type': 'ItemList',
-    name: 'AI駆動塾 学習カテゴリ',
+    name: 'AI道場 学習カテゴリ',
     description: '非エンジニアでもAIでアプリを作り、売るための3つのステップ',
     numberOfItems: 4,
     itemListOrder: 'https://schema.org/ItemListOrderAscending',

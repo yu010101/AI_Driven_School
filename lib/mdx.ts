@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 
-export type Category = 'vibe-coding' | 'build' | 'marketing' | 'sales'
+export type Category = 'vibe-coding' | 'build' | 'marketing' | 'sales' | 'claude-code'
 
 export interface Reference {
   title: string
@@ -46,7 +46,7 @@ function getAllMdxFiles(dir: string): string[] {
 }
 
 export function getAllArticles(category?: Category): Article[] {
-  const categories = category ? [category] : ['vibe-coding', 'build', 'marketing', 'sales']
+  const categories = category ? [category] : ['vibe-coding', 'build', 'marketing', 'sales', 'claude-code']
   const articles: Article[] = []
 
   for (const cat of categories) {
@@ -146,28 +146,35 @@ export function getCategoryStats(): CategoryStats[] {
       label: 'バイブコーディング',
       description: 'AIでアプリを作る',
       icon: 'code',
-      color: '#6366F1',
+      color: '#0A0A0A',
+    },
+    {
+      category: 'claude-code',
+      label: 'Claude Code攻略',
+      description: 'AIエディタを極める',
+      icon: 'terminal',
+      color: '#0A0A0A',
     },
     {
       category: 'build',
       label: '実装パターン',
       description: 'ログイン・決済など',
       icon: 'build',
-      color: '#06B6D4',
+      color: '#0A0A0A',
     },
     {
       category: 'marketing',
       label: 'マーケティング',
       description: '0円で集客する',
       icon: 'chart',
-      color: '#F97316',
+      color: '#0A0A0A',
     },
     {
       category: 'sales',
       label: 'セールス',
       description: '売上を伸ばす',
       icon: 'sales',
-      color: '#10B981',
+      color: '#0A0A0A',
     },
   ]
 

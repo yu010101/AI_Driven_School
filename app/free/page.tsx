@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   description: 'バイブコーディングと0円マーケティングを無料で学べます。非エンジニアでもAIでアプリを作り、広告費ゼロで集客する方法を体系的に解説。',
   openGraph: {
     type: 'website',
-    title: '無料で学ぶ | AI駆動塾',
+    title: '無料で学ぶ',
     description: 'バイブコーディングと0円マーケティングを無料で学べます。',
     url: `${baseUrl}/free`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: '無料で学ぶ | AI駆動塾',
+    title: '無料で学ぶ',
     description: 'バイブコーディングと0円マーケティングを無料で学べます。',
   },
   alternates: {

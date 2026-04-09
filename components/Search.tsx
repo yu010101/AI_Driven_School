@@ -18,9 +18,9 @@ const categoryNames: Record<string, string> = {
 }
 
 const categoryColors: Record<string, string> = {
-  'vibe-coding': 'bg-[#EEF2FF] text-[#6366F1]',
-  'build': 'bg-[#ECFEFF] text-[#06B6D4]',
-  'marketing': 'bg-[#FFF7ED] text-[#F97316]',
+  'vibe-coding': 'bg-[#F5F5F5] text-[#0A0A0A]',
+  'build': 'bg-[#F5F5F5] text-[#0A0A0A]',
+  'marketing': 'bg-[#F5F5F5] text-[#0A0A0A]',
 }
 
 export default function Search() {

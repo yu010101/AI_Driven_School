@@ -15,40 +15,40 @@ const questions = [
     id: 'appType',
     question: 'どんなアプリを作りたいですか？',
     options: [
-      { value: 'web', label: 'Webアプリ', icon: '🌐' },
-      { value: 'mobile', label: 'モバイルアプリ', icon: '📱' },
-      { value: 'api', label: 'API/バックエンド', icon: '⚙️' },
-      { value: 'landing', label: 'LP/サイト', icon: '📄' },
+      { value: 'web', label: 'Webアプリ', icon: '' },
+      { value: 'mobile', label: 'モバイルアプリ', icon: '' },
+      { value: 'api', label: 'API/バックエンド', icon: '' },
+      { value: 'landing', label: 'LP/サイト', icon: '' },
     ],
   },
   {
     id: 'experience',
     question: 'プログラミング経験は？',
     options: [
-      { value: 'none', label: '未経験', icon: '🌱' },
-      { value: 'beginner', label: '初心者', icon: '📚' },
-      { value: 'intermediate', label: '中級者', icon: '💪' },
-      { value: 'advanced', label: '上級者', icon: '🚀' },
+      { value: 'none', label: '未経験', icon: '' },
+      { value: 'beginner', label: '初心者', icon: '' },
+      { value: 'intermediate', label: '中級者', icon: '' },
+      { value: 'advanced', label: '上級者', icon: '' },
     ],
   },
   {
     id: 'priority',
     question: '何を重視しますか？',
     options: [
-      { value: 'speed', label: '開発速度', icon: '⚡' },
-      { value: 'cost', label: 'コスト', icon: '💰' },
-      { value: 'scalability', label: '拡張性', icon: '📈' },
-      { value: 'learning', label: '学習', icon: '🎓' },
+      { value: 'speed', label: '開発速度', icon: '' },
+      { value: 'cost', label: 'コスト', icon: '' },
+      { value: 'scalability', label: '拡張性', icon: '' },
+      { value: 'learning', label: '学習', icon: '' },
     ],
   },
   {
     id: 'scale',
     question: '想定ユーザー数は？',
     options: [
-      { value: 'personal', label: '個人/少人数', icon: '👤' },
-      { value: 'small', label: '〜100人', icon: '👥' },
-      { value: 'medium', label: '〜1000人', icon: '🏢' },
-      { value: 'large', label: '1000人以上', icon: '🌍' },
+      { value: 'personal', label: '個人/少人数', icon: '' },
+      { value: 'small', label: '〜100人', icon: '' },
+      { value: 'medium', label: '〜1000人', icon: '' },
+      { value: 'large', label: '1000人以上', icon: '' },
     ],
   },
 ]
@@ -151,7 +151,7 @@ export default function TechStackAdvisorPage() {
     <div className="py-12 md:py-20">
       <div className="container mx-auto px-4">
         <header className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 bg-[#06B6D4] text-white text-xs font-bold rounded-full mb-4">
+          <span className="inline-block px-4 py-1.5 bg-[#0A0A0A] text-white text-xs font-bold rounded-full mb-4">
             TECH STACK ADVISOR
           </span>
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
@@ -172,7 +172,7 @@ export default function TechStackAdvisorPage() {
               </div>
               <div className="h-2 bg-[#E5E7EB] rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#06B6D4] to-[#6366F1] transition-all duration-500"
+                  className="h-full bg-[#0A0A0A] transition-all duration-500"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -188,10 +188,10 @@ export default function TechStackAdvisorPage() {
                   <button
                     key={option.value}
                     onClick={() => handleSelect(currentQuestion.id, option.value)}
-                    className="p-6 border-2 border-[#E5E7EB] rounded-xl hover:border-[#6366F1] hover:bg-[#6366F1]/5 transition-all text-center group"
+                    className="p-6 border-2 border-[#E5E7EB] rounded-xl hover:border-[#0A0A0A] hover:bg-[#0A0A0A]/5 transition-all text-center group"
                   >
                     <span className="text-4xl mb-3 block">{option.icon}</span>
-                    <span className="font-medium group-hover:text-[#6366F1]">
+                    <span className="font-medium group-hover:text-[#0A0A0A]">
                       {option.label}
                     </span>
                   </button>
@@ -203,17 +203,16 @@ export default function TechStackAdvisorPage() {
           <div className="max-w-3xl mx-auto">
             <div className="card p-8 md:p-12">
               <div className="text-center mb-8">
-                <span className="text-5xl mb-4 block">🎯</span>
                 <h2 className="text-2xl font-bold mb-2">診断結果</h2>
-                <p className="text-xl text-[#6366F1] font-bold">{result.title}</p>
+                <p className="text-xl text-[#0A0A0A] font-bold">{result.title}</p>
               </div>
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="font-bold text-[#6366F1] mb-2">💻 フロントエンド</h3>
+                  <h3 className="font-bold text-[#0A0A0A] mb-2">フロントエンド</h3>
                   <div className="flex flex-wrap gap-2">
                     {result.frontend.map((tech) => (
-                      <span key={tech} className="px-3 py-1 bg-[#6366F1]/10 text-[#6366F1] rounded-full text-sm">
+                      <span key={tech} className="px-3 py-1 bg-[#0A0A0A]/10 text-[#0A0A0A] rounded-full text-sm">
                         {tech}
                       </span>
                     ))}
@@ -221,10 +220,10 @@ export default function TechStackAdvisorPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-[#06B6D4] mb-2">⚙️ バックエンド</h3>
+                  <h3 className="font-bold text-[#0A0A0A] mb-2">バックエンド</h3>
                   <div className="flex flex-wrap gap-2">
                     {result.backend.map((tech) => (
-                      <span key={tech} className="px-3 py-1 bg-[#06B6D4]/10 text-[#06B6D4] rounded-full text-sm">
+                      <span key={tech} className="px-3 py-1 bg-[#0A0A0A]/10 text-[#0A0A0A] rounded-full text-sm">
                         {tech}
                       </span>
                     ))}
@@ -232,10 +231,10 @@ export default function TechStackAdvisorPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-[#F97316] mb-2">🗄️ データベース</h3>
+                  <h3 className="font-bold text-[#0A0A0A] mb-2">データベース</h3>
                   <div className="flex flex-wrap gap-2">
                     {result.database.map((tech) => (
-                      <span key={tech} className="px-3 py-1 bg-[#F97316]/10 text-[#F97316] rounded-full text-sm">
+                      <span key={tech} className="px-3 py-1 bg-[#0A0A0A]/10 text-[#0A0A0A] rounded-full text-sm">
                         {tech}
                       </span>
                     ))}
@@ -243,10 +242,10 @@ export default function TechStackAdvisorPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-[#10B981] mb-2">🚀 ホスティング</h3>
+                  <h3 className="font-bold text-[#0A0A0A] mb-2">ホスティング</h3>
                   <div className="flex flex-wrap gap-2">
                     {result.hosting.map((tech) => (
-                      <span key={tech} className="px-3 py-1 bg-[#10B981]/10 text-[#10B981] rounded-full text-sm">
+                      <span key={tech} className="px-3 py-1 bg-[#0A0A0A]/10 text-[#0A0A0A] rounded-full text-sm">
                         {tech}
                       </span>
                     ))}
@@ -254,7 +253,7 @@ export default function TechStackAdvisorPage() {
                 </div>
 
                 <div className="pt-4 border-t border-[#E5E7EB]">
-                  <h3 className="font-bold mb-2">💡 この構成をおすすめする理由</h3>
+                  <h3 className="font-bold mb-2">この構成をおすすめする理由</h3>
                   <p className="text-[#525252]">{result.reason}</p>
                 </div>
               </div>
@@ -262,7 +261,7 @@ export default function TechStackAdvisorPage() {
               <div className="mt-8 flex justify-center gap-4">
                 <button
                   onClick={handleReset}
-                  className="px-6 py-3 border-2 border-[#E5E7EB] rounded-xl hover:border-[#6366F1] transition-colors"
+                  className="px-6 py-3 border-2 border-[#E5E7EB] rounded-xl hover:border-[#0A0A0A] transition-colors"
                 >
                   もう一度診断する
                 </button>

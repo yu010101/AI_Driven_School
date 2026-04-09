@@ -4,12 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 
 const appTypes = [
-  { id: 'web', label: 'Webアプリ', icon: '🌐' },
-  { id: 'mobile', label: 'モバイルアプリ', icon: '📱' },
-  { id: 'chrome', label: 'Chrome拡張', icon: '🧩' },
-  { id: 'discord', label: 'Discord Bot', icon: '🤖' },
-  { id: 'line', label: 'LINE Bot', icon: '💬' },
-  { id: 'cli', label: 'CLIツール', icon: '⌨️' },
+  { id: 'web', label: 'Webアプリ', icon: '' },
+  { id: 'mobile', label: 'モバイルアプリ', icon: '' },
+  { id: 'chrome', label: 'Chrome拡張', icon: '' },
+  { id: 'discord', label: 'Discord Bot', icon: '' },
+  { id: 'line', label: 'LINE Bot', icon: '' },
+  { id: 'cli', label: 'CLIツール', icon: '' },
 ]
 
 const features = [
@@ -121,7 +121,7 @@ ${additionalRequirements}
       <div className="container mx-auto px-4 max-w-3xl">
         {/* Header */}
         <header className="text-center mb-12">
-          <Link href="/tools" className="inline-flex items-center gap-2 text-[#64748B] hover:text-[#6366F1] mb-4 text-sm">
+          <Link href="/tools" className="inline-flex items-center gap-2 text-[#64748B] hover:text-[#0A0A0A] mb-4 text-sm">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
@@ -146,7 +146,7 @@ ${additionalRequirements}
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
                     step >= s
-                      ? 'bg-[#6366F1] text-white'
+                      ? 'bg-[#0A0A0A] text-white'
                       : 'bg-[#E5E5E5] text-[#64748B]'
                   }`}
                 >
@@ -155,7 +155,7 @@ ${additionalRequirements}
                 {s < 4 && (
                   <div
                     className={`flex-1 h-1 mx-2 rounded transition-colors ${
-                      step > s ? 'bg-[#6366F1]' : 'bg-[#E5E5E5]'
+                      step > s ? 'bg-[#0A0A0A]' : 'bg-[#E5E5E5]'
                     }`}
                   />
                 )}
@@ -183,8 +183,8 @@ ${additionalRequirements}
                     onClick={() => setAppType(type.id)}
                     className={`p-4 rounded-xl border-2 transition-all text-left ${
                       appType === type.id
-                        ? 'border-[#6366F1] bg-[#6366F1]/5'
-                        : 'border-[#E5E5E5] hover:border-[#6366F1]/50'
+                        ? 'border-[#0A0A0A] bg-[#0A0A0A]/5'
+                        : 'border-[#E5E5E5] hover:border-[#0A0A0A]/50'
                     }`}
                   >
                     <span className="text-2xl mb-2 block">{type.icon}</span>
@@ -216,7 +216,7 @@ ${additionalRequirements}
                     value={appName}
                     onChange={(e) => setAppName(e.target.value)}
                     placeholder="例: TaskMaster"
-                    className="w-full px-4 py-3 rounded-xl border border-[#E5E5E5] focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/20 outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-2 focus:ring-[#0A0A0A]/20 outline-none transition-all"
                   />
                 </div>
                 <div>
@@ -226,7 +226,7 @@ ${additionalRequirements}
                     onChange={(e) => setAppDescription(e.target.value)}
                     placeholder="例: タスクを管理できるアプリ。カテゴリ分け、期限設定、優先度の設定ができる。"
                     rows={4}
-                    className="w-full px-4 py-3 rounded-xl border border-[#E5E5E5] focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/20 outline-none transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-2 focus:ring-[#0A0A0A]/20 outline-none transition-all resize-none"
                   />
                 </div>
               </div>
@@ -260,14 +260,14 @@ ${additionalRequirements}
                     onClick={() => toggleFeature(feature.id)}
                     className={`p-4 rounded-xl border-2 transition-all text-left ${
                       selectedFeatures.includes(feature.id)
-                        ? 'border-[#6366F1] bg-[#6366F1]/5'
-                        : 'border-[#E5E5E5] hover:border-[#6366F1]/50'
+                        ? 'border-[#0A0A0A] bg-[#0A0A0A]/5'
+                        : 'border-[#E5E5E5] hover:border-[#0A0A0A]/50'
                     }`}
                   >
                     <span className="flex items-center gap-2">
                       <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${
                         selectedFeatures.includes(feature.id)
-                          ? 'border-[#6366F1] bg-[#6366F1]'
+                          ? 'border-[#0A0A0A] bg-[#0A0A0A]'
                           : 'border-[#E5E5E5]'
                       }`}>
                         {selectedFeatures.includes(feature.id) && (
@@ -309,13 +309,13 @@ ${additionalRequirements}
                     onClick={() => setTechStack(tech.id)}
                     className={`p-4 rounded-xl border-2 transition-all text-left relative ${
                       techStack === tech.id
-                        ? 'border-[#6366F1] bg-[#6366F1]/5'
-                        : 'border-[#E5E5E5] hover:border-[#6366F1]/50'
+                        ? 'border-[#0A0A0A] bg-[#0A0A0A]/5'
+                        : 'border-[#E5E5E5] hover:border-[#0A0A0A]/50'
                     }`}
                   >
                     <span className="font-medium">{tech.label}</span>
                     {tech.recommended && (
-                      <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-[#10B981] text-white text-xs font-bold rounded-full">
+                      <span className="absolute -top-2 -right-2 px-2 py-0.5 bg-[#0A0A0A] text-white text-xs font-bold rounded-full">
                         推奨
                       </span>
                     )}
@@ -329,7 +329,7 @@ ${additionalRequirements}
                   onChange={(e) => setAdditionalRequirements(e.target.value)}
                   placeholder="例: ダークモード対応、アニメーションを多用など"
                   rows={3}
-                  className="w-full px-4 py-3 rounded-xl border border-[#E5E5E5] focus:border-[#6366F1] focus:ring-2 focus:ring-[#6366F1]/20 outline-none transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-xl border border-[#E5E5E5] focus:border-[#0A0A0A] focus:ring-2 focus:ring-[#0A0A0A]/20 outline-none transition-all resize-none"
                 />
               </div>
               <div className="flex justify-between">
@@ -359,7 +359,7 @@ ${additionalRequirements}
                   onClick={copyToClipboard}
                   className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
                     copied
-                      ? 'bg-[#10B981] text-white'
+                      ? 'bg-[#0A0A0A] text-white'
                       : 'bg-[#F5F5F5] text-[#0A0A0A] hover:bg-[#E5E5E5]'
                   }`}
                 >
@@ -385,9 +385,9 @@ ${additionalRequirements}
                   {generatedPrompt}
                 </pre>
               </div>
-              <div className="bg-[#6366F1]/5 border border-[#6366F1]/20 rounded-xl p-4">
+              <div className="bg-[#0A0A0A]/5 border border-[#0A0A0A]/20 rounded-xl p-4">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-[#6366F1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-[#0A0A0A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   使い方

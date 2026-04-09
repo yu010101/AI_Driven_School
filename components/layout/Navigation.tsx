@@ -3,40 +3,28 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import Search from '@/components/Search'
+import UserMenu from './UserMenu'
 
 export function Navigation() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const links = [
-    { href: '/', label: 'ホーム' },
-    { href: '/guide', label: '完全ガイド' },
-    { href: '/knowledge', label: '記事一覧' },
-    { href: '/books', label: '書籍' },
-    { href: '/tools', label: 'ツール' },
+    { href: '/dojo', label: '道場' },
+    { href: '/dojo/cert', label: '認定対策' },
+    { href: '/pricing', label: '料金' },
+    { href: '/enterprise', label: '法人' },
   ]
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-[#E2E8F0]/50" role="navigation" aria-label="メインナビゲーション">
-      {/* Subtle gradient line at top */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#6366F1]/20 to-transparent" />
+    <nav className="sticky top-0 z-50 bg-white border-b border-[#E2E8F0]/50" role="navigation" aria-label="メインナビゲーション">
 
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Logo with enhanced animation */}
-          <Link href="/" className="flex items-center gap-2.5 group" aria-label="AI駆動塾 ホーム">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0A0A0A] to-[#1a1a1a] rounded-xl flex items-center justify-center shadow-lg shadow-black/10 group-hover:shadow-black/20 transition-all duration-300 group-hover:scale-105">
-                <span className="font-bold text-white text-sm">AI</span>
-              </div>
-              {/* Glow effect on hover */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#6366F1]/20 to-[#06B6D4]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-[#0A0A0A] text-lg leading-tight group-hover:text-[#6366F1] transition-colors">駆動塾</span>
-              <span className="text-[10px] text-[#94A3B8] font-medium tracking-wider">AI DRIVEN SCHOOL</span>
-            </div>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2 group" aria-label="AI道場 ホーム">
+            <img src="/ai-dojo-icon.jpg" alt="AI道場" className="w-9 h-9 rounded-lg" />
+            <span className="font-bold text-[#0A0A0A] text-lg leading-tight">AI道場</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -50,7 +38,7 @@ export function Navigation() {
                   href={link.href}
                   className={`nav-link px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
                     isActive
-                      ? 'text-[#6366F1] bg-[#6366F1]/5'
+                      ? 'text-[#0A0A0A] bg-[#0A0A0A]/5'
                       : 'text-[#64748B] hover:text-[#0A0A0A] hover:bg-[#F5F5F5]'
                   } ${isActive ? 'active' : ''}`}
                   aria-current={isActive ? 'page' : undefined}
@@ -59,8 +47,8 @@ export function Navigation() {
                 </Link>
               )
             })}
-            <div className="ml-3 pl-3 border-l border-[#E2E8F0]">
-              <Search />
+            <div className="ml-2">
+              <UserMenu />
             </div>
           </div>
 
@@ -101,9 +89,6 @@ export function Navigation() {
           }`}
         >
           <div className="flex flex-col gap-1 pb-2">
-            <div className="px-2 py-3">
-              <Search />
-            </div>
             {links.map((link, index) => {
               const isActive = pathname === link.href ||
                 (link.href !== '/' && pathname.startsWith(link.href))
@@ -113,7 +98,7 @@ export function Navigation() {
                   href={link.href}
                   className={`px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 flex items-center gap-3 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#6366F1]/10 to-[#06B6D4]/5 text-[#6366F1]'
+                      ? 'bg-[#0A0A0A]/10 text-[#0A0A0A]'
                       : 'text-[#64748B] hover:text-[#0A0A0A] hover:bg-[#F5F5F5]'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
@@ -122,7 +107,7 @@ export function Navigation() {
                 >
                   {/* Icon for each link */}
                   <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    isActive ? 'bg-[#6366F1]/10' : 'bg-[#F5F5F5]'
+                    isActive ? 'bg-[#0A0A0A]/10' : 'bg-[#F5F5F5]'
                   }`}>
                     {link.href === '/' && (
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,11 +140,24 @@ export function Navigation() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     )}
+                    {link.href === '/dojo' && (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    )}
+                    {link.href === '/enterprise' && (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                      </svg>
+                    )}
                   </span>
                   {link.label}
                 </Link>
               )
             })}
+          </div>
+          <div className="pt-2 border-t border-[#E2E8F0]">
+            <UserMenu />
           </div>
         </div>
       </div>

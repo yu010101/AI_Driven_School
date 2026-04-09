@@ -1,0 +1,326 @@
+---
+title: "MCP（Model Context Protocol）入門【Claude Codeの拡張機能】"
+description: "Claude CodeのMCP（Model Context Protocol）を使って、外部ツールやサービスと連携する方法を解説。"
+tags: ["Claude Code", "MCP", "拡張機能", "連携", "応用"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Model Context Protocol"
+    url: "https://modelcontextprotocol.io/"
+    author: "Anthropic"
+---
+
+## MCPとは
+
+MCP（Model Context Protocol）は、Claude Codeを外部ツールやサービスと連携させるためのプロトコルです。
+
+```
+Claude Code
+    ↓ MCP
+┌─────────────────────────────┐
+│ 外部ツール・サービス        │
+│ - GitHub                    │
+│ - Slack                     │
+│ - データベース              │
+│ - 独自ツール                │
+└─────────────────────────────┘
+```
+
+MCPを使うと、Claudeが直接これらのサービスを操作できるようになります。
+
+## MCPでできること
+
+### 例1: GitHubとの連携
+
+```
+GitHubのIssue #123 の内容を取得して、
+それに基づいて実装して。
+```
+
+### 例2: Slackとの連携
+
+```
+実装が完了したら、#dev チャンネルに通知して。
+```
+
+### 例3: データベースとの連携
+
+```
+本番DBから最近のエラーログを取得して分析して。
+```
+
+## MCPサーバーの設定
+
+### 設定ファイルの場所
+
+```
+~/.claude/settings.json
+```
+
+### 設定例
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "your-github-token"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/path/to/allowed/directory"]
+    }
+  }
+}
+```
+
+## 主要なMCPサーバー
+
+### 1. GitHub MCP Server
+
+```bash
+npx -y @modelcontextprotocol/server-github
+```
+
+機能:
+- Issue/PRの取得・作成
+- リポジトリの検索
+- ファイルの取得
+
+### 2. Filesystem MCP Server
+
+```bash
+npx -y @modelcontextprotocol/server-filesystem /path
+```
+
+機能:
+- 指定ディレクトリ外のファイルアクセス
+- 複数プロジェクト間の操作
+
+### 3. Slack MCP Server
+
+```bash
+npx -y @modelcontextprotocol/server-slack
+```
+
+機能:
+- メッセージの送信
+- チャンネル情報の取得
+
+### 4. PostgreSQL MCP Server
+
+```bash
+npx -y @modelcontextprotocol/server-postgres
+```
+
+機能:
+- SQLクエリの実行
+- スキーマ情報の取得
+
+## MCPの設定手順
+
+### STEP 1: MCPサーバーを選ぶ
+
+使いたい連携機能に合わせてMCPサーバーを選びます。
+
+公式サーバー一覧: https://modelcontextprotocol.io/servers
+
+### STEP 2: 認証情報を準備
+
+各サービスのAPIトークンやキーを取得します。
+
+**GitHub:**
+1. Settings → Developer settings → Personal access tokens
+2. 必要な権限を選択してトークン生成
+
+**Slack:**
+1. api.slack.com でアプリを作成
+2. Bot Token を取得
+
+### STEP 3: 設定ファイルを編集
+
+```bash
+# 設定ファイルを開く
+code ~/.claude/settings.json
+```
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "ghp_xxxxxxxxxxxx"
+      }
+    }
+  }
+}
+```
+
+### STEP 4: Claude Codeを再起動
+
+```bash
+# 一度終了して再起動
+claude
+```
+
+### STEP 5: 動作確認
+
+```
+GitHubのリポジトリ一覧を取得して。
+```
+
+## 実践的な使い方
+
+### GitHub連携の活用
+
+**Issue駆動開発:**
+```
+GitHubのIssue #45 を読んで、その内容を実装して。
+完了したらPRを作成して、Issueにリンクして。
+```
+
+**PR作成の自動化:**
+```
+今の変更をPRとして作成して。
+- タイトル: 変更内容から自動生成
+- 説明: 変更の詳細を記載
+- レビュワー: @teamlead を指定
+```
+
+### Slack連携の活用
+
+**デプロイ通知:**
+```
+デプロイが完了したら、#releases チャンネルに
+以下を投稿して:
+- バージョン
+- 変更点
+- デプロイ時刻
+```
+
+### データベース連携の活用
+
+**データ分析:**
+```
+過去7日間のユーザー登録数を集計して、
+日別のグラフデータを作成して。
+```
+
+**スキーマの理解:**
+```
+データベースのスキーマを取得して、
+ER図をMermaid形式で生成して。
+```
+
+## カスタムMCPサーバーの作成
+
+独自のMCPサーバーを作ることもできます。
+
+### 最小構成
+
+```typescript
+// my-mcp-server.ts
+import { Server } from "@modelcontextprotocol/sdk/server/index.js"
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+
+const server = new Server({
+  name: "my-custom-server",
+  version: "1.0.0"
+}, {
+  capabilities: {
+    tools: {}
+  }
+})
+
+// ツールを定義
+server.setRequestHandler("tools/list", async () => ({
+  tools: [{
+    name: "my_tool",
+    description: "My custom tool",
+    inputSchema: {
+      type: "object",
+      properties: {
+        input: { type: "string" }
+      }
+    }
+  }]
+}))
+
+// ツールの実装
+server.setRequestHandler("tools/call", async (request) => {
+  if (request.params.name === "my_tool") {
+    return {
+      content: [{ type: "text", text: "Result" }]
+    }
+  }
+})
+
+// サーバー起動
+const transport = new StdioServerTransport()
+await server.connect(transport)
+```
+
+## セキュリティの注意点
+
+### 1. トークンの管理
+
+```
+❌ 設定ファイルを直接コミット
+✅ 環境変数経由で設定
+```
+
+### 2. 権限の最小化
+
+```
+❌ 全権限を付与
+✅ 必要な権限だけを付与
+```
+
+### 3. ディレクトリの制限
+
+```
+❌ ルートディレクトリ全体を許可
+✅ プロジェクトディレクトリのみ許可
+```
+
+## トラブルシューティング
+
+### MCPサーバーが認識されない
+
+```bash
+# Claude Codeのログを確認
+claude --debug
+
+# 設定ファイルの構文エラーをチェック
+cat ~/.claude/settings.json | jq .
+```
+
+### 認証エラー
+
+```
+トークンが有効か確認して。
+```
+
+APIトークンの有効期限や権限を確認。
+
+## 次のステップ
+
+MCPの基本をマスターしました！
+
+次は、カスタムスラッシュコマンドの作り方を学びましょう。
+
+→ [カスタムスラッシュコマンドの作り方](/knowledge/claude-code/custom-commands)
+
+## まとめ
+
+- MCP = Claude Codeの拡張プロトコル
+- 外部サービス（GitHub, Slack, DB等）と連携可能
+- ~/.claude/settings.json で設定
+- 公式サーバーが多数用意されている
+- カスタムサーバーも作成可能
+- セキュリティ（トークン管理、権限）に注意

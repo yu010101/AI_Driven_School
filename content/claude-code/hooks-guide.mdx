@@ -1,0 +1,318 @@
+---
+title: "Hooks活用ガイド【Claude Codeの自動化トリガー】"
+description: "Claude CodeのHooks機能を使って、特定のイベントで自動処理を実行する方法を解説。"
+tags: ["Claude Code", "Hooks", "自動化", "ワークフロー", "応用"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code Hooks"
+    url: "https://docs.anthropic.com/en/docs/claude-code/hooks"
+    author: "Anthropic"
+---
+
+## Hooksとは
+
+Hooksは、Claude Codeの特定のイベント発生時に、シェルコマンドを自動実行する機能です。
+
+```
+イベント発生 → Hook実行 → 結果をClaudeにフィードバック
+```
+
+例:
+- ファイル保存時にリントを実行
+- コミット前にテストを実行
+- コマンド実行前に確認
+
+## Hooksの種類
+
+| Hook | タイミング |
+|------|-----------|
+| `PreToolUse` | ツール実行前 |
+| `PostToolUse` | ツール実行後 |
+| `Notification` | 通知発生時 |
+| `Stop` | Claude停止時 |
+
+## 設定方法
+
+### 設定ファイルの場所
+
+**プロジェクト固有:**
+```
+.claude/settings.json
+```
+
+**グローバル:**
+```
+~/.claude/settings.json
+```
+
+### 基本構文
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "ツール名のパターン",
+        "command": "実行するコマンド"
+      }
+    ]
+  }
+}
+```
+
+## 実践例
+
+### 例1: ファイル編集前にバックアップ
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "edit_file",
+        "command": "cp \"$FILE_PATH\" \"$FILE_PATH.bak\" 2>/dev/null || true"
+      }
+    ]
+  }
+}
+```
+
+ファイルを編集する前に、自動でバックアップを作成。
+
+### 例2: ファイル保存後にリント
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "write_file",
+        "command": "if [[ \"$FILE_PATH\" == *.ts ]]; then npx eslint \"$FILE_PATH\" --fix; fi"
+      }
+    ]
+  }
+}
+```
+
+TypeScriptファイルを保存したら、自動でESLintを実行。
+
+### 例3: コマンド実行前の確認
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "execute_command",
+        "command": "echo '実行コマンド: $COMMAND' && read -p '続行しますか? (y/n) ' answer && [ \"$answer\" = \"y\" ]"
+      }
+    ]
+  }
+}
+```
+
+危険なコマンド実行前に確認プロンプトを表示。
+
+### 例4: 本番環境操作の警告
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "execute_command",
+        "command": "if echo \"$COMMAND\" | grep -q 'production\\|prod\\|--prod'; then echo '⚠️ 本番環境への操作です！' && sleep 2; fi"
+      }
+    ]
+  }
+}
+```
+
+本番環境に関連するコマンドで警告を表示。
+
+### 例5: 変更のログ記録
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "edit_file|write_file",
+        "command": "echo \"$(date): $FILE_PATH が変更されました\" >> .claude/changes.log"
+      }
+    ]
+  }
+}
+```
+
+ファイル変更をログファイルに記録。
+
+## 環境変数
+
+Hooks内で使える環境変数:
+
+| 変数 | 内容 |
+|------|------|
+| `$TOOL_NAME` | 実行されるツール名 |
+| `$FILE_PATH` | 対象ファイルパス |
+| `$COMMAND` | 実行コマンド（execute_command時） |
+| `$RESULT` | ツールの実行結果（PostToolUse時） |
+
+## Matcherパターン
+
+### 単一ツール
+
+```json
+"matcher": "edit_file"
+```
+
+### 複数ツール（OR）
+
+```json
+"matcher": "edit_file|write_file"
+```
+
+### 全ツール
+
+```json
+"matcher": ".*"
+```
+
+### 特定のファイルパターン
+
+```json
+{
+  "matcher": "write_file",
+  "command": "if [[ \"$FILE_PATH\" == *.test.ts ]]; then npm test; fi"
+}
+```
+
+## 安全なHooksの設計
+
+### 原則1: 失敗しても止まらない
+
+```json
+"command": "npm run lint || true"
+```
+
+`|| true` を付けることで、リントエラーがあってもClaudeの動作を止めない。
+
+### 原則2: タイムアウトを設定
+
+```json
+"command": "timeout 30 npm test"
+```
+
+長時間かかる処理にはタイムアウトを設定。
+
+### 原則3: 対話的コマンドを避ける
+
+```json
+❌ "command": "npm init"  // 対話的
+✅ "command": "npm init -y"  // 非対話的
+```
+
+### 原則4: 条件を明確に
+
+```json
+"command": "if [ -f package.json ]; then npm test; fi"
+```
+
+条件付きで実行し、予期しないエラーを防ぐ。
+
+## Hooksのデバッグ
+
+### ログ出力を追加
+
+```json
+"command": "echo \"[Hook] $TOOL_NAME on $FILE_PATH\" >> /tmp/claude-hooks.log && 実際のコマンド"
+```
+
+### 一時的に無効化
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      // コメントアウトできないので、matcherを絶対マッチしないものに
+      {
+        "matcher": "DISABLED_edit_file",
+        "command": "..."
+      }
+    ]
+  }
+}
+```
+
+## チームでの活用
+
+### プロジェクト設定を共有
+
+```
+.claude/
+├── settings.json    ← Hooks設定
+├── commands/        ← カスタムコマンド
+└── CLAUDE.md        ← プロジェクト設定
+```
+
+これらをgitで管理し、チーム全員が同じHooksを使用。
+
+### コードスタイルの自動統一
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "write_file",
+        "command": "npx prettier --write \"$FILE_PATH\" 2>/dev/null || true"
+      }
+    ]
+  }
+}
+```
+
+保存時に自動でPrettierを実行し、コードスタイルを統一。
+
+## よくある問題と解決法
+
+### 問題1: Hookが実行されない
+
+1. 設定ファイルのパスを確認
+2. JSONの構文エラーをチェック
+3. matcherパターンを確認
+
+### 問題2: コマンドがエラー
+
+```bash
+# 手動でコマンドを実行してテスト
+FILE_PATH="test.ts" bash -c 'npx eslint "$FILE_PATH"'
+```
+
+### 問題3: 無限ループ
+
+HookがファイルをEditし、それがまたHookを発火させる場合:
+
+```json
+"command": "if [ ! -f /tmp/hook-running ]; then touch /tmp/hook-running && npm run lint && rm /tmp/hook-running; fi"
+```
+
+ロックファイルで多重実行を防ぐ。
+
+## 次のステップ
+
+Hooks活用法をマスターしました！
+
+次は、CI/CDとの連携を学びましょう。
+
+→ [CI/CDとの連携](/knowledge/claude-code/ci-cd-integration)
+
+## まとめ
+
+- Hooks = イベント駆動の自動処理
+- PreToolUse / PostToolUse が主要なタイミング
+- 環境変数でファイルパスやコマンドを取得
+- `|| true` でエラー時も継続
+- チームで設定を共有してワークフローを統一
+- 無限ループに注意

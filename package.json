@@ -9,22 +9,35 @@
     "lint": "next lint",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e:debug": "playwright test --debug",
+    "build:worker": "opennextjs-cloudflare build",
+    "preview:worker": "opennextjs-cloudflare build && wrangler dev"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.0.0",
     "@mdx-js/react": "^3.0.0",
+    "@neondatabase/serverless": "^1.0.2",
+    "@stripe/stripe-js": "^9.1.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
     "gray-matter": "^4.0.3",
+    "jose": "^6.2.2",
     "next": "^14.2.0",
-    "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote": "^6.0.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "stripe": "^22.0.1"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^0.6.6",
     "@playwright/test": "^1.42.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.11.0",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
@@ -33,6 +46,7 @@
     "eslint-config-next": "^14.2.0",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "wrangler": "^4.78.0"
   }
 }

@@ -1,0 +1,355 @@
+---
+title: "よくあるエラーと解決法【Claude Codeトラブルシューティング】"
+description: "Claude Codeでよく遭遇するエラーとその解決方法を解説。インストール、認証、実行時のエラーを網羅。"
+tags: ["Claude Code", "エラー", "トラブルシューティング", "解決法", "FAQ"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code Troubleshooting"
+    url: "https://docs.anthropic.com/en/docs/claude-code/troubleshooting"
+    author: "Anthropic"
+---
+
+## インストール時のエラー
+
+### command not found: claude
+
+**症状:**
+```bash
+$ claude
+zsh: command not found: claude
+```
+
+**原因:** npmのグローバルパスが通っていない
+
+**解決法:**
+```bash
+# パスを確認
+npm config get prefix
+
+# パスを追加（zshの場合）
+echo 'export PATH="$PATH:$(npm config get prefix)/bin"' >> ~/.zshrc
+source ~/.zshrc
+
+# bashの場合
+echo 'export PATH="$PATH:$(npm config get prefix)/bin"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### EACCES: permission denied
+
+**症状:**
+```bash
+npm install -g @anthropic-ai/claude-code
+npm ERR! Error: EACCES: permission denied
+```
+
+**原因:** npmのグローバルディレクトリへの書き込み権限がない
+
+**解決法（推奨）:**
+```bash
+# npmのディレクトリを変更
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zshrc
+source ~/.zshrc
+
+# 再インストール
+npm install -g @anthropic-ai/claude-code
+```
+
+**解決法（非推奨）:**
+```bash
+sudo npm install -g @anthropic-ai/claude-code
+```
+
+### Node.js version error
+
+**症状:**
+```
+error: Required Node.js version 18+ not found
+```
+
+**解決法:**
+```bash
+# Node.jsのバージョン確認
+node --version
+
+# nvmを使ってアップデート
+nvm install 20
+nvm use 20
+
+# または直接インストール
+# Mac
+brew install node
+
+# Windows
+# nodejs.org から最新版をダウンロード
+```
+
+## 認証エラー
+
+### Invalid API key
+
+**症状:**
+```
+Error: Invalid API key provided
+```
+
+**原因:** APIキーが間違っている、または期限切れ
+
+**解決法:**
+```bash
+# 現在の設定を確認
+echo $ANTHROPIC_API_KEY
+
+# 再設定
+export ANTHROPIC_API_KEY="sk-ant-api03-xxxxx"
+
+# 永続化（zsh）
+echo 'export ANTHROPIC_API_KEY="sk-ant-api03-xxxxx"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### Authentication failed
+
+**症状:**
+```
+Error: Authentication failed. Please run 'claude auth login'
+```
+
+**解決法:**
+```bash
+# ログアウトして再ログイン
+claude auth logout
+claude auth login
+```
+
+### Rate limit exceeded
+
+**症状:**
+```
+Error: Rate limit exceeded. Please try again later.
+```
+
+**原因:** APIの利用上限に達した
+
+**解決法:**
+- 数分待ってから再試行
+- Claude Pro/Maxの場合は上限リセットを待つ
+- API従量課金に切り替えを検討
+
+## 実行時のエラー
+
+### Context window exceeded
+
+**症状:**
+```
+Error: Context window exceeded. Please reduce input size.
+```
+
+**原因:** コンテキストが一杯になった
+
+**解決法:**
+```bash
+# コンテキストをリセット
+/clear
+
+# または圧縮
+/compact
+```
+
+### Timeout error
+
+**症状:**
+```
+Error: Request timed out
+```
+
+**原因:** 処理に時間がかかりすぎた
+
+**解決法:**
+```bash
+# タスクを小さく分割
+❌ 「このプロジェクト全体をリファクタリングして」
+✅ 「src/lib/auth.ts をリファクタリングして」
+```
+
+### File permission denied
+
+**症状:**
+```
+Error: Permission denied: /path/to/file
+```
+
+**原因:** ファイルへの書き込み権限がない
+
+**解決法:**
+```bash
+# ファイルの権限を確認
+ls -la /path/to/file
+
+# 権限を付与
+chmod 644 /path/to/file
+
+# ディレクトリの場合
+chmod 755 /path/to/directory
+```
+
+### Git operation failed
+
+**症状:**
+```
+Error: Git operation failed
+```
+
+**原因:** Gitの設定問題
+
+**解決法:**
+```bash
+# Git設定を確認
+git config --list
+
+# ユーザー設定
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+```
+
+## よくある問題
+
+### Claudeが同じ間違いを繰り返す
+
+**原因:** コンテキストに誤った情報が蓄積
+
+**解決法:**
+```bash
+# コンテキストをリセット
+/clear
+
+# 問題を最初から説明し直す
+```
+
+### 応答が遅い
+
+**原因:**
+- コンテキストが大きい
+- サーバー負荷
+
+**解決法:**
+```bash
+# コンテキストを圧縮
+/compact
+
+# または新しいセッション
+/clear
+```
+
+### 期待と違うコードが生成される
+
+**原因:** 指示が曖昧
+
+**解決法:**
+```
+❌ 「ログイン機能を作って」
+
+✅ 「ログイン機能を作って。
+    - メールアドレス + パスワード認証
+    - NextAuth.js を使用
+    - Prisma でユーザー管理
+    - エラーメッセージは日本語で」
+```
+
+### ファイルが見つからないと言われる
+
+**原因:** パスが間違っている、または権限の問題
+
+**解決法:**
+```bash
+# 現在のディレクトリを確認
+pwd
+
+# ファイルの存在確認
+ls -la path/to/file
+
+# Claude Code を正しいディレクトリで起動
+cd /path/to/project
+claude
+```
+
+## MCP関連のエラー
+
+### MCP server not found
+
+**症状:**
+```
+Error: MCP server 'github' not found
+```
+
+**解決法:**
+```bash
+# 設定ファイルを確認
+cat ~/.claude/settings.json
+
+# MCPサーバーを再インストール
+npx -y @modelcontextprotocol/server-github
+```
+
+### MCP connection failed
+
+**症状:**
+```
+Error: Failed to connect to MCP server
+```
+
+**解決法:**
+```bash
+# 環境変数を確認
+echo $GITHUB_TOKEN
+
+# Claude Codeを再起動
+# Ctrl+C で終了してから再起動
+claude
+```
+
+## デバッグモード
+
+問題の詳細を確認するには:
+
+```bash
+# デバッグモードで起動
+claude --debug
+```
+
+詳細なログが表示され、問題の原因特定に役立ちます。
+
+## それでも解決しない場合
+
+### 1. 公式ドキュメントを確認
+
+https://docs.anthropic.com/en/docs/claude-code
+
+### 2. GitHubのIssueを検索
+
+https://github.com/anthropics/claude-code/issues
+
+### 3. 新しいIssueを作成
+
+再現手順を含めて報告:
+- OS・Node.jsバージョン
+- 実行したコマンド
+- エラーメッセージ全文
+
+## まとめ
+
+| エラー種別 | よくある原因 | 対処法 |
+|-----------|-------------|--------|
+| command not found | パス未設定 | PATHを追加 |
+| permission denied | 権限不足 | npmディレクトリ変更 |
+| Invalid API key | キー間違い | 再設定 |
+| Context exceeded | コンテキスト溢れ | /clear |
+| Timeout | タスク大きすぎ | 分割して実行 |
+
+**困ったら:**
+1. `/clear` でリセット
+2. デバッグモードで詳細確認
+3. 公式ドキュメント・Issue確認

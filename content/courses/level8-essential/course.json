@@ -1,0 +1,10 @@
+{
+  "id": "level8-essential",
+  "title": "実務必須スキル — 認定試験の核心",
+  "description": "Hooks、Permission、Context Window、コスト管理。公式認定で必ず問われる4つの基礎。",
+  "emoji": "",
+  "level": 8,
+  "totalLessons": 4,
+  "estimatedMinutes": 20,
+  "certification": "Claude Code in Action"
+}

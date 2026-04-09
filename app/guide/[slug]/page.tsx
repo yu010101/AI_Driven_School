@@ -51,12 +51,12 @@ export default function GuidePage({ params }: Props) {
     description: guide.description,
     author: {
       '@type': 'Organization',
-      name: 'AI駆動塾',
+      name: 'AI道場',
       url: baseUrl,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'AI駆動塾',
+      name: 'AI道場',
       logo: { '@type': 'ImageObject', url: `${baseUrl}/icon-512.png` },
     },
     datePublished: guide.createdAt,
@@ -115,9 +115,9 @@ export default function GuidePage({ params }: Props) {
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm" aria-label="パンくずリスト">
             <ol className="flex items-center gap-2 text-[#64748B]">
-              <li><Link href="/" className="hover:text-[#6366F1]">ホーム</Link></li>
+              <li><Link href="/" className="hover:text-[#0A0A0A]">ホーム</Link></li>
               <li>/</li>
-              <li><Link href="/guide" className="hover:text-[#6366F1]">完全ガイド</Link></li>
+              <li><Link href="/guide" className="hover:text-[#0A0A0A]">完全ガイド</Link></li>
               <li>/</li>
               <li className="text-[#0A0A0A] font-medium">{guide.shortTitle || guide.title}</li>
             </ol>
@@ -129,7 +129,7 @@ export default function GuidePage({ params }: Props) {
               {guide.badges?.map((badge) => (
                 <span
                   key={badge}
-                  className="px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r from-[#6366F1] to-[#06B6D4] text-white"
+                  className="px-3 py-1 text-xs font-bold rounded-full bg-[#0A0A0A] text-white"
                 >
                   {badge}
                 </span>
@@ -151,7 +151,7 @@ export default function GuidePage({ params }: Props) {
           {guide.toc && guide.toc.length > 0 && (
             <nav className="mb-12 p-6 bg-[#F5F5F5] rounded-2xl">
               <h2 className="font-bold text-lg mb-4 flex items-center gap-2">
-                <svg className="w-5 h-5 text-[#6366F1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#0A0A0A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h7" />
                 </svg>
                 目次
@@ -161,7 +161,7 @@ export default function GuidePage({ params }: Props) {
                   <li key={item.id}>
                     <a
                       href={`#${item.id}`}
-                      className="text-[#525252] hover:text-[#6366F1] transition-colors flex items-center gap-2"
+                      className="text-[#525252] hover:text-[#0A0A0A] transition-colors flex items-center gap-2"
                     >
                       <span className="w-6 h-6 bg-[#0A0A0A] text-white rounded-full flex items-center justify-center text-xs font-bold">
                         {index + 1}
@@ -183,7 +183,7 @@ export default function GuidePage({ params }: Props) {
           {guide.faqs && guide.faqs.length > 0 && (
             <section className="mt-16 pt-12 border-t border-[#E5E5E5]">
               <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                <span className="w-10 h-10 bg-[#6366F1] rounded-xl flex items-center justify-center">
+                <span className="w-10 h-10 bg-[#0A0A0A] rounded-xl flex items-center justify-center">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
@@ -198,7 +198,7 @@ export default function GuidePage({ params }: Props) {
                   >
                     <summary className="p-5 cursor-pointer font-semibold flex items-center justify-between hover:bg-[#F5F5F5] transition-colors">
                       <span className="flex items-center gap-3">
-                        <span className="w-8 h-8 bg-[#F5F5F5] rounded-lg flex items-center justify-center text-[#6366F1] font-bold text-sm group-open:bg-[#6366F1] group-open:text-white transition-colors">
+                        <span className="w-8 h-8 bg-[#F5F5F5] rounded-lg flex items-center justify-center text-[#0A0A0A] font-bold text-sm group-open:bg-[#0A0A0A] group-open:text-white transition-colors">
                           Q
                         </span>
                         {faq.question}
@@ -209,7 +209,7 @@ export default function GuidePage({ params }: Props) {
                     </summary>
                     <div className="px-5 pb-5 pt-2 text-[#525252] border-t border-[#E5E5E5]">
                       <div className="flex gap-3">
-                        <span className="w-8 h-8 bg-[#10B981]/10 rounded-lg flex items-center justify-center text-[#10B981] font-bold text-sm flex-shrink-0">
+                        <span className="w-8 h-8 bg-[#0A0A0A]/10 rounded-lg flex items-center justify-center text-[#0A0A0A] font-bold text-sm flex-shrink-0">
                           A
                         </span>
                         <p>{faq.answer}</p>
@@ -232,13 +232,13 @@ export default function GuidePage({ params }: Props) {
                     href={article.href}
                     className="card group p-5 flex items-center gap-4"
                   >
-                    <div className="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center group-hover:bg-[#6366F1] transition-colors">
+                    <div className="w-12 h-12 bg-[#F5F5F5] rounded-xl flex items-center justify-center group-hover:bg-[#0A0A0A] transition-colors">
                       <svg className="w-6 h-6 text-[#64748B] group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold group-hover:text-[#6366F1] transition-colors">{article.title}</h3>
+                      <h3 className="font-semibold group-hover:text-[#0A0A0A] transition-colors">{article.title}</h3>
                       <p className="text-sm text-[#64748B]">{article.description}</p>
                     </div>
                     <svg className="w-5 h-5 text-[#64748B] group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,21 +250,43 @@ export default function GuidePage({ params }: Props) {
             </section>
           )}
 
-          {/* CTA */}
-          <section className="mt-16 p-8 bg-gradient-to-br from-[#0A0A0A] to-[#1a1a1a] rounded-2xl text-center relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#6366F1]/10 rounded-full blur-3xl" />
-            <div className="relative z-10">
-              <h2 className="text-2xl font-bold text-white mb-4">もっと学びたい方へ</h2>
-              <p className="text-white/70 mb-6">全ての記事を無料で公開しています</p>
-              <Link
-                href="/knowledge"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#0A0A0A] font-semibold rounded-xl hover:bg-white/90 transition-colors"
-              >
-                記事一覧を見る
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
+          {/* 書籍CTA */}
+          <section className="mt-16 p-8 bg-[#0A0A0A] rounded-2xl relative overflow-hidden">
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+              {/* Book mockup */}
+              <div className="flex-shrink-0">
+                <div className="w-28 h-36 bg-[#0A0A0A] rounded-lg shadow-xl flex items-center justify-center">
+                  <div className="text-center text-white p-2">
+                    <div className="text-[8px] font-bold mb-1 opacity-80">AI道場</div>
+                    <div className="text-sm font-bold leading-tight">Vibe Coding<br/>入門</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 text-center md:text-left">
+                <h2 className="text-xl font-bold text-white mb-2">体系的に学ぶなら書籍版</h2>
+                <p className="text-white/60 text-sm mb-4">
+                  51本の記事を1冊に凝縮。順番に読むだけで効率的に学べる構成になっています。
+                </p>
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                  <Link
+                    href="/books/vibe-coding"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#0A0A0A] font-semibold rounded-xl hover:bg-white/90 transition-colors"
+                  >
+                    書籍を見る（¥1,980）
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                  <Link
+                    href="/knowledge"
+                    className="text-white/60 hover:text-white text-sm transition-colors"
+                  >
+                    個別記事を読む →
+                  </Link>
+                </div>
+              </div>
             </div>
           </section>
         </div>

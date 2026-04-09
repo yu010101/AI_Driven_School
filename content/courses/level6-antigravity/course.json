@@ -1,0 +1,10 @@
+{
+  "id": "level6-antigravity",
+  "title": "Antigravity — スキルをどこでも使う",
+  "description": "Claude Code・Cursor・Gemini CLI。作ったスキルはどのAI IDEでも動く。マルチIDE時代の設計術。",
+  "emoji": "",
+  "level": 6,
+  "totalLessons": 3,
+  "estimatedMinutes": 15,
+  "certification": "Agent Skills"
+}

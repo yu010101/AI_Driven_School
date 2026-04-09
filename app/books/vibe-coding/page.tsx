@@ -4,11 +4,11 @@ import type { Metadata } from 'next'
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://ai-driven-school.vercel.app'
 
 export const metadata: Metadata = {
-  title: 'Vibe Coding入門 - AIと一緒にアプリを作る新時代の開発手法 | AI駆動塾',
+  title: 'Vibe Coding入門 - AIと一緒にアプリを作る新時代の開発手法',
   description: '非エンジニアでもAIでアプリが作れる。12種のAIツール解説、21種のチュートリアル、プロンプト50選を収録した200ページの完全ガイド。',
   openGraph: {
     type: 'website',
-    title: 'Vibe Coding入門 | AI駆動塾',
+    title: 'Vibe Coding入門',
     description: '非エンジニアでもAIでアプリが作れる完全ガイド',
     url: `${baseUrl}/books/vibe-coding`,
   },
@@ -98,22 +98,22 @@ const tableOfContents = [
 
 const features = [
   {
-    icon: '🛠️',
+    icon: '',
     title: '12種のAIツール完全網羅',
     description: 'Cursor、Claude Code、Copilot、Bolt.newなど主要ツールをすべて解説',
   },
   {
-    icon: '📚',
+    icon: '',
     title: '21種のチュートリアル',
     description: 'ToDoアプリからSaaS MVPまで、実際に手を動かしながら学べる',
   },
   {
-    icon: '📝',
+    icon: '',
     title: 'プロンプト50選',
     description: 'コピペですぐに使える実践的なプロンプトテンプレート集',
   },
   {
-    icon: '🎯',
+    icon: '',
     title: '初心者でも30分で',
     description: '最初のアプリを30分で作れるステップバイステップガイド',
   },
@@ -146,20 +146,20 @@ export default function VibeCodingBookPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-primary/5 to-transparent py-20">
+      <section className="bg-primary/5 py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             {/* Book Cover */}
             <div className="flex justify-center">
               <div className="relative">
-                <div className="w-64 h-80 bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-lg shadow-2xl flex items-center justify-center p-8 relative overflow-hidden transform hover:scale-105 transition-transform">
+                <div className="w-64 h-80 bg-primary rounded-lg shadow-2xl flex items-center justify-center p-8 relative overflow-hidden transform hover:scale-105 transition-transform">
                   <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-6 left-6 w-24 h-24 border-2 border-white/30 rounded-full" />
                     <div className="absolute bottom-10 right-6 w-36 h-36 border-2 border-white/20 rounded-full" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-white/10 rounded-full" />
                   </div>
                   <div className="text-center text-white relative z-10">
-                    <p className="text-xs opacity-70 mb-3 tracking-wider">AI駆動塾</p>
+                    <p className="text-xs opacity-70 mb-3 tracking-wider">AI道場</p>
                     <h2 className="font-bold text-2xl leading-tight mb-2">Vibe Coding</h2>
                     <h2 className="font-bold text-2xl leading-tight">入門</h2>
                     <div className="w-12 h-0.5 bg-white/30 mx-auto my-4" />
@@ -311,7 +311,7 @@ export default function VibeCodingBookPage() {
       </section>
 
       {/* Sample Chapter CTA */}
-      <section className="py-20 bg-gradient-to-r from-accent/5 to-accent-secondary/5">
+      <section className="py-20 bg-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl font-bold mb-4">まずは無料で試してみる</h2>
@@ -378,17 +378,26 @@ export default function VibeCodingBookPage() {
                 ))}
               </ul>
 
+              {/* Gumroad埋め込みボタン（将来的にStripeに移行可能） */}
               <a
-                href="https://note.com/l_mrk"
+                href="https://because01.gumroad.com/l/vibe-coding"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full bg-white text-primary font-bold py-4 px-8 rounded-lg hover:bg-white/90 transition-colors"
+                className="gumroad-button block w-full bg-white text-primary font-bold py-4 px-8 rounded-lg hover:bg-white/90 transition-colors mb-4"
               >
-                noteで購入する
+                購入する（Gumroad）
               </a>
-              <p className="text-white/50 text-xs mt-4">
-                ※ 決済はnoteのシステムを使用します
-              </p>
+
+              <div className="flex items-center gap-3 justify-center text-white/50 text-xs">
+                <span className="flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  安全な決済
+                </span>
+                <span>|</span>
+                <span>クレジットカード対応</span>
+              </div>
             </div>
 
             <p className="text-white/50 text-sm">

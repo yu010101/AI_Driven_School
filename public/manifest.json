@@ -1,6 +1,6 @@
 {
-  "name": "AI駆動塾",
-  "short_name": "AI駆動塾",
+  "name": "AI道場",
+  "short_name": "AI道場",
   "description": "バイブコーディング × 個人開発 × 0円マーケ ── 実践知を体系化した知識データベース",
   "start_url": "/",
   "display": "standalone",

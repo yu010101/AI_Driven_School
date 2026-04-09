@@ -1,0 +1,10 @@
+{
+  "id": "level9-enterprise",
+  "title": "エンタープライズ — チーム導入と運用",
+  "description": "GitHub Actions、セキュリティ、サンドボックス、Channels。企業でClaude Codeを安全に運用する方法。",
+  "emoji": "",
+  "level": 9,
+  "totalLessons": 4,
+  "estimatedMinutes": 20,
+  "certification": "Claude Code in Action + MCP Advanced"
+}

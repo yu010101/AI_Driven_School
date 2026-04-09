@@ -8,16 +8,16 @@ import { Footer } from '@/components/layout/Footer'
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
-const siteName = 'AI Driven School'
+const siteName = 'AI道場'
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: '非エンジニアでも「作れて・動いて・売れる」をAIで実現 | AI Driven School',
-    template: '%s | AI Driven School',
+    default: 'AIで業務を自動化する実践スキルを身につける | AI道場',
+    template: '%s | AI道場',
   },
-  description: 'バイブコーディング × 個人開発 × 0円マーケ ── 実践知を体系化した知識データベース',
-  keywords: ['バイブコーディング', 'AI', '個人開発', 'ノーコード', '0円マーケティング', '非エンジニア', 'アプリ開発'],
+  description: 'コピペ1行から始める。Anthropic公式認定も取れる。議事録・メール・データ分析、実務で使えるAIスキルを無料で学べます。',
+  keywords: ['AI道場', 'Claude Code', 'AI研修', '資格', 'Anthropic認定', 'AI自動化', '業務効率化'],
   authors: [{ name: siteName }],
   creator: siteName,
   publisher: siteName,
@@ -41,21 +41,21 @@ export const metadata: Metadata = {
     locale: 'ja_JP',
     url: baseUrl,
     siteName: siteName,
-    title: '非エンジニアでも「作れて・動いて・売れる」をAIで実現',
-    description: 'バイブコーディング × 個人開発 × 0円マーケ ── 実践知を体系化した知識データベース',
+    title: 'AIで業務を自動化する実践スキルを身につける',
+    description: 'コピペ1行から始める。Anthropic公式認定も取れる。議事録・メール・データ分析、実務で使えるAIスキルを無料で学べます。',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AI駆動塾 - VIBE_CODING x BUILD x MARKETING',
+        alt: 'AI道場 - VIBE_CODING x BUILD x MARKETING',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: '非エンジニアでも「作れて・動いて・売れる」をAIで実現',
-    description: 'バイブコーディング × 個人開発 × 0円マーケ ── 実践知を体系化した知識データベース',
+    title: 'AIで業務を自動化する実践スキルを身につける',
+    description: 'コピペ1行から始める。Anthropic公式認定も取れる。議事録・メール・データ分析、実務で使えるAIスキルを無料で学べます。',
     images: ['/og-image.png'],
   },
   robots: {
@@ -136,7 +136,7 @@ const jsonLd = {
       '@type': 'WebPage',
       '@id': `${baseUrl}/#webpage`,
       url: baseUrl,
-      name: '非エンジニアでも「作れて・動いて・売れる」をAIで実現 | AI Driven School',
+      name: '非エンジニアでも「作れて・動いて・売れる」をAIで実現',
       isPartOf: {
         '@id': `${baseUrl}/#website`,
       },
@@ -168,7 +168,7 @@ const jsonLd = {
     {
       '@type': 'Course',
       '@id': `${baseUrl}/#course`,
-      name: 'AI駆動開発マスターコース',
+      name: 'AI活用マスターコース',
       description: '非エンジニアでもAIを使ってアプリを作り、売る方法を体系的に学べる無料コース',
       provider: {
         '@id': `${baseUrl}/#organization`,
@@ -206,7 +206,7 @@ const jsonLd = {
     {
       '@type': 'Person',
       '@id': `${baseUrl}/#author`,
-      name: 'AI駆動塾',
+      name: 'AI道場',
       url: 'https://x.com/L_go_mrk',
       sameAs: [
         'https://x.com/L_go_mrk',

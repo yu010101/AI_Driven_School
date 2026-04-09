@@ -6,17 +6,17 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 export const metadata: Metadata = {
   title: 'タグ一覧',
-  description: 'AI駆動塾の記事をタグから探す。バイブコーディング、AI開発、0円マーケティングなどのタグから興味のある記事を見つけられます。',
+  description: 'AI道場の記事をタグから探す。バイブコーディング、AI開発、0円マーケティングなどのタグから興味のある記事を見つけられます。',
   openGraph: {
     type: 'website',
-    title: 'タグ一覧 | AI駆動塾',
-    description: 'AI駆動塾の記事をタグから探す',
+    title: 'タグ一覧',
+    description: 'AI道場の記事をタグから探す',
     url: `${baseUrl}/tags`,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'タグ一覧 | AI駆動塾',
-    description: 'AI駆動塾の記事をタグから探す',
+    title: 'タグ一覧',
+    description: 'AI道場の記事をタグから探す',
   },
   alternates: {
     canonical: `${baseUrl}/tags`,
@@ -43,13 +43,13 @@ export default function TagsPage() {
     '@type': 'CollectionPage',
     '@id': `${baseUrl}/tags#webpage`,
     name: 'タグ一覧',
-    description: 'AI駆動塾の記事をタグから探す',
+    description: 'AI道場の記事をタグから探す',
     url: `${baseUrl}/tags`,
     inLanguage: 'ja',
     isPartOf: {
       '@type': 'WebSite',
       '@id': `${baseUrl}/#website`,
-      name: 'AI Driven School',
+      name: 'AI道場',
       url: baseUrl,
     },
     mainEntity: {

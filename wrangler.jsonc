@@ -1,0 +1,20 @@
+{
+  "name": "ai-driven-school",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2024-09-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ai-dojo",
+      "database_id": "53982bf7-6892-4eed-8b20-ddfcba4b9233"
+    }
+  ],
+  "vars": {
+    "JWT_SECRET": "d7c904899f4ebae2e3e8c9ee26911773e7f0bafa4e01f7e97d5315056955fe7e"
+  }
+}

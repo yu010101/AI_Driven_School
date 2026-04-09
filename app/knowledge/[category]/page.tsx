@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { getAllArticles, type Category } from '@/lib/mdx'
 import type { Metadata } from 'next'
 
-const categories: Category[] = ['vibe-coding', 'build', 'marketing', 'sales']
+const categories: Category[] = ['vibe-coding', 'claude-code', 'build', 'marketing', 'sales']
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 const categoryData: Record<Category, { name: string; description: string; step: string; longDescription: string }> = {
@@ -12,6 +12,12 @@ const categoryData: Record<Category, { name: string; description: string; step: 
     description: 'AIに指示を出すだけでアプリが作れる開発手法',
     longDescription: 'バイブコーディングとは、AIに指示を出すだけでアプリが作れる開発手法です。コードが書けなくても、ChatGPTやCursorを使って本格的なアプリを作る方法を解説します。',
     step: '1. 作る',
+  },
+  'claude-code': {
+    name: 'Claude Code完全攻略',
+    description: 'Anthropic公式AIエディタを使いこなす',
+    longDescription: 'Claude Code（クロードコード）は、Anthropicが提供する公式AIコーディングツール。日本語で最も詳しい実践ガイドとして、入門から応用まで徹底解説します。',
+    step: 'SPECIAL',
   },
   'build': {
     name: '実装パターン',
@@ -54,13 +60,13 @@ export async function generateMetadata({
     description: data.longDescription,
     openGraph: {
       type: 'website',
-      title: `${data.name} | AI駆動塾`,
+      title: `${data.name}`,
       description: data.longDescription,
       url: categoryUrl,
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${data.name} | AI駆動塾`,
+      title: `${data.name}`,
       description: data.longDescription,
     },
     alternates: {
@@ -99,7 +105,7 @@ export default function CategoryPage({
     isPartOf: {
       '@type': 'WebSite',
       '@id': `${baseUrl}/#website`,
-      name: 'AI Driven School',
+      name: 'AI道場',
       url: baseUrl,
     },
     about: {

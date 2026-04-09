@@ -7,6 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 const categoryNames: Record<Category, string> = {
   'vibe-coding': 'バイブコーディング',
+  'claude-code': 'Claude Code攻略',
   'build': '実装パターン',
   'marketing': '0円マーケティング',
   'sales': '営業・収益化',
@@ -42,20 +43,20 @@ export async function generateMetadata({
   }
 
   const tagUrl = `${baseUrl}/tags/${encodeURIComponent(tag)}`
-  const description = `「${tag}」タグが付いた記事一覧（${taggedArticles.length}件）。AI駆動塾でバイブコーディング、個人開発、0円マーケティングを学ぶ。`
+  const description = `「${tag}」タグが付いた記事一覧（${taggedArticles.length}件）。AI道場でバイブコーディング、個人開発、0円マーケティングを学ぶ。`
 
   return {
     title: `#${tag}`,
     description,
     openGraph: {
       type: 'website',
-      title: `#${tag} | AI駆動塾`,
+      title: `#${tag}`,
       description,
       url: tagUrl,
     },
     twitter: {
       card: 'summary_large_image',
-      title: `#${tag} | AI駆動塾`,
+      title: `#${tag}`,
       description,
     },
     alternates: {
@@ -93,7 +94,7 @@ export default function TagPage({
     isPartOf: {
       '@type': 'WebSite',
       '@id': `${baseUrl}/#website`,
-      name: 'AI Driven School',
+      name: 'AI道場',
       url: baseUrl,
     },
     about: {

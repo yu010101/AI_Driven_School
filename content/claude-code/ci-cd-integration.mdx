@@ -1,0 +1,341 @@
+---
+title: "CI/CDとの連携【Claude Codeを自動化パイプラインに組み込む】"
+description: "Claude CodeをGitHub Actions等のCI/CDパイプラインに組み込む方法。自動コードレビュー、PR作成の自動化を実現。"
+tags: ["Claude Code", "CI/CD", "GitHub Actions", "自動化", "応用"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code CI/CD Integration"
+    url: "https://docs.anthropic.com/en/docs/claude-code/ci-cd"
+    author: "Anthropic"
+---
+
+## なぜCI/CDと連携するのか
+
+Claude CodeをCI/CDパイプラインに組み込むことで:
+
+- **自動コードレビュー**: PRが作成されたら自動でレビュー
+- **自動修正**: リントエラーを自動で修正してコミット
+- **ドキュメント生成**: コード変更に応じてドキュメントを自動更新
+- **テスト生成**: 新しいコードに対してテストを自動生成
+
+## GitHub Actionsでの利用
+
+### 基本セットアップ
+
+`.github/workflows/claude-review.yml`:
+
+```yaml
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run Claude Review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "このPRの変更をレビューして。問題点があれば指摘して。" > review.md
+
+      - name: Post Review Comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('review.md', 'utf8');
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: review
+            });
+```
+
+### シークレットの設定
+
+1. リポジトリの Settings → Secrets and variables → Actions
+2. `ANTHROPIC_API_KEY` を追加
+
+## 実践パターン
+
+### パターン1: 自動コードレビュー
+
+```yaml
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 差分取得のため
+
+      - name: Get Changed Files
+        id: changes
+        run: |
+          echo "files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Setup Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Review Changes
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "以下のファイルの変更をレビューして:
+          ${{ steps.changes.outputs.files }}
+
+          チェック項目:
+          - セキュリティ脆弱性
+          - パフォーマンス問題
+          - コードスタイル
+          - テストの有無
+
+          問題があれば具体的に指摘して。" > review.md
+
+      - name: Post Review
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('review.md', 'utf8');
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `## 🤖 AI Code Review\n\n${review}`
+            });
+```
+
+### パターン2: 自動修正PR作成
+
+```yaml
+name: Auto Fix
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  auto-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          npm install
+
+      - name: Run Lint and Get Errors
+        id: lint
+        run: |
+          npm run lint 2>&1 | tee lint-output.txt || true
+
+      - name: Fix with Claude
+        if: failure()
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "以下のリントエラーを修正して:
+          $(cat lint-output.txt)
+
+          ファイルを直接編集して。"
+
+      - name: Create Fix PR
+        if: failure()
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "fix: auto-fix lint errors"
+          title: "🤖 Auto-fix: Lint errors"
+          body: "This PR was automatically created by Claude Code to fix lint errors."
+          branch: auto-fix/lint-errors
+```
+
+### パターン3: ドキュメント自動生成
+
+```yaml
+name: Update Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**/*.ts'
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Generate API Docs
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "src/api/ 以下のファイルを読んで、
+          API仕様書を docs/api.md に生成して。
+
+          含めるべき情報:
+          - エンドポイント一覧
+          - リクエスト/レスポンス形式
+          - 認証方法
+          - エラーコード"
+
+      - name: Commit and Push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --staged --quiet || git commit -m "docs: update API documentation"
+          git push
+```
+
+### パターン4: テスト自動生成
+
+```yaml
+name: Generate Tests
+
+on:
+  pull_request:
+    types: [opened]
+    paths:
+      - 'src/**/*.ts'
+      - '!src/**/*.test.ts'
+
+jobs:
+  generate-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get New Files
+        id: new-files
+        run: |
+          echo "files=$(git diff --name-only --diff-filter=A origin/${{ github.base_ref }}...HEAD | grep -E '\.ts$' | grep -v '\.test\.ts$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+      - name: Generate Tests with Claude
+        if: steps.new-files.outputs.files != ''
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude -p "以下の新規ファイルのユニットテストを生成して:
+          ${{ steps.new-files.outputs.files }}
+
+          テストフレームワーク: Jest
+          カバレッジ目標: 主要な関数をカバー"
+
+      - name: Create Test PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "test: add tests for new files"
+          title: "🧪 Auto-generated tests"
+          body: "Tests automatically generated by Claude Code for new files."
+          branch: auto/add-tests
+```
+
+## セキュリティ考慮事項
+
+### 1. APIキーの保護
+
+```yaml
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+```
+
+**絶対にコードにハードコードしない**
+
+### 2. 権限の最小化
+
+```yaml
+permissions:
+  contents: read
+  pull-requests: write
+```
+
+必要最小限の権限のみ付与。
+
+### 3. フォークからのPRに注意
+
+```yaml
+on:
+  pull_request_target:  # フォークからのPRでもシークレットにアクセス可能
+```
+
+フォークからのPRでシークレットを使う場合は、悪意のあるコード実行に注意。
+
+### 4. 出力の検証
+
+```yaml
+- name: Validate Claude Output
+  run: |
+    # 危険なコマンドが含まれていないか確認
+    if grep -E 'rm -rf|curl.*\|.*sh' review.md; then
+      echo "Dangerous command detected"
+      exit 1
+    fi
+```
+
+## コスト管理
+
+### 実行条件を絞る
+
+```yaml
+on:
+  pull_request:
+    paths:
+      - 'src/**'  # srcの変更時のみ
+    branches:
+      - main      # mainへのPRのみ
+```
+
+### キャッシュの活用
+
+```yaml
+- name: Cache Claude responses
+  uses: actions/cache@v4
+  with:
+    path: ~/.claude/cache
+    key: claude-${{ hashFiles('src/**') }}
+```
+
+## 次のステップ
+
+CI/CD連携をマスターしました！
+
+これでClaude Code応用編は完了です。次は、他のツールとの比較を見てみましょう。
+
+→ [Claude Code vs Cursor 徹底比較](/knowledge/claude-code/claude-code-vs-cursor)
+
+## まとめ
+
+- Claude CodeはCI/CDパイプラインに組み込める
+- GitHub Actionsで自動レビュー、修正、ドキュメント生成
+- APIキーはSecretsで管理
+- 権限は最小限に
+- 実行条件を絞ってコスト管理
+- フォークからのPRには注意

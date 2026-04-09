@@ -16,13 +16,13 @@
   --primary-light: #F5F5F5;
 
   /* Accent Colors - Multi-layer */
-  --accent: #6366F1;
-  --accent-light: #EEF2FF;
-  --accent-secondary: #06B6D4;
-  --accent-tertiary: #F97316;
+  --accent: #0A0A0A;
+  --accent-light: #F5F5F5;
+  --accent-secondary: #0A0A0A;
+  --accent-tertiary: #0A0A0A;
 
   /* Semantic Colors */
-  --success: #10B981;
+  --success: #0A0A0A;
   --warning: #F59E0B;
   --error: #EF4444;
   --info: #3B82F6;
@@ -41,12 +41,33 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* ==============================
+     DOJO Theme — 道場サブブランド
+     ============================== */
+  --dojo-ink: #1a1a2e;
+  /* accent (was vermillion, now black for unified palette) */
+  --dojo-vermillion: #0A0A0A;
+  --dojo-vermillion-dark: #000000;
+  --dojo-vermillion-light: #F5F5F5;
+  --dojo-surface: #FAFAFA;
+  --dojo-surface-warm: #FAFAFA;
+  --dojo-text: #1a1a2e;
+  --dojo-text-muted: #6B6B7B;
+  --dojo-terminal-bg: #1a1b26;
+  --dojo-terminal-fg: #a9b1d6;
+  --dojo-terminal-header: #13141f;
+  --dojo-success: #2D8B6F;
+  --dojo-hint: #C4963A;
+  --dojo-border: #E8E6E1;
+  --dojo-glow: rgba(10, 10, 10, 0.08);
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 450;
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
@@ -60,16 +81,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 /* ===============================
    Keyframe Animations
    =============================== */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -1000px 0; }
-  100% { background-position: 1000px 0; }
-}
-
 @keyframes slideInUp {
   from {
     opacity: 0;
@@ -81,64 +92,14 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-  50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-}
-
-@keyframes ripple {
-  to {
-    width: 300px;
-    height: 300px;
-    opacity: 0;
-  }
-}
-
-@keyframes blob-move {
-  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  33% { transform: translate(30px, -20px) rotate(120deg) scale(1.1); }
-  66% { transform: translate(-20px, 20px) rotate(240deg) scale(0.9); }
-}
-
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes underline-expand {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
 /* ===============================
    Animation Utilities
    =============================== */
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  animation: shimmer 2s infinite linear;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  background-size: 1000px 100%;
-}
-
 .animate-slideInUp {
   animation: slideInUp 0.6s ease-out forwards;
 }
@@ -147,21 +108,8 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
-.animate-blob {
-  animation: blob-move 7s ease-in-out infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-}
-
 /* Staggered Animation Delays */
-.delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
 
 @layer components {
   /* ===============================
@@ -173,7 +121,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     border-radius: 20px;
     padding: 1.5rem;
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 2px 8px var(--glow-primary);
+    box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
   }
@@ -185,7 +133,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-secondary), var(--accent-tertiary));
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -193,8 +141,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
   .card:hover {
     border-color: var(--accent);
-    box-shadow: 0 20px 40px var(--glow-accent);
-    transform: translateY(-4px) scale(1.01);
+    box-shadow: var(--shadow-md);
   }
 
   .card:hover::before {
@@ -217,15 +164,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     letter-spacing: -0.03em;
   }
 
-  .page-title-accent {
-    @apply text-3xl md:text-4xl font-bold mb-4;
-    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
-    background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
   .section-heading-center {
     @apply text-xl md:text-2xl font-bold mb-2;
     font-family: 'Outfit', 'Noto Sans JP', sans-serif;
@@ -242,115 +180,39 @@ h1, h2, h3, h4, h5, h6, .font-heading {
      =============================== */
   .step-badge {
     @apply inline-block px-4 py-1.5 text-xs font-bold mb-3;
-    background: linear-gradient(135deg, var(--primary), #1a1a1a);
+    background: var(--primary);
     color: white;
     border-radius: 100px;
-    box-shadow: 0 2px 8px var(--glow-primary);
-  }
-
-  .badge-glow {
-    @apply inline-flex items-center gap-2 px-4 py-2;
-    background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-    backdrop-filter: blur(12px);
-    border-radius: 100px;
-    border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
-    transition: all 0.3s ease;
-  }
-
-  .badge-glow:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
-    transform: translateY(-1px);
-  }
-
-  /* Category Badges */
-  .badge-vibe-coding {
-    background: rgba(99, 102, 241, 0.1);
-    color: var(--accent);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-  }
-
-  .badge-build {
-    background: rgba(6, 182, 212, 0.1);
-    color: var(--accent-secondary);
-    border: 1px solid rgba(6, 182, 212, 0.2);
-  }
-
-  .badge-marketing {
-    background: rgba(249, 115, 22, 0.1);
-    color: var(--accent-tertiary);
-    border: 1px solid rgba(249, 115, 22, 0.2);
+    box-shadow: var(--shadow-sm);
   }
 
   /* ===============================
-     Buttons - Enhanced with Ripple
+     Buttons — 3種のみ
      =============================== */
   .btn-primary {
     @apply px-6 py-3 font-semibold text-sm;
     background: var(--primary);
     color: white;
-    border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 10px;
+    transition: opacity 0.2s ease;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .btn-primary:active::before {
-    animation: ripple 0.6s ease-out;
   }
 
   .btn-primary:hover {
-    background: #1a1a1a;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 24px var(--glow-primary);
+    opacity: 0.85;
   }
 
   .btn-cta {
     @apply px-6 py-3 font-semibold text-sm;
-    background: linear-gradient(135deg, var(--accent), #818CF8);
+    background: var(--primary);
     color: white;
-    border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 10px;
+    transition: opacity 0.2s ease;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px var(--glow-accent);
-  }
-
-  .btn-cta::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.4);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  .btn-cta:active::before {
-    animation: ripple 0.6s ease-out;
   }
 
   .btn-cta:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 16px 32px var(--glow-accent);
+    opacity: 0.85;
   }
 
   .btn-secondary {
@@ -358,16 +220,13 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     background: var(--surface);
     color: var(--foreground);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-radius: 10px;
+    transition: border-color 0.2s ease;
     cursor: pointer;
   }
 
   .btn-secondary:hover {
     border-color: var(--primary);
-    background: var(--primary-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px var(--glow-primary);
   }
 
   /* ===============================
@@ -385,7 +244,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+    background: var(--accent);
     border-radius: 2px;
     transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
@@ -396,119 +255,11 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   }
 
   /* ===============================
-     Icon Container
-     =============================== */
-  .icon-container {
-    @apply w-12 h-12 rounded-xl flex items-center justify-center;
-    background: linear-gradient(135deg, var(--primary), #1a1a1a);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 12px var(--glow-primary);
-  }
-
-  .icon-container:hover,
-  .group:hover .icon-container {
-    transform: scale(1.15) rotate(5deg);
-    box-shadow: 0 8px 20px var(--glow-accent);
-    background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  }
-
-  /* ===============================
-     Backgrounds & Textures
-     =============================== */
-  .bg-grain {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.03;
-  }
-
-  .bg-dots {
-    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  .bg-grid {
-    background-image:
-      linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
-  /* Blob Background */
-  .blob-glow {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .blob-glow::before,
-  .blob-glow::after {
-    content: '';
-    position: absolute;
-    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-    filter: blur(60px);
-    animation: blob-move 8s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  .blob-glow::before {
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(6, 182, 212, 0.15));
-    top: -100px;
-    left: -50px;
-  }
-
-  .blob-glow::after {
-    width: 250px;
-    height: 250px;
-    background: linear-gradient(135deg, rgba(249, 115, 22, 0.12), rgba(99, 102, 241, 0.1));
-    bottom: -80px;
-    right: -80px;
-    animation-delay: 3s;
-  }
-
-  /* Gradient Backgrounds */
-  .gradient-radial {
-    background: radial-gradient(
-      ellipse 80% 80% at 50% 0%,
-      rgba(99, 102, 241, 0.12) 0%,
-      transparent 100%
-    );
-  }
-
-  .gradient-mesh {
-    background:
-      radial-gradient(at 40% 20%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, rgba(6, 182, 212, 0.08) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, rgba(249, 115, 22, 0.06) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
-  }
-
-  /* Glow Effects */
-  .glow-primary {
-    box-shadow:
-      0 0 40px 0 rgba(99, 102, 241, 0.15),
-      0 0 80px 0 rgba(99, 102, 241, 0.08);
-  }
-
-  .glow-accent {
-    box-shadow:
-      0 0 60px 0 rgba(6, 182, 212, 0.2),
-      0 0 100px 0 rgba(6, 182, 212, 0.1);
-  }
-
-  /* ===============================
-     Progress Bar - Enhanced
+     Progress Bar
      =============================== */
   .progress-bar {
     height: 3px;
-    background: linear-gradient(90deg,
-      var(--accent),
-      var(--accent-secondary),
-      var(--accent-tertiary)
-    );
-    background-size: 200% 100%;
-    animation: gradient-shift 2s ease infinite;
-    box-shadow: 0 0 10px var(--glow-accent);
+    background: var(--accent);
     border-radius: 0 2px 2px 0;
   }
 }
@@ -613,7 +364,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   margin: 1.5rem 0;
   font-size: 0.9rem;
   line-height: 1.6;
-  box-shadow: 0 4px 20px var(--glow-primary);
+  box-shadow: var(--shadow-lg);
 }
 
 .prose pre code {
@@ -649,7 +400,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 
 /* 引用 */
 .prose blockquote {
-  background: linear-gradient(135deg, var(--primary-light), rgba(99, 102, 241, 0.05));
+  background: var(--primary-light);
   border-left: 4px solid var(--accent);
   padding: 1rem 1.5rem;
   margin: 1.5rem 0;
@@ -675,7 +426,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   font-size: 0.95rem;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px var(--glow-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .prose th,
@@ -686,7 +437,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 .prose th {
-  background: linear-gradient(135deg, var(--primary), #1a1a1a);
+  background: var(--primary);
   color: white;
   font-weight: 600;
 }
@@ -699,7 +450,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .prose hr {
   border: none;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  background: var(--border);
   margin: 3rem 0;
 }
 
@@ -707,7 +458,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 .prose img {
   border-radius: 16px;
   margin: 1.5rem 0;
-  box-shadow: 0 4px 20px var(--glow-primary);
+  box-shadow: var(--shadow-md);
 }
 
 /* ===============================
@@ -737,12 +488,12 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--border), var(--foreground-muted));
+  background: var(--border);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--foreground-muted), var(--primary));
+  background: var(--foreground-muted);
 }
 
 /* アクセシビリティ */
@@ -775,6 +526,403 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+}
+
+/* ===============================
+   DOJO — 道場セクション専用
+   =============================== */
+
+/* 道場レイアウト背景 */
+.dojo-bg {
+  background: #FAFAFA;
+}
+
+/* 道場カード */
+.dojo-card {
+  background: var(--surface);
+  border: 2px solid var(--dojo-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-sm);
+}
+
+.dojo-card:hover {
+  border-color: var(--dojo-vermillion);
+  box-shadow: var(--shadow-md);
+}
+
+.dojo-card.completed {
+  border-color: var(--dojo-success);
+  background: #F0FAF6;
+}
+
+/* 道場バッジ */
+.dojo-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  background: var(--dojo-vermillion);
+  border-radius: 100px;
+}
+
+/* 道場ボタン */
+.dojo-btn-primary {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: white;
+  background: var(--dojo-vermillion);
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dojo-btn-primary:hover {
+  opacity: 0.85;
+}
+
+.dojo-btn-success {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  color: white;
+  background: var(--dojo-success);
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dojo-btn-success:hover {
+  opacity: 0.85;
+}
+
+/* 道場プログレスバー */
+.dojo-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--dojo-vermillion);
+  transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 道場タブ — アクティブ */
+.dojo-tab {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dojo-text-muted);
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.dojo-tab.active {
+  color: var(--dojo-vermillion);
+  border-bottom-color: var(--dojo-vermillion);
+}
+
+/* 道場ステップインジケーター */
+.dojo-step {
+  width: 2rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background: var(--dojo-border);
+  transition: background 0.3s ease;
+}
+
+.dojo-step.done {
+  background: var(--dojo-vermillion);
+}
+
+.dojo-step.current {
+  background: rgba(10, 10, 10, 0.4);
+}
+
+/* 道場ターミナルヘッダー */
+.dojo-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--dojo-terminal-header);
+  border-bottom: 1px solid #2a2b3d;
+}
+
+.dojo-terminal-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 9999px;
+}
+
+/* 道場 完了アニメーション */
+@keyframes dojoSuccess {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes dojoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--dojo-glow); }
+  50% { box-shadow: 0 0 0 12px transparent; }
+}
+
+.dojo-success-enter {
+  animation: dojoSuccess 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.dojo-pulse {
+  animation: dojoPulse 2s ease-in-out infinite;
+}
+
+@keyframes dojoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.dojo-float {
+  animation: dojoFloat 2s ease-in-out infinite;
+}
+
+/* スライド遷移アニメーション */
+@keyframes dojoSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes dojoSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+}
+
+.dojo-slide-enter {
+  animation: dojoSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Confetti パーティクル */
+@keyframes dojoConfetti {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-120px) rotate(720deg) scale(0);
+    opacity: 0;
+  }
+}
+
+.dojo-confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 60;
+}
+
+.dojo-confetti-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: dojoConfetti 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* 道場 Before/After図 */
+.dojo-before-after {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.dojo-ba-before {
+  flex: 1;
+  border-radius: 12px;
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  padding: 1rem;
+  text-align: center;
+}
+
+.dojo-ba-after {
+  flex: 1;
+  border-radius: 12px;
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  padding: 1rem;
+  text-align: center;
+}
+
+.dojo-ba-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.dojo-ba-before .dojo-ba-label { color: #f87171; }
+.dojo-ba-after .dojo-ba-label { color: #4ade80; }
+
+.dojo-ba-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.dojo-ba-before .dojo-ba-value { color: #dc2626; }
+.dojo-ba-after .dojo-ba-value { color: #16a34a; }
+
+.dojo-ba-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--dojo-vermillion);
+}
+
+/* 道場 フロー図 */
+.dojo-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1.5rem 0;
+}
+
+.dojo-flow-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--dojo-border);
+  padding: 0.625rem 1rem;
+  box-shadow: var(--shadow-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--dojo-text);
+  min-width: 200px;
+  justify-content: center;
+}
+
+.dojo-flow-arrow {
+  color: var(--dojo-vermillion);
+}
+
+/* 道場スライドコンテンツ */
+.dojo-slide-content code:not(pre code) {
+  background: var(--dojo-vermillion-light);
+  color: var(--dojo-vermillion);
+  padding: 0.2em 0.4em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-family: 'SF Mono', Consolas, monospace;
+}
+
+.dojo-slide-content pre {
+  background: var(--dojo-ink);
+  color: #e5e5e5;
+  padding: 1rem;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  box-shadow: var(--shadow-md);
+}
+
+.dojo-slide-content h2 {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--dojo-text);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--dojo-border);
+}
+
+.dojo-slide-content h3 {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--dojo-text);
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.dojo-slide-content p {
+  color: var(--dojo-text);
+  font-size: 0.925rem;
+  line-height: 1.9;
+  margin-bottom: 1.25rem;
+}
+
+.dojo-slide-content strong {
+  font-weight: 600;
+  color: var(--dojo-ink);
+}
+
+.dojo-slide-content li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.375rem;
+  color: var(--dojo-text);
+  font-size: 0.925rem;
+  line-height: 1.7;
+}
+
+.dojo-list-bullet {
+  color: var(--dojo-vermillion);
+  font-size: 0.5rem;
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* xterm.js overrides for dojo */
+.dojo-terminal-inner {
+  padding: 12px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.dojo-terminal .xterm-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dojo-terminal .xterm-viewport::-webkit-scrollbar-thumb {
+  background: #4a4e69;
+  border-radius: 3px;
+}
+
+/* Brand bridge — dojo accent in main site context */
+a[href="/dojo"],
+a[href^="/dojo/"] {
+  --link-accent: var(--dojo-vermillion);
+}
+
+.nav-link[href="/dojo"]::after {
+  background: var(--dojo-vermillion) !important;
+}
+
+.nav-link[href="/dojo"].active {
+  color: var(--dojo-vermillion) !important;
+  background: rgba(10, 10, 10, 0.05) !important;
 }
 
 /* アニメーション削減 */

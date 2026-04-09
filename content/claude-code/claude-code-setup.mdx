@@ -1,0 +1,242 @@
+---
+title: "Claude Codeインストールから最初のコマンドまで【完全ガイド】"
+description: "Claude Codeのインストール方法と初期設定を日本語で解説。Mac/Windows/Linux対応。5分で最初のコマンドを実行できます。"
+tags: ["Claude Code", "インストール", "セットアップ", "入門", "Mac", "Windows"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "Claude Code Installation"
+    url: "https://docs.anthropic.com/en/docs/claude-code/getting-started"
+    author: "Anthropic"
+---
+
+## 前提条件
+
+Claude Codeを使うには、以下が必要です。
+
+| 項目 | 必要なもの |
+|------|-----------|
+| OS | macOS, Windows, Linux |
+| Node.js | v18以上 |
+| アカウント | Anthropic API or Claude Pro/Team |
+
+## STEP 1: Node.jsのインストール
+
+まず、Node.jsがインストールされているか確認します。
+
+```bash
+node --version
+```
+
+`v18.0.0` 以上が表示されればOKです。
+
+### Node.jsが入っていない場合
+
+**Mac（Homebrewを使用）:**
+```bash
+brew install node
+```
+
+**Windows:**
+1. [Node.js公式サイト](https://nodejs.org/)にアクセス
+2. LTS版をダウンロード
+3. インストーラーを実行
+
+**Linux（Ubuntu）:**
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+## STEP 2: Claude Codeのインストール
+
+npmを使ってClaude Codeをグローバルインストールします。
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+インストール確認:
+```bash
+claude --version
+```
+
+バージョン番号が表示されれば成功です。
+
+## STEP 3: 認証設定
+
+Claude Codeを使うには、Anthropicアカウントでの認証が必要です。
+
+### 方法A: ブラウザ認証（推奨）
+
+```bash
+claude auth login
+```
+
+ブラウザが開くので、Anthropicアカウントでログインします。
+
+### 方法B: APIキー認証
+
+Anthropic ConsoleからAPIキーを取得し、環境変数に設定:
+
+```bash
+export ANTHROPIC_API_KEY="your-api-key-here"
+```
+
+永続化する場合は `.bashrc` や `.zshrc` に追加:
+
+```bash
+echo 'export ANTHROPIC_API_KEY="your-api-key-here"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+## STEP 4: 最初のコマンドを実行
+
+認証が完了したら、さっそくClaude Codeを使ってみましょう。
+
+### 簡単な質問をする
+
+```bash
+claude "Hello! What can you do?"
+```
+
+Claudeが自己紹介してくれます。
+
+### 日本語で使う
+
+```bash
+claude "こんにちは！何ができるか教えて"
+```
+
+日本語でも問題なく使えます。
+
+### プロジェクトで使う
+
+プロジェクトディレクトリに移動して起動:
+
+```bash
+cd ~/my-project
+claude
+```
+
+インタラクティブモードで起動し、プロジェクトのコンテキストを理解した状態で会話できます。
+
+## 便利な起動オプション
+
+### インタラクティブモード（デフォルト）
+
+```bash
+claude
+```
+
+対話形式で連続して指示を出せます。終了は `Ctrl+C` または `/exit`。
+
+### ワンショットモード
+
+```bash
+claude -p "このプロジェクトの構造を説明して"
+```
+
+1回の指示だけ実行して終了。スクリプトから使う時に便利。
+
+### 前回の会話を続ける
+
+```bash
+claude --continue
+```
+
+前回のセッションを再開できます。
+
+### 特定のセッションを再開
+
+```bash
+claude --resume
+```
+
+過去のセッション一覧から選んで再開。
+
+## 動作確認: ToDoアプリを作ってみる
+
+セットアップの確認として、簡単なアプリを作ってみましょう。
+
+```bash
+mkdir test-app && cd test-app
+claude
+```
+
+インタラクティブモードで以下を入力:
+
+```
+シンプルなToDoリストのHTMLファイルを作って。
+ローカルストレージに保存できるようにして。
+```
+
+Claudeが以下を行います:
+1. `index.html` ファイルを作成
+2. JavaScript込みのToDoアプリを実装
+3. 完成したファイルを保存
+
+作成されたファイルをブラウザで開いて動作確認:
+
+```bash
+open index.html  # Mac
+start index.html  # Windows
+```
+
+## トラブルシューティング
+
+### `command not found: claude`
+
+npm のグローバルパスが通っていない可能性があります。
+
+```bash
+npm config get prefix
+```
+
+表示されたパスを PATH に追加:
+
+```bash
+export PATH="$PATH:$(npm config get prefix)/bin"
+```
+
+### 認証エラー
+
+```bash
+claude auth logout
+claude auth login
+```
+
+再ログインを試してください。
+
+### Permission denied
+
+管理者権限でインストール:
+
+```bash
+sudo npm install -g @anthropic-ai/claude-code
+```
+
+### プロキシ環境下で使えない
+
+企業ネットワークなどでは、プロキシ設定が必要な場合があります:
+
+```bash
+export HTTP_PROXY="http://proxy.example.com:8080"
+export HTTPS_PROXY="http://proxy.example.com:8080"
+```
+
+## 次のステップ
+
+Claude Codeのセットアップが完了しました！
+
+次は、プロジェクトごとの設定ファイル「CLAUDE.md」の書き方を学びましょう。これをマスターすると、Claudeがあなたのプロジェクトをより深く理解してくれます。
+
+→ [CLAUDE.mdの書き方完全ガイド](/knowledge/claude-code/claude-md-guide)
+
+## まとめ
+
+- Node.js v18以上が必要
+- `npm install -g @anthropic-ai/claude-code` でインストール
+- `claude auth login` で認証
+- `claude` でインタラクティブモード起動
+- `-p` オプションでワンショット実行

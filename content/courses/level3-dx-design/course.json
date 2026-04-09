@@ -1,0 +1,10 @@
+{
+  "id": "level3-dx-design",
+  "title": "DX設計 — 中学生に30万払わなくていい",
+  "description": "MCP連携、チーム設定、経営ダッシュボード。自社のAI基盤を自分で作る。",
+  "emoji": "",
+  "level": 3,
+  "totalLessons": 5,
+  "estimatedMinutes": 30,
+  "certification": "MCP入門"
+}

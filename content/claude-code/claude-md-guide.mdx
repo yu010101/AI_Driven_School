@@ -1,0 +1,291 @@
+---
+title: "CLAUDE.mdの書き方完全ガイド【テンプレート付き】"
+description: "Claude Codeの設定ファイルCLAUDE.mdの書き方を徹底解説。書くべきこと・書くべきでないこと、実践的なテンプレートを公開。"
+tags: ["Claude Code", "CLAUDE.md", "設定", "テンプレート", "ベストプラクティス"]
+createdAt: "2025-01-23"
+updatedAt: "2025-01-23"
+references:
+  - title: "CLAUDE.md Best Practices"
+    url: "https://code.claude.com/docs/en/best-practices#claudemd-best-practices"
+    author: "Anthropic"
+---
+
+## CLAUDE.mdとは
+
+`CLAUDE.md` は、Claude Codeがプロジェクトを理解するための設定ファイルです。
+
+プロジェクトのルートに配置すると、Claude Codeを起動するたびに自動で読み込まれます。
+
+```
+my-project/
+├── CLAUDE.md          ← ここに配置
+├── src/
+├── package.json
+└── ...
+```
+
+## なぜCLAUDE.mdが重要か
+
+CLAUDE.mdを書くことで:
+
+1. **プロジェクト固有のルールを伝えられる**
+   - コーディング規約
+   - 使うべきライブラリ
+   - 避けるべきパターン
+
+2. **毎回の説明が不要になる**
+   - 「ESModuleを使って」と毎回言わなくていい
+   - プロジェクト構造を毎回説明しなくていい
+
+3. **Claudeの出力品質が上がる**
+   - プロジェクトに合ったコードを生成
+   - 既存コードとの一貫性が保たれる
+
+## 書くべきこと
+
+### 1. コーディング規約
+
+```markdown
+# コーディング規約
+
+- TypeScriptを使用（JavaScriptは使わない）
+- ESModules形式（import/export）を使用
+- 関数は極力アロー関数で書く
+- コンポーネントは関数コンポーネントのみ
+```
+
+### 2. プロジェクト構造の説明
+
+```markdown
+# プロジェクト構造
+
+- `src/components/` - UIコンポーネント
+- `src/hooks/` - カスタムフック
+- `src/lib/` - ユーティリティ関数
+- `src/types/` - 型定義
+```
+
+### 3. 使用技術・ライブラリ
+
+```markdown
+# 技術スタック
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Prisma (ORM)
+- Supabase (DB)
+```
+
+### 4. 開発ワークフロー
+
+```markdown
+# ワークフロー
+
+1. コード変更後は必ず `npm run typecheck` を実行
+2. テストは `npm test -- --watch=false` で単発実行
+3. PRを作る前に `npm run lint:fix` を実行
+```
+
+### 5. 禁止事項
+
+```markdown
+# 禁止事項
+
+- `any` 型は使用禁止
+- `console.log` は本番コードに残さない
+- `.env` ファイルは絶対にコミットしない
+```
+
+## 書くべきでないこと
+
+### NG: Claudeが推測できること
+
+```markdown
+# NG例
+- JavaScriptの変数はconstかletを使う
+- 関数には引数と戻り値を書く
+```
+
+これらは当たり前すぎて書く意味がありません。
+
+### NG: 長すぎる説明
+
+```markdown
+# NG例
+## プロジェクトの歴史
+このプロジェクトは2020年に始まり、当初はPHPで書かれていましたが...
+（500行続く）
+```
+
+CLAUDE.mdが長すぎると、Claudeが重要な情報を見落とします。
+
+### NG: APIドキュメント全文
+
+```markdown
+# NG例
+## Stripe API Reference
+createCustomer(params): Promise<Customer>
+  params.email: string (required)
+  params.name: string (optional)
+  ...（1000行続く）
+```
+
+→ 代わりにリンクを貼る: `Stripe API: https://stripe.com/docs`
+
+## 理想的な長さ
+
+**目安: 50行以内**
+
+Claudeは長いCLAUDE.mdを無視する傾向があります。
+
+重要なルールを厳選し、短く保ちましょう。
+
+## 実践テンプレート
+
+### Next.js プロジェクト用
+
+```markdown
+# プロジェクト概要
+
+Next.js 14 + TypeScript + Tailwind CSS のWebアプリ
+
+# コーディング規約
+
+- TypeScript strict mode
+- ESModules (import/export)
+- 関数コンポーネントのみ（クラスコンポーネント禁止）
+- スタイルはTailwind CSSのみ（CSS-in-JS禁止）
+
+# ディレクトリ構造
+
+- `app/` - ページとルーティング
+- `components/` - 再利用可能なUIコンポーネント
+- `lib/` - ユーティリティ、API クライアント
+- `types/` - 型定義
+
+# ワークフロー
+
+1. コード変更後: `npm run typecheck`
+2. テスト: `npm test`
+3. リント: `npm run lint`
+
+# 禁止事項
+
+- any型の使用
+- console.log の残存
+- インラインスタイル
+```
+
+### Python プロジェクト用
+
+```markdown
+# プロジェクト概要
+
+Python 3.11 + FastAPI のREST APIサーバー
+
+# コーディング規約
+
+- 型ヒント必須
+- Black でフォーマット
+- isort でimport整理
+- docstring は Google style
+
+# ディレクトリ構造
+
+- `app/` - アプリケーションコード
+- `app/routers/` - APIエンドポイント
+- `app/models/` - Pydanticモデル
+- `app/services/` - ビジネスロジック
+- `tests/` - pytest テスト
+
+# ワークフロー
+
+1. フォーマット: `black . && isort .`
+2. 型チェック: `mypy app`
+3. テスト: `pytest`
+
+# 禁止事項
+
+- 型ヒントなしの関数
+- print文（loggingを使う）
+- グローバル変数
+```
+
+## CLAUDE.mdを自動生成する
+
+Claude Codeには、プロジェクトを分析してCLAUDE.mdを自動生成する機能があります。
+
+```bash
+claude /init
+```
+
+これで基本的なCLAUDE.mdが生成されます。その後、手動で調整しましょう。
+
+## 複数のCLAUDE.mdを使い分ける
+
+大規模プロジェクトでは、サブディレクトリごとにCLAUDE.mdを配置できます。
+
+```
+my-project/
+├── CLAUDE.md              ← プロジェクト全体のルール
+├── frontend/
+│   ├── CLAUDE.md          ← フロントエンド固有のルール
+│   └── src/
+└── backend/
+    ├── CLAUDE.md          ← バックエンド固有のルール
+    └── src/
+```
+
+Claudeは、現在のディレクトリに近いCLAUDE.mdを優先的に参照します。
+
+## よくある間違い
+
+### 間違い1: ルールが多すぎる
+
+```markdown
+# NG: 50個のルールを列挙
+1. 変数名はキャメルケース
+2. 関数名はキャメルケース
+3. クラス名はパスカルケース
+...（50個続く）
+```
+
+→ 本当に重要な10-15個に絞る
+
+### 間違い2: 曖昧な表現
+
+```markdown
+# NG
+- きれいなコードを書く
+- 適切にエラーハンドリングする
+```
+
+→ 具体的に書く
+```markdown
+# OK
+- 1関数50行以内
+- try-catchで例外を捕捉し、エラーはloggerで記録
+```
+
+### 間違い3: 更新されていない
+
+プロジェクトが進化しても、CLAUDE.mdが古いまま。
+
+→ 定期的に見直す習慣をつける
+
+## 次のステップ
+
+CLAUDE.mdの書き方をマスターしました！
+
+次は、Claude Codeを使いこなすための「コンテキストウィンドウ管理」を学びましょう。これを理解すると、長い開発作業でもClaudeのパフォーマンスを維持できます。
+
+→ [コンテキストウィンドウ管理の基本](/knowledge/claude-code/context-window-management)
+
+## まとめ
+
+- CLAUDE.mdはプロジェクト固有の設定ファイル
+- 書くべき: コーディング規約、構造、ワークフロー、禁止事項
+- 書くべきでない: 当たり前のこと、長い説明、API全文
+- 50行以内を目安に、重要なルールを厳選
+- `/init` で自動生成可能

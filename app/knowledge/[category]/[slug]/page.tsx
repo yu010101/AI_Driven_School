@@ -8,11 +8,12 @@ import type { Metadata } from 'next'
 import { ShareButtons } from '@/components/ShareButtons'
 import { ReadingProgress } from '@/components/ReadingProgress'
 
-const categories: Category[] = ['vibe-coding', 'build', 'marketing', 'sales']
+const categories: Category[] = ['vibe-coding', 'claude-code', 'build', 'marketing', 'sales']
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
 const categoryNames: Record<Category, string> = {
   'vibe-coding': 'バイブコーディング',
+  'claude-code': 'Claude Code攻略',
   'build': '実装パターン',
   'marketing': '0円マーケティング',
   'sales': '営業・収益化',
@@ -193,7 +194,7 @@ export async function generateMetadata({
       url: articleUrl,
       publishedTime: article.createdAt,
       modifiedTime: article.updatedAt || article.createdAt,
-      authors: ['AI駆動塾'],
+      authors: ['AI道場'],
       tags: article.tags,
       images: [
         {
@@ -235,15 +236,6 @@ export default async function ArticlePage({
   const articleUrl = `${baseUrl}/knowledge/${category}/${params.slug}`
   const readingTime = calculateReadingTime(article.content)
 
-  // CTAの決定
-  const ctaHref =
-    category === 'marketing' || category === 'sales'
-      ? '/free/zero-marketing-book'
-      : '/free/vibe-coding-book'
-  const ctaText =
-    category === 'marketing' || category === 'sales'
-      ? '0円マーケティングの教科書を読む'
-      : 'バイブコーディングの教科書を読む'
 
   // 同カテゴリ内の記事を3本取得
   const sameCategoryArticles = getAllArticles(category)
@@ -296,13 +288,13 @@ export default async function ArticlePage({
     author: {
       '@type': 'Person',
       '@id': `${baseUrl}/#author`,
-      name: 'AI駆動塾',
+      name: 'AI道場',
       url: 'https://x.com/L_go_mrk',
     },
     publisher: {
       '@type': 'Organization',
       '@id': `${baseUrl}/#organization`,
-      name: 'AI駆動塾',
+      name: 'AI道場',
       logo: {
         '@type': 'ImageObject',
         url: `${baseUrl}/icon-512.png`,
@@ -319,7 +311,7 @@ export default async function ArticlePage({
     isPartOf: {
       '@type': 'WebSite',
       '@id': `${baseUrl}/#website`,
-      name: 'AI Driven School',
+      name: 'AI道場',
       url: baseUrl,
     },
     keywords: article.tags?.join(', '),
@@ -434,7 +426,7 @@ export default async function ArticlePage({
     creator: {
       '@type': 'Person',
       '@id': `${baseUrl}/#author`,
-      name: 'AI駆動塾',
+      name: 'AI道場',
     },
     teaches: category === 'vibe-coding' ? 'AIを使ったアプリ開発' :
              category === 'build' ? 'アプリの機能実装' :
@@ -545,7 +537,7 @@ export default async function ArticlePage({
                       rel="noopener noreferrer"
                       className="font-medium text-gray-900 hover:underline"
                     >
-                      AI駆動塾
+                      AI道場
                     </a>
                   </div>
                 </div>
@@ -679,13 +671,77 @@ export default async function ArticlePage({
               </section>
             )}
 
-            {/* CTA */}
-            <div className="mt-10 text-center">
-              <Link
-                href={ctaHref}
-                className="inline-block px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                {ctaText}
+            {/* 道場CTA（Claude Code記事のみ） */}
+            {category === 'claude-code' && (
+              <div className="mt-10">
+                <Link href="/dojo" className="block group">
+                  <div className="relative overflow-hidden rounded-2xl bg-[#1a1b26] p-6 md:p-8 border border-[#2a2b3d] hover:border-[#0A0A0A] transition-all">
+                    <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6">
+                      <div className="flex-shrink-0 w-16 h-16 bg-[#0A0A0A]/10 rounded-2xl flex items-center justify-center">
+                        <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+                          <rect x="4" y="4" width="28" height="22" rx="6" fill="#2a2b3d" />
+                          <circle cx="10" cy="9" r="1.2" fill="#ff5f57" />
+                          <circle cx="14" cy="9" r="1.2" fill="#febc2e" />
+                          <circle cx="18" cy="9" r="1.2" fill="#28c840" />
+                          <circle cx="13" cy="16" r="2" fill="#7aa2f7" />
+                          <circle cx="23" cy="16" r="2" fill="#7aa2f7" />
+                          <path d="M14 22 Q18 27 22 22" stroke="#9ece6a" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+                          <rect x="11" y="26" width="4" height="4" rx="2" fill="#2a2b3d" />
+                          <rect x="21" y="26" width="4" height="4" rx="2" fill="#2a2b3d" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 text-center sm:text-left">
+                        <h3 className="text-lg font-bold text-white mb-1 group-hover:text-[#0A0A0A] transition-colors">
+                          この記事の内容を道場で実践する
+                        </h3>
+                        <p className="text-[#a9b1d6] text-sm mb-3">
+                          ブラウザ上のターミナルでClaude Codeを体験。コピペするだけで動く23のレシピ。
+                        </p>
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A0A0A] text-white text-sm font-semibold rounded-lg hover:opacity-85 transition-colors">
+                          道場に入門する →
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            )}
+
+            {/* 書籍CTA */}
+            <div className="mt-10">
+              <Link href="/books/vibe-coding" className="block group">
+                <div className="relative overflow-hidden rounded-2xl bg-[#0A0A0A] p-6 md:p-8">
+                  <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6">
+                    {/* Book cover mockup */}
+                    <div className="flex-shrink-0">
+                      <div className="w-24 h-32 bg-[#0A0A0A] rounded-lg shadow-xl flex items-center justify-center transition-opacity duration-200">
+                        <div className="text-center text-white p-2">
+                          <div className="text-[8px] font-bold mb-1 opacity-80">AI道場</div>
+                          <div className="text-xs font-bold leading-tight">Vibe Coding<br/>入門</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Book info */}
+                    <div className="flex-1 text-center sm:text-left">
+                      <span className="inline-block px-2 py-0.5 bg-[#0A0A0A] text-white text-[10px] font-bold rounded-full mb-2">
+                        人気
+                      </span>
+                      <h3 className="text-xl font-bold text-white mb-2">
+                        体系的に学ぶなら書籍版
+                      </h3>
+                      <p className="text-white/60 text-sm mb-3">
+                        51本の記事を1冊に凝縮。AIでアプリを作る方法を体系的に学べる。
+                      </p>
+                      <div className="flex items-center justify-center sm:justify-start gap-3">
+                        <span className="text-2xl font-bold text-white">¥1,980</span>
+                        <span className="px-4 py-2 bg-white text-[#0A0A0A] text-sm font-semibold rounded-lg group-hover:bg-white/90 transition-colors">
+                          詳細を見る
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </Link>
             </div>
           </article>

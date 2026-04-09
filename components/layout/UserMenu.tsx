@@ -47,7 +47,7 @@ export default function UserMenu() {
   };
 
   if (loading) {
-    return <div className="w-8 h-8 rounded-full bg-[#F5F5F5] animate-pulse" />;
+    return <div className="w-8 h-8 rounded-full bg-[#F5F5F5] animate-pulse" data-testid="user-menu-loading" />;
   }
 
   if (!user) {
@@ -68,6 +68,8 @@ export default function UserMenu() {
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-[#F5F5F5] transition-colors"
+        data-testid="user-menu-trigger"
+        aria-label="ユーザーメニュー"
       >
         <div className="w-7 h-7 rounded-full bg-[#0A0A0A] text-white flex items-center justify-center text-xs font-bold">
           {initial}

@@ -13,7 +13,7 @@ const siteName = 'AI道場'
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: 'AIで業務を自動化する実践スキルを身につける | AI道場',
+    default: 'AI道場 — AIで業務を自動化する実践スキルを身につける',
     template: '%s | AI道場',
   },
   description: 'コピペ1行から始める。Anthropic公式認定も取れる。議事録・メール・データ分析、実務で使えるAIスキルを無料で学べます。',

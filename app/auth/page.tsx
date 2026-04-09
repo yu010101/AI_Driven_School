@@ -161,9 +161,8 @@ function AuthForm() {
 
           {mode === "login" && (
             <p className="text-xs text-[#a3a3a3]">
-              パスワードをお忘れの方は{" "}
-              <a href="mailto:yuichiyoshida@radineer.com?subject=パスワードリセット" className="underline hover:text-[#525252]">
-                お問い合わせください
+              <a href="/auth/forgot-password" className="underline hover:text-[#525252]">
+                パスワードをお忘れですか？
               </a>
             </p>
           )}

@@ -235,16 +235,30 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
 
         {/* Pro upgrade gate — shown to free users */}
         {isAuthenticated && userPlan === "free" && (
-          <div className="mt-8 rounded-2xl border border-dojo-border p-6 bg-white">
-            <p className="text-sm text-dojo-text mb-2 font-medium">Proプランで全コース解放</p>
-            <p className="text-xs text-dojo-text-muted mb-4">Level 4以降の上級コース + 認定試験にアクセス。¥2,980/月、いつでもキャンセル可能。</p>
-            <Link
-              href="/pricing"
-              className="inline-block px-6 py-2.5 text-sm font-bold text-white rounded-xl"
-              style={{ backgroundColor: "#0A0A0A" }}
-            >
-              Proプランを見る
-            </Link>
+          <div className="mt-8 space-y-4">
+            <div className="rounded-2xl border border-dojo-border p-6 bg-white">
+              <p className="text-sm text-dojo-text mb-2 font-medium">Proプランで全コース解放</p>
+              <p className="text-xs text-dojo-text-muted mb-4">Level 4以降の上級コース + 認定試験にアクセス。¥2,980/月、いつでもキャンセル可能。</p>
+              <Link
+                href="/pricing"
+                className="inline-block px-6 py-2.5 text-sm font-bold text-white rounded-xl"
+                style={{ backgroundColor: "#0A0A0A" }}
+              >
+                Proプランを見る
+              </Link>
+            </div>
+            <div className="rounded-2xl border border-dojo-border p-6 bg-white">
+              <p className="text-sm text-dojo-text mb-2 font-medium">AI駆動塾 — 講師付きで実践的に学ぶ</p>
+              <p className="text-xs text-dojo-text-muted mb-4">週1ウェビナー + Discord相談し放題 + 全有料記事読み放題。¥4,980/月。</p>
+              <a
+                href="https://note.com/l_mrk/membership"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-6 py-2.5 text-sm font-bold text-[#0A0A0A] rounded-xl border border-dojo-border hover:border-[#0A0A0A] transition-colors"
+              >
+                AI駆動塾を見る
+              </a>
+            </div>
           </div>
         )}
 

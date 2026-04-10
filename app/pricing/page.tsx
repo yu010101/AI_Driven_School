@@ -37,6 +37,22 @@ const plans = [
     highlight: true,
   },
   {
+    key: "juku",
+    name: "AI駆動塾",
+    price: "¥4,980",
+    period: "/月",
+    description: "講師付きで実践力を身につけたい方に",
+    features: [
+      "全有料記事読み放題（note）",
+      "限定Discordで相談し放題",
+      "週1回のウェビナー参加",
+      "毎週金曜のボイスチャット",
+    ],
+    cta: "AI駆動塾に参加",
+    href: "https://note.com/l_mrk/membership",
+    highlight: false,
+  },
+  {
     key: "team",
     name: "チーム",
     price: "¥10,000",
@@ -117,7 +133,7 @@ function PricingContent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
           {plans.map((plan) => (
             <div
               key={plan.key}
@@ -172,16 +188,31 @@ function PricingContent() {
               </ul>
 
               {plan.href ? (
-                <Link
-                  href={plan.href}
-                  className={`block w-full py-3 text-sm font-bold text-center rounded-xl transition-all ${
-                    plan.highlight
-                      ? "bg-white text-[#0A0A0A] hover:bg-gray-100"
-                      : "bg-[#0A0A0A] text-white hover:bg-[#1a1a1a]"
-                  }`}
-                >
-                  {plan.cta}
-                </Link>
+                plan.href.startsWith("http") ? (
+                  <a
+                    href={plan.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`block w-full py-3 text-sm font-bold text-center rounded-xl transition-all ${
+                      plan.highlight
+                        ? "bg-white text-[#0A0A0A] hover:bg-gray-100"
+                        : "bg-[#0A0A0A] text-white hover:bg-[#1a1a1a]"
+                    }`}
+                  >
+                    {plan.cta}
+                  </a>
+                ) : (
+                  <Link
+                    href={plan.href}
+                    className={`block w-full py-3 text-sm font-bold text-center rounded-xl transition-all ${
+                      plan.highlight
+                        ? "bg-white text-[#0A0A0A] hover:bg-gray-100"
+                        : "bg-[#0A0A0A] text-white hover:bg-[#1a1a1a]"
+                    }`}
+                  >
+                    {plan.cta}
+                  </Link>
+                )
               ) : (
                 <button
                   onClick={() => handleCheckout(plan.key)}

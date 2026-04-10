@@ -10,6 +10,7 @@ export function Footer() {
             <span className="text-sm font-bold text-[#0A0A0A]">AI道場</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[#525252]">
+            <a href="https://note.com/l_mrk/membership" target="_blank" rel="noopener noreferrer">AI駆動塾</a>
             <Link href="/enterprise">法人</Link>
             <Link href="/glossary">用語集</Link>
             <Link href="/terms">利用規約</Link>

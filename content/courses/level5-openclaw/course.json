@@ -3,7 +3,7 @@
   "title": "OpenClaw — AI経営OSを構築する",
   "description": "CFO・COO・CMO・CEOの4エージェントが24時間あなたの会社を動かす。実際に稼働中のシステムを再現。",
   "prerequisites": "Level 4完了。SKILL.mdの基本を理解していること。freee・Slack・GA4のアカウントがあると実践しやすい。",
-  "emoji": "🏢",
+  "emoji": "OS",
   "level": 5,
   "totalLessons": 7,
   "estimatedMinutes": 40,

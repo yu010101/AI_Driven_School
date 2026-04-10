@@ -3,7 +3,7 @@
   "title": "エンタープライズ — チーム導入と運用",
   "description": "GitHub Actions、セキュリティ、サンドボックス、Channels。企業でClaude Codeを安全に運用する方法。",
   "prerequisites": "Level 0-3完了。GitHubアカウントがあること。チームでの導入を検討している方向け。",
-  "emoji": "🏗️",
+  "emoji": "ENT",
   "level": 9,
   "totalLessons": 4,
   "estimatedMinutes": 20,

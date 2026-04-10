@@ -2,7 +2,7 @@
   "id": "level2-automation",
   "title": "仕組み化 — 毎日の作業を自動化する",
   "description": "議事録→Slack自動投稿、Gmail→タスク生成。一度作れば毎日勝手に動く仕組み。",
-  "emoji": "",
+  "emoji": "AUTO",
   "level": 2,
   "totalLessons": 5,
   "estimatedMinutes": 25,

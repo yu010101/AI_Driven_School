@@ -43,7 +43,12 @@ export default function CourseCard({
               </span>
             )}
           </div>
-          <span className="text-xs text-dojo-text-muted">{estimatedMinutes}分</span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-medium text-[#94A3B8]">
+              {level === 7 ? "テスト" : "実践"}
+            </span>
+            <span className="text-xs text-dojo-text-muted">{estimatedMinutes}分</span>
+          </div>
         </div>
 
         {/* Title */}

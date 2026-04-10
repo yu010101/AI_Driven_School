@@ -170,16 +170,16 @@ export const mcpQuestions = [
   {
     id: 13,
     question:
-      "プロジェクトレベルのMCP設定とユーザーレベルのMCP設定が競合した場合、どちらが優先されますか？",
+      "MCPサーバーを追加する際、設定ファイルのパスとして正しいものはどれですか？",
     choices: [
-      "常にユーザーレベルの設定が優先される",
-      "常にプロジェクトレベルの設定が優先される",
-      "プロジェクトレベルの設定が優先されるが、ユーザーが承認する必要がある",
-      "エラーが発生して両方無効になる",
+      ".claude/settings.json",
+      "package.json",
+      "tsconfig.json",
+      ".env",
     ],
-    answer: 2,
+    answer: 0,
     explanation:
-      "プロジェクトレベルの.claude/settings.jsonに定義されたMCPサーバーは、セキュリティのためユーザーの承認が必要です。信頼できるプロジェクトのサーバーのみ許可する設計になっています。",
+      "MCPサーバーの設定は .claude/settings.json に記述します。プロジェクトのルートディレクトリに .claude/ フォルダを作成し、settings.json に接続情報を記載します。",
   },
   // Security considerations (2 questions)
   {

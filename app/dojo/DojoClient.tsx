@@ -20,10 +20,10 @@ const firstLessonMap: Record<string, string> = {
 };
 
 const RANK_LABELS = [
-  { min: 0, label: "白帯", emoji: "🤍", color: "bg-gray-300" },
-  { min: 13, label: "青帯", emoji: "💙", color: "bg-blue-500" },
-  { min: 28, label: "茶帯", emoji: "🟤", color: "bg-amber-700" },
-  { min: 51, label: "黒帯", emoji: "🖤", color: "bg-[#0A0A0A]" },
+  { min: 0, label: "白帯", indicator: "○", color: "bg-gray-300" },
+  { min: 13, label: "青帯", indicator: "●", color: "bg-blue-500" },
+  { min: 28, label: "茶帯", indicator: "◆", color: "bg-amber-700" },
+  { min: 51, label: "黒帯", indicator: "■", color: "bg-[#0A0A0A]" },
 ];
 
 function getRank(totalCompleted: number) {
@@ -105,12 +105,12 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
           {/* Rank + XP */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <span className="text-sm">{rank.emoji}</span>
+              <span className={`w-3 h-3 rounded-full inline-block ${rank.color}`} />
               <span className="text-xs font-bold text-dojo-text">{rank.label}</span>
             </div>
             {streak > 0 && (
               <div className="flex items-center gap-1">
-                <span className="text-sm streak-flame">🔥</span>
+                <span className="text-xs font-bold text-orange-500 streak-flame">STREAK</span>
                 <span className="text-xs font-bold text-dojo-text">{streak}</span>
               </div>
             )}

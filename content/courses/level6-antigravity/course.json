@@ -1,9 +1,9 @@
 {
   "id": "level6-antigravity",
-  "title": "Antigravity — スキルをどこでも使う",
-  "description": "Claude Code・Cursor・Gemini CLI。作ったスキルはどのAI IDEでも動く。マルチIDE時代の設計術。",
+  "title": "マルチIDE互換 — スキルをどこでも使う",
+  "description": "Claude Code・Cursor・Gemini CLI・Windsurf・GitHub Copilot。作ったスキルはどのAI IDEでも動く。マルチIDE時代の設計術。",
   "prerequisites": "Level 4-5完了。複数のAI IDEに興味がある方向け。",
-  "emoji": "🚀",
+  "emoji": "MULTI",
   "level": 6,
   "totalLessons": 3,
   "estimatedMinutes": 15,

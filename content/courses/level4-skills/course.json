@@ -3,7 +3,7 @@
   "title": "Skills — AIに専門スキルを持たせる",
   "description": "Claude Codeの拡張プラグイン「Skills」を使い、自社専用の業務AIを構築する。",
   "prerequisites": "Level 0-3完了。ターミナル操作に慣れていること。",
-  "emoji": "🧩",
+  "emoji": "SKILL",
   "level": 4,
   "totalLessons": 5,
   "estimatedMinutes": 25,

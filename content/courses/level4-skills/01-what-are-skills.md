@@ -6,6 +6,9 @@ expectedCommand: "claude /find-skills"
 acceptableCommands: ["claude '/find-skills'"]
 simulatedOutput: "\n🧩 Skills マーケットプレイス\n\n利用可能なスキルカテゴリ:\n┌──────────────────┬────────────┐\n│ カテゴリ          │ インストール数 │\n├──────────────────┼────────────┤\n│ seo-mastery      │ 4,200+     │\n│ commit           │ 3,800+     │\n│ frontend-design  │ 2,900+     │\n│ content-creator  │ 2,100+     │\n│ copywriter       │ 1,800+     │\n│ cfo              │ 1,500+     │\n│ analytics        │ 1,200+     │\n│ review           │ 980+       │\n└──────────────────┴────────────┘\n\n1,340+ skills available\n→ /install-skill <name> でインストールできます"
 hint: "claude /find-skills と入力してください"
+relatedArticles:
+  - title: "Next.js開発でのClaude Code活用"
+    path: "/knowledge/claude-code/nextjs-development"
 ---
 
 > **前提知識**: Level 0-3完了。ターミナル操作に慣れていること。

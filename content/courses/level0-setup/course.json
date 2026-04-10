@@ -2,7 +2,7 @@
   "id": "level0-setup",
   "title": "5分セットアップ",
   "description": "コピペ3行で始められる。あなたの会社専用AIアシスタントが5分で手に入ります。",
-  "emoji": "",
+  "emoji": "SETUP",
   "level": 0,
   "totalLessons": 3,
   "estimatedMinutes": 5,

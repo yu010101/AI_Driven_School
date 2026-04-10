@@ -3,9 +3,9 @@
   "title": "認定試験チャレンジ",
   "description": "Anthropic公式認定の模擬テスト。Claude 101からMCP Advancedまで、全範囲の理解を確認。",
   "prerequisites": "Level 0-6の内容を一通り学習済みであること。",
-  "emoji": "📝",
+  "emoji": "EXAM",
   "level": 7,
   "totalLessons": 5,
-  "estimatedMinutes": 20,
+  "estimatedMinutes": 50,
   "certification": "全認定対応"
 }

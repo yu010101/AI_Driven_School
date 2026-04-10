@@ -9,8 +9,9 @@ export function Footer() {
             <img src="/ai-dojo-icon.jpg" alt="AI道場" className="w-6 h-6 rounded" />
             <span className="text-sm font-bold text-[#0A0A0A]">AI道場</span>
           </div>
-          <div className="flex items-center gap-6 text-sm text-[#525252]">
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[#525252]">
             <Link href="/enterprise">法人</Link>
+            <Link href="/glossary">用語集</Link>
             <Link href="/terms">利用規約</Link>
             <Link href="/privacy">プライバシー</Link>
             <a href="mailto:yuichiyoshida@radineer.com">お問い合わせ</a>

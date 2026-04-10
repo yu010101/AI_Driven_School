@@ -247,8 +247,8 @@ export default function Home() {
 
             <Link href="/dojo/cert" className="block group">
               <div className="h-full rounded-2xl border border-[#E5E5E5] p-6 md:p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
-                <div className="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-lg mb-4">
-                  🎯
+                <div className="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-sm font-bold text-[#0A0A0A]">
+                  CERT
                 </div>
                 <h2 className="text-xl font-bold text-[#0A0A0A] mb-3">資格を取る</h2>
                 <p className="text-sm text-[#525252] leading-relaxed mb-4">
@@ -274,7 +274,7 @@ export default function Home() {
                 className="block rounded-xl border border-[#E5E5E5] p-5 hover:border-[#0A0A0A] hover:shadow-sm transition-all"
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-lg">{course.emoji || "📘"}</span>
+                  <span className="text-lg">{course.emoji || ""}</span>
                   <span className="text-xs font-medium text-[#94A3B8] bg-[#F5F5F5] px-2 py-0.5 rounded-full">
                     Level {course.level}
                   </span>

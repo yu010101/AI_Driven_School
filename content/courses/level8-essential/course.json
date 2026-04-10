@@ -3,7 +3,7 @@
   "title": "実務必須スキル — 認定試験の核心",
   "description": "Hooks、Permission、Context Window、コスト管理。公式認定で必ず問われる4つの基礎。",
   "prerequisites": "Level 0-1完了。JSONファイルの編集ができること。",
-  "emoji": "⚙️",
+  "emoji": "CORE",
   "level": 8,
   "totalLessons": 4,
   "estimatedMinutes": 20,

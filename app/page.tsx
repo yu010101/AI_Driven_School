@@ -233,8 +233,10 @@ export default function Home() {
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link href="/dojo/level0-setup/01-install" className="block group">
-              <div className="h-full rounded-2xl border border-[#E5E5E5] p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
-                <span className="text-3xl mb-4 block">{'>'}_</span>
+              <div className="h-full rounded-2xl border border-[#E5E5E5] p-6 md:p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
+                <div className="w-10 h-10 rounded-xl bg-[#0A0A0A] text-white flex items-center justify-center text-lg font-mono font-bold mb-4">
+                  &gt;_
+                </div>
                 <h2 className="text-xl font-bold text-[#0A0A0A] mb-3">実務ですぐ使う</h2>
                 <p className="text-sm text-[#525252] leading-relaxed mb-4">
                   議事録・メール・データ分析の自動化。ブラウザ上でインタラクティブに学べます。
@@ -244,8 +246,10 @@ export default function Home() {
             </Link>
 
             <Link href="/dojo/cert" className="block group">
-              <div className="h-full rounded-2xl border border-[#E5E5E5] p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
-                <span className="text-3xl mb-4 block">&#x1F3AF;</span>
+              <div className="h-full rounded-2xl border border-[#E5E5E5] p-6 md:p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
+                <div className="w-10 h-10 rounded-xl bg-[#F5F5F5] flex items-center justify-center text-lg mb-4">
+                  🎯
+                </div>
                 <h2 className="text-xl font-bold text-[#0A0A0A] mb-3">資格を取る</h2>
                 <p className="text-sm text-[#525252] leading-relaxed mb-4">
                   Anthropic公式認定の対策。5トラック+模擬試験でスコアを可視化。

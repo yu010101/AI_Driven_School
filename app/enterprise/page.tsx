@@ -55,21 +55,21 @@ export default function EnterprisePage() {
         <div className="bg-white rounded-2xl border border-[#E5E5E5] p-8 mb-16">
           <h2 className="text-xl font-bold text-[#0A0A0A] mb-6">料金</h2>
           <div className="space-y-4">
-            <div className="flex items-center justify-between py-3 border-b border-[#E5E5E5]">
-              <div>
-                <p className="font-bold text-[#0A0A0A]">チームプラン</p>
-                <p className="text-sm text-[#525252]">3名以上</p>
-              </div>
-              <div className="flex items-center gap-4">
+            <div className="py-4 border-b border-[#E5E5E5]">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="font-bold text-[#0A0A0A]">チームプラン</p>
+                  <p className="text-sm text-[#525252]">3名以上</p>
+                </div>
                 <p className="text-xl font-bold text-[#0A0A0A]">¥10,000<span className="text-sm font-normal text-[#525252]">/人/月</span></p>
-                <Link
-                  href="/auth?plan=team"
-                  className="px-4 py-2 text-sm font-bold text-white rounded-lg"
-                  style={{ backgroundColor: "#0A0A0A" }}
-                >
-                  申し込む
-                </Link>
               </div>
+              <Link
+                href="/auth?plan=team"
+                className="inline-block px-6 py-2.5 text-sm font-bold text-white rounded-lg transition-all hover:opacity-90"
+                style={{ backgroundColor: "#0A0A0A" }}
+              >
+                チームプランを始める
+              </Link>
             </div>
             <div className="flex items-center justify-between py-3 border-b border-[#E5E5E5]">
               <div>

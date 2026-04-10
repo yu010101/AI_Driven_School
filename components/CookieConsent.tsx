@@ -57,7 +57,7 @@ export default function CookieConsent() {
 
       {/* Cookie banner */}
       {visible && (
-        <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 bg-white border-t border-[#E5E5E5] shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-[90] p-4 bg-white border-t border-[#E5E5E5] shadow-lg">
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center gap-4">
             <p className="text-sm text-[#525252] flex-1">
               当サイトではサービス改善のためCookieを使用しています。

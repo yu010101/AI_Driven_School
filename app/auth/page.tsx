@@ -90,7 +90,7 @@ function AuthForm() {
 
   return (
     <div className="min-h-screen bg-[#FAFAFA] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-md">
         <Link href="/" className="text-sm text-[#525252] hover:text-[#0A0A0A] mb-8 block">
           ← 戻る
         </Link>

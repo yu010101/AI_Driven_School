@@ -117,13 +117,13 @@ function PricingContent() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
           {plans.map((plan) => (
             <div
               key={plan.key}
-              className={`rounded-2xl p-8 ${
+              className={`rounded-2xl p-8 flex flex-col ${
                 plan.highlight
-                  ? "bg-[#0A0A0A] text-white ring-2 ring-[#0A0A0A] scale-[1.02]"
+                  ? "bg-[#0A0A0A] text-white ring-2 ring-[#0A0A0A] md:scale-[1.03]"
                   : "bg-white border border-[#E5E5E5]"
               }`}
             >

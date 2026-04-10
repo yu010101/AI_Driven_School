@@ -97,8 +97,10 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="text-sm text-dojo-text-muted hover:text-dojo-text transition-colors">
-              ← 戻る
+              AI道場
             </Link>
+            <span className="text-dojo-text-muted text-xs">/</span>
+            <span className="text-sm font-medium text-dojo-text">道場</span>
           </div>
           {/* Rank + XP */}
           <div className="flex items-center gap-3">

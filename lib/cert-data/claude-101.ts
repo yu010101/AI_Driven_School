@@ -41,16 +41,16 @@ export const claude101Questions = [
   },
   {
     id: 4,
-    question: "Claude Codeをインストールする推奨コマンドはどれですか？",
+    question: "Claude Codeをインストールする方法として正しいものはどれですか？",
     choices: [
       "pip install claude-code",
-      "brew install claude",
-      "curl -fsSL https://claude.ai/install.sh | bash",
-      "apt-get install claude-code"
+      "npm install -g @anthropic-ai/claude-code",
+      "apt-get install claude-code",
+      "brew install claude"
     ],
-    answer: 2,
+    answer: 1,
     explanation:
-      "Claude Codeの推奨インストール方法はネイティブインストーラーで、`curl -fsSL https://claude.ai/install.sh | bash`（macOS/Linux）で実行します。Homebrewやnpmでもインストール可能ですが、ネイティブインストールが推奨されています。"
+      "Claude Codeは `npm install -g @anthropic-ai/claude-code` でインストールできます。macOS/Linuxでは `curl -fsSL https://claude.ai/install.sh | bash` によるネイティブインストールも利用可能です。Node.js 18以上が必要です。"
   },
   {
     id: 5,

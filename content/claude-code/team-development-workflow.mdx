@@ -1,0 +1,95 @@
+---
+title: "チームでClaude Codeを使うワークフロー"
+description: "複数人でClaude Codeを使う際のCLAUDE.md共有、ブランチ運用、コードレビュー、ナレッジ蓄積の実践ガイド。"
+createdAt: "2026-04-10"
+updatedAt: "2026-04-10"
+category: "claude-code"
+tags: ["Claude Code", "チーム開発", "ワークフロー", "CLAUDE.md", "エンタープライズ"]
+---
+
+# チームでClaude Codeを使うワークフロー
+
+1人で使うClaude Codeと、チームで使うClaude Codeは運用が全く異なります。この記事では、3-10人規模のチームがClaude Codeを導入する際の実践的なワークフローを解説します。
+
+## 1. CLAUDE.mdをチームで共有する
+
+CLAUDE.mdはプロジェクトのルートに置くチーム共有の設定ファイルです。全メンバーが同じルールでClaude Codeを使えるようになります。
+
+```markdown
+# CLAUDE.md（チーム版テンプレート）
+
+## プロジェクト概要
+- サービス名: ○○
+- 技術スタック: Next.js 14, TypeScript, Tailwind CSS, PostgreSQL
+- デプロイ先: Vercel
+
+## コーディング規約
+- コンポーネント: 関数コンポーネント + TypeScript
+- スタイル: Tailwind CSS（CSS Modulesは使わない）
+- API: App Router の Route Handlers
+- テスト: Playwright (E2E), Vitest (Unit)
+
+## やってはいけないこと
+- .envファイルをコミットしない
+- console.logを本番コードに残さない
+- anyを使わない（unknown + type guardを使う）
+
+## ブランチ戦略
+- main: 本番
+- develop: 開発
+- feature/*: 機能ブランチ
+```
+
+**ポイント**: CLAUDE.mdはGitで管理し、PRレビューの対象にします。チームの知見が蓄積される「生きたドキュメント」です。
+
+## 2. ブランチ運用のルール
+
+チームでClaude Codeを使う場合、必ずブランチを切ってください。
+
+```bash
+# 1. featureブランチを作成
+git checkout -b feature/add-user-profile
+
+# 2. Claude Codeで実装
+claude "ユーザープロフィールページを作って"
+
+# 3. 変更を確認してコミット
+git add -A && git commit -m "Add user profile page"
+
+# 4. PRを作成
+gh pr create --title "Add user profile page"
+```
+
+**注意**: 複数人が同じブランチでClaude Codeを使うとコンフリクトが発生します。必ず1ブランチ=1人で作業してください。
+
+## 3. コードレビューのポイント
+
+Claude Codeが生成したコードは、人間が書いたコードと同じ基準でレビューします。加えて、以下のAI特有のチェックポイントがあります:
+
+- **不要なコメントが大量にないか** — Claude Codeは説明コメントを多く付ける傾向
+- **使われていないimportがないか** — 削除したコードの残骸が残ることがある
+- **テストが実際に意味のあるテストか** — 「常にtrueを返すテスト」になっていないか
+- **秘密情報がハードコードされていないか** — APIキーやパスワードの埋め込み
+
+## 4. ナレッジの蓄積
+
+チームで使い続けると「この指示の出し方がうまくいく」というパターンが見つかります。これをCLAUDE.mdに追記していきます。
+
+```markdown
+## 過去の教訓
+- 「型を作って」と指示するとinterface/typeの両方を作る → 「typeで統一して」と追加する
+- 画像最適化はnext/imageを提案してくるが、外部画像の場合はdomains設定が必要
+- Tailwindのクラス名を提案する際、v3とv4の構文を混ぜることがある → バージョン明記する
+```
+
+## 5. コスト管理
+
+チームで使うと個人利用の3-10倍のコストがかかります。
+
+| 利用パターン | 月間目安コスト |
+|------------|-------------|
+| 軽め（日に2-3タスク×5人） | $50-100 |
+| 普通（日に5-10タスク×5人） | $200-400 |
+| ヘビー（常時利用×5人） | $500-1,000 |
+
+**節約のコツ**: Claude Pro ($20/月) をチーム人数分契約する方が、API従量課金より安いことが多いです。

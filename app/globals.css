@@ -15,17 +15,17 @@
   --primary: #0A0A0A;
   --primary-light: #F5F5F5;
 
-  /* Accent Colors - Multi-layer */
-  --accent: #0A0A0A;
-  --accent-light: #F5F5F5;
-  --accent-secondary: #0A0A0A;
-  --accent-tertiary: #0A0A0A;
+  /* Accent Colors */
+  --accent: #2563EB;
+  --accent-light: #EFF6FF;
+  --accent-secondary: #7C3AED;
+  --accent-tertiary: #0891B2;
 
   /* Semantic Colors */
-  --success: #0A0A0A;
-  --warning: #F59E0B;
-  --error: #EF4444;
-  --info: #3B82F6;
+  --success: #059669;
+  --warning: #D97706;
+  --error: #DC2626;
+  --info: #2563EB;
 
   --border: #E5E5E5;
   --surface: #FFFFFF;
@@ -46,10 +46,10 @@
      DOJO Theme — 道場サブブランド
      ============================== */
   --dojo-ink: #1a1a2e;
-  /* accent (was vermillion, now black for unified palette) */
-  --dojo-vermillion: #0A0A0A;
-  --dojo-vermillion-dark: #000000;
-  --dojo-vermillion-light: #F5F5F5;
+  /* accent — warm vermillion for dojo brand */
+  --dojo-vermillion: #E63B2E;
+  --dojo-vermillion-dark: #C42B1F;
+  --dojo-vermillion-light: #FEF2F2;
   --dojo-surface: #FAFAFA;
   --dojo-surface-warm: #FAFAFA;
   --dojo-text: #1a1a2e;

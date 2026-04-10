@@ -12,6 +12,7 @@ interface CourseCardProps {
   firstLessonSlug: string;
   basePath?: string;
   certification?: string;
+  emoji?: string;
 }
 
 export default function CourseCard({
@@ -25,6 +26,7 @@ export default function CourseCard({
   firstLessonSlug,
   basePath = "/dojo",
   certification,
+  emoji,
 }: CourseCardProps) {
   const isCompleted = completedLessons >= totalLessons;
 
@@ -45,7 +47,8 @@ export default function CourseCard({
         </div>
 
         {/* Title */}
-        <h3 className="text-base font-bold text-dojo-text mb-3">
+        <h3 className="text-base font-bold text-dojo-text mb-3 flex items-center gap-2">
+          {emoji && <span className="text-lg">{emoji}</span>}
           {title}
         </h3>
 

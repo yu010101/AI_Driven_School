@@ -100,12 +100,12 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
               <span className="text-xs font-medium text-dojo-text-muted">{rank.label}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div
-                  className="h-full rounded-full"
+                  className="h-full rounded-full transition-all duration-500"
                   style={{
                     width: `${xpPct}%`,
-                    background: "#0A0A0A",
+                    background: "var(--dojo-vermillion)",
                   }}
                 />
               </div>

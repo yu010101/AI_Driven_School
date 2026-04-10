@@ -174,49 +174,142 @@ export default function Home() {
       />
     <div>
       {/* Hero */}
-      <section className="pt-12 pb-8 md:pt-28 md:pb-16">
+      <section className="pt-12 pb-8 md:pt-24 md:pb-12">
         <div className="container mx-auto px-4 text-center max-w-3xl">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-[1.1] tracking-tight text-[#0A0A0A]">
             AIで業務を自動化する<br className="hidden md:block" />実践スキルを身につける
           </h1>
-          <p className="text-lg text-[#525252] mb-4 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-[#525252] mb-6 max-w-xl mx-auto leading-relaxed">
             コピペ1行から始める。認定資格も取れる。
           </p>
-          <p className="text-sm text-[#94A3B8] mb-8 md:mb-16">
-            51レッスン / 100問クイズ / Anthropic公式認定対応
-          </p>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <Link
+              href="/dojo/level0-setup/01-install"
+              className="px-8 py-3.5 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90"
+              style={{ backgroundColor: "#0A0A0A" }}
+            >
+              無料で始める
+            </Link>
+            <Link
+              href="/pricing"
+              className="px-8 py-3.5 text-sm font-bold text-[#0A0A0A] rounded-xl border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors"
+            >
+              料金を見る
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* 2つの入口 */}
-      <section className="pb-20 md:pb-28">
+      {/* Stats bar */}
+      <section className="pb-12 md:pb-16">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="flex items-center justify-center gap-8 md:gap-16 py-6 border-y border-[#E5E5E5]">
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-[#0A0A0A]">51</p>
+              <p className="text-xs text-[#94A3B8] mt-1">レッスン</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-[#0A0A0A]">10</p>
+              <p className="text-xs text-[#94A3B8] mt-1">コース</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-[#0A0A0A]">5</p>
+              <p className="text-xs text-[#94A3B8] mt-1">認定試験</p>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl md:text-3xl font-bold text-[#0A0A0A]">100+</p>
+              <p className="text-xs text-[#94A3B8] mt-1">問題</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2 Entry Points */}
+      <section className="pb-16 md:pb-20">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
             <Link href="/dojo/level0-setup/01-install" className="block group">
-              <div className="h-full rounded-2xl border border-[#E5E5E5] p-8 bg-white hover:border-[#0A0A0A] transition-colors">
+              <div className="h-full rounded-2xl border border-[#E5E5E5] p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
+                <span className="text-3xl mb-4 block">{'>'}_</span>
                 <h2 className="text-xl font-bold text-[#0A0A0A] mb-3">実務ですぐ使う</h2>
-                <p className="text-sm text-[#525252] leading-relaxed">
-                  議事録・メール・データ分析の自動化。51レッスン。
+                <p className="text-sm text-[#525252] leading-relaxed mb-4">
+                  議事録・メール・データ分析の自動化。ブラウザ上でインタラクティブに学べます。
                 </p>
+                <span className="text-sm font-medium text-[#0A0A0A] group-hover:underline">始める &rarr;</span>
               </div>
             </Link>
 
             <Link href="/dojo/cert" className="block group">
-              <div className="h-full rounded-2xl border border-[#E5E5E5] p-8 bg-white hover:border-[#0A0A0A] transition-colors">
+              <div className="h-full rounded-2xl border border-[#E5E5E5] p-8 bg-white hover:border-[#0A0A0A] hover:shadow-md transition-all">
+                <span className="text-3xl mb-4 block">&#x1F3AF;</span>
                 <h2 className="text-xl font-bold text-[#0A0A0A] mb-3">資格を取る</h2>
-                <p className="text-sm text-[#525252] leading-relaxed">
-                  Anthropic公式認定の対策。100問+模擬試験。
+                <p className="text-sm text-[#525252] leading-relaxed mb-4">
+                  Anthropic公式認定の対策。5トラック+模擬試験でスコアを可視化。
                 </p>
+                <span className="text-sm font-medium text-[#0A0A0A] group-hover:underline">対策を始める &rarr;</span>
               </div>
             </Link>
-
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-16 pt-8 border-t border-[#E5E5E5]">
+      {/* Course preview */}
+      <section className="pb-16 md:pb-20 bg-white border-y border-[#E5E5E5]">
+        <div className="container mx-auto px-4 max-w-4xl py-12 md:py-16">
+          <h2 className="text-2xl font-bold text-[#0A0A0A] mb-2 text-center">コース一覧</h2>
+          <p className="text-sm text-[#94A3B8] text-center mb-10">無料コースから始めて、段階的にスキルアップ</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {courses.slice(0, 6).map((course) => (
+              <Link
+                key={course.id}
+                href={`/dojo/${course.id}/${firstLessonMap[course.id] || "01"}`}
+                className="block rounded-xl border border-[#E5E5E5] p-5 hover:border-[#0A0A0A] hover:shadow-sm transition-all"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-lg">{course.emoji || "📘"}</span>
+                  <span className="text-xs font-medium text-[#94A3B8] bg-[#F5F5F5] px-2 py-0.5 rounded-full">
+                    Level {course.level}
+                  </span>
+                  {course.level <= 1 && (
+                    <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                      無料
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-sm font-bold text-[#0A0A0A] mb-1">{course.title}</h3>
+                <p className="text-xs text-[#94A3B8]">{course.totalLessons}レッスン</p>
+              </Link>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/dojo"
+              className="text-sm font-medium text-[#0A0A0A] hover:underline"
+            >
+              全{courses.length}コースを見る &rarr;
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 md:py-20">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <h2 className="text-2xl font-bold text-[#0A0A0A] mb-4">まずは無料で体験</h2>
+          <p className="text-sm text-[#525252] mb-8 max-w-md mx-auto">
+            アカウント登録不要。Level 0-1の13レッスンは今すぐ無料で始められます。
+          </p>
+          <div className="flex items-center justify-center gap-4 flex-wrap">
+            <Link
+              href="/dojo/level0-setup/01-install"
+              className="px-8 py-3.5 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90"
+              style={{ backgroundColor: "#0A0A0A" }}
+            >
+              無料レッスンを始める
+            </Link>
             <Link
               href="/enterprise"
-              className="inline-block px-6 py-3 text-sm font-bold text-[#0A0A0A] rounded-xl border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors"
+              className="px-8 py-3.5 text-sm font-bold text-[#0A0A0A] rounded-xl border border-[#E5E5E5] hover:border-[#0A0A0A] transition-colors"
             >
               法人プラン
             </Link>

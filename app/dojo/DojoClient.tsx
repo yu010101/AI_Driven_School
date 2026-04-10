@@ -20,10 +20,10 @@ const firstLessonMap: Record<string, string> = {
 };
 
 const RANK_LABELS = [
-  { min: 0, label: "初級", color: "bg-gray-300" },
-  { min: 13, label: "中級", color: "bg-blue-500" },
-  { min: 28, label: "上級", color: "bg-dojo-ink" },
-  { min: 51, label: "認定", color: "bg-[#0A0A0A]" },
+  { min: 0, label: "白帯", emoji: "🤍", color: "bg-gray-300" },
+  { min: 13, label: "青帯", emoji: "💙", color: "bg-blue-500" },
+  { min: 28, label: "茶帯", emoji: "🟤", color: "bg-amber-700" },
+  { min: 51, label: "黒帯", emoji: "🖤", color: "bg-[#0A0A0A]" },
 ];
 
 function getRank(totalCompleted: number) {
@@ -46,6 +46,7 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
   const [xp, setXp] = useState(0);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [resumeInfo, setResumeInfo] = useState<{ courseId: string; courseTitle: string; lessonSlug: string; completed: number; total: number } | null>(null);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     const map: Record<string, number> = {};
@@ -58,6 +59,12 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
     setProgressMap(map);
     setTotalCompleted(total);
     setXp(getTotalXP());
+
+    // Calculate streak (simple: count consecutive days with progress, based on total completed)
+    // For MVP, show streak based on total completed sessions
+    if (total > 0) {
+      setStreak(Math.min(total, 7)); // Cap at 7 for display
+    }
 
     // Find resume point — first incomplete course
     const courseOrder = ["level0-setup", "level1-tips10", "level2-automation", "level3-dx-design", "level4-skills", "level5-openclaw", "level6-antigravity"];
@@ -96,9 +103,15 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
           {/* Rank + XP */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <div className={`w-3 h-3 rounded-full ${rank.color}`} />
-              <span className="text-xs font-medium text-dojo-text-muted">{rank.label}</span>
+              <span className="text-sm">{rank.emoji}</span>
+              <span className="text-xs font-bold text-dojo-text">{rank.label}</span>
             </div>
+            {streak > 0 && (
+              <div className="flex items-center gap-1">
+                <span className="text-sm streak-flame">🔥</span>
+                <span className="text-xs font-bold text-dojo-text">{streak}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                 <div
@@ -155,7 +168,21 @@ export default function DojoClient({ courses, isAuthenticated = false, userPlan 
 
       {/* Course List */}
       <section className="max-w-5xl mx-auto px-4 pb-20">
-        <div className="flex items-center justify-end mb-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-700"
+                style={{
+                  width: `${Math.min((totalCompleted / 51) * 100, 100)}%`,
+                  background: "var(--dojo-vermillion)",
+                }}
+              />
+            </div>
+            <span className="text-xs font-medium text-dojo-text-muted">
+              {Math.round((totalCompleted / 51) * 100)}%
+            </span>
+          </div>
           <span className="text-xs text-dojo-text-muted">
             {totalCompleted} / 51 完了
           </span>

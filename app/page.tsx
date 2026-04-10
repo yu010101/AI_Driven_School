@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getRecentArticles, getCategoryStats } from '@/lib/mdx'
 import { getCourses } from '@/lib/courses'
+import WelcomeBack from '@/components/WelcomeBack'
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
 
@@ -199,6 +200,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Welcome back (logged-in users with progress) */}
+      <WelcomeBack />
 
       {/* Stats bar */}
       <section className="pb-12 md:pb-16">

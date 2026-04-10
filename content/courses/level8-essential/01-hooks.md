@@ -8,6 +8,8 @@ simulatedOutput: "📁 .claude/settings.json を更新します...\n\n{\n  \"hoo
 hint: "claude \"ファイル保存時に自動でESLintを実行するHookを設定して\" と入力してください"
 ---
 
+> **前提知識**: Level 0-1完了。JSONファイルの編集ができること。
+
 ## Hooks — Claude Codeの「自動トリガー」
 
 Hooks = ファイル編集・コミット・ツール実行のタイミングで**自動処理を挟む仕組み**。

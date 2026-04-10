@@ -24,6 +24,8 @@ simulatedOutput: |
 hint: "claude \"SKILL.mdフォーマットが使えるAI IDEの一覧を教えて\" と入力してください"
 ---
 
+> **前提知識**: Level 4-5完了。複数のAI IDEに興味がある方向け。
+
 ## 「Antigravity」とは何か
 
 まず誤解を解きましょう。「Antigravity」は特定の製品名ではなく、GoogleのProject IDX / AI IDEエコシステム全体を指す概念です。Googleが推進するAI統合開発環境の取り組みの中で、**既存のSKILL.mdフォーマットとの互換性**を実現したことが最大のポイントです。

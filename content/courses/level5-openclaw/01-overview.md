@@ -46,6 +46,8 @@ simulatedOutput: |
 hint: "claude \"経営を自動化するAIエージェント構成を設計して...\" と入力してください"
 ---
 
+> **前提知識**: Level 4完了。SKILL.mdの基本を理解していること。freee・Slack・GA4のアカウントがあると実践しやすい。
+
 # OpenClawとは？
 
 **OpenClaw**は、AIエージェントが24時間365日あなたの会社を経営するシステムです。

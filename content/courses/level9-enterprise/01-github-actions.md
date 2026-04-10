@@ -8,6 +8,8 @@ simulatedOutput: "📁 .github/workflows/claude-review.yml を作成します...
 hint: "claude \"GitHub ActionsでPRが作られたら自動コードレビューするワークフローを作って\" と入力してください"
 ---
 
+> **前提知識**: Level 0-3完了。GitHubアカウントがあること。チームでの導入を検討している方向け。
+
 ## GitHub Actions — PRの自動レビュー
 
 GitHub Actions = コードの変更を**自動チェックする仕組み**。PRが作られるたびにClaude Codeがレビューしてくれる。
